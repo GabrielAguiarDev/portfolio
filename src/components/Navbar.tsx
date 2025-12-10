@@ -1,11 +1,7 @@
 import { useState, useEffect } from "react";
-import { Coffee } from "lucide-react";
-import { Texts } from "@/texts";
-import { useLanguage } from "@/utils/useLanguage";
 import { useTranslation } from "react-i18next";
 
 const Navbar = () => {
-  // const texts = useLanguage(Texts);
   const { i18n, t: translate } = useTranslation();
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
