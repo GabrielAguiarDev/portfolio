@@ -23,6 +23,9 @@ All colors MUST be HSL.
     --secondary: 25 95% 53%;
     --secondary-foreground: 0 0% 100%;
 
+    --tertiary: 180 60% 45%;
+    --tertiary-foreground: 0 0% 98%;
+
     --muted: 240 10% 15%;
     --muted-foreground: 240 5% 65%;
 
@@ -130,6 +133,11 @@ All colors MUST be HSL.
   .scroll-fade-in.visible {
     opacity: 1;
     transform: translateY(0);
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    transition: opacity 0.6s ease-out, transform 0.2s ease-out, box-shadow 0.1s ease-out;
+  }
+
+  .scroll-fade-in.visible.card-hover:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 40px -15px hsl(271 81% 56% / 0.4);
   }
 }

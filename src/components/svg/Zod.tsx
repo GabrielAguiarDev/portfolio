@@ -1,4 +1,4 @@
-const ZodIcon = () => (
+const Zod = () => (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 96 96" id="Zod--Streamline-Svg-Logos" height="24" width="24">
         <g clip-path="url(#a)">
             <path fill="#18253f" d="M22.9392 15.373h50.8337l14.8959 15.5514L46.522 78.1307 7.3252 30.9244l15.614-15.5514Z"></path>
@@ -27,4 +27,4 @@ const ZodIcon = () => (
     </svg>
 );
 
-export default ZodIcon;
+export default Zod;

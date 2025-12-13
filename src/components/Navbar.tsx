@@ -1,55 +1,85 @@
-import { useState, useEffect } from "react";
-import { useTranslation } from "react-i18next";
+import { useState, useEffect } from "react"
+import { useTranslation } from "react-i18next"
+
+function normalizeLanguage(lang?: string): "pt" | "en" {
+  if (lang?.toLowerCase().startsWith("pt")) return "pt"
+  return "en"
+}
 
 const Navbar = () => {
-  const { i18n, t: translate } = useTranslation();
-  const [scrolled, setScrolled] = useState(false);
-  const [activeSection, setActiveSection] = useState("home");
-  const [language, setLanguage] = useState(i18n.language || "en");
+  const { i18n, t: translate } = useTranslation()
+  const [scrolled, setScrolled] = useState(false)
+  const [activeSection, setActiveSection] = useState("home")
+  const [language, setLanguage] = useState(
+    i18n.language || normalizeLanguage(navigator.language),
+  )
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
+      setScrolled(window.scrollY > 50)
 
-      const sections = ["home", "aboutMe", "experiences", "skills", "projects", "contacts"];
-      const scrollPosition = window.scrollY + 100;
+      const sections = [
+        "home",
+        "aboutMe",
+        "experiences",
+        "skills",
+        "projects",
+        "contacts",
+      ]
+      const scrollPosition = window.scrollY + 100
+
+      const isAtBottom =
+        window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight - 10
+
+      if (isAtBottom) {
+        setActiveSection("contacts")
+        return
+      }
 
       for (const section of sections) {
-        const element = document.getElementById(section);
+        const element = document.getElementById(section)
         if (element) {
-          const { offsetTop, offsetHeight } = element;
-          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
-            setActiveSection(section);
-            break;
+          const { offsetTop, offsetHeight } = element
+
+          if (
+            scrollPosition >= offsetTop &&
+            scrollPosition < offsetTop + offsetHeight
+          ) {
+            setActiveSection(section)
+            break
           }
         }
       }
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+    }
+    window.addEventListener("scroll", handleScroll)
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
 
   const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
+    const element = document.getElementById(id)
     if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
+      element.scrollIntoView({ behavior: "smooth" })
     }
-  };
+  }
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+    window.scrollTo({ top: 0, behavior: "smooth" })
+  }
 
   const toggleLanguage = () => {
-    const newLang = language === "pt" ? "en" : "pt";
-    setLanguage(newLang);
+    const newLang = language === "pt" ? "en" : "pt"
+    setLanguage(newLang)
     i18n.changeLanguage(newLang)
-  };
+  }
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "bg-background/95 backdrop-blur-sm border-b border-border" : "bg-transparent"
-        }`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        scrolled
+          ? "bg-background/95 backdrop-blur-sm border-b border-border"
+          : "bg-transparent"
+      }`}
     >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-center h-16 relative">
@@ -64,8 +94,11 @@ const Navbar = () => {
           <div className="hidden md:flex items-center gap-8">
             <button
               onClick={() => scrollToSection("aboutMe")}
-              className={`relative text-sm font-medium transition-colors hover:text-foreground py-2 ${activeSection === "aboutMe" ? "text-foreground" : "text-muted-foreground"
-                }`}
+              className={`relative text-sm font-medium transition-colors hover:text-foreground py-2 ${
+                activeSection === "aboutMe"
+                  ? "text-foreground"
+                  : "text-muted-foreground"
+              }`}
             >
               {translate("aboutMe")}
               {activeSection === "aboutMe" && (
@@ -74,8 +107,11 @@ const Navbar = () => {
             </button>
             <button
               onClick={() => scrollToSection("experiences")}
-              className={`relative text-sm font-medium transition-colors hover:text-foreground py-2 ${activeSection === "experiences" ? "text-foreground" : "text-muted-foreground"
-                }`}
+              className={`relative text-sm font-medium transition-colors hover:text-foreground py-2 ${
+                activeSection === "experiences"
+                  ? "text-foreground"
+                  : "text-muted-foreground"
+              }`}
             >
               {translate("experiences")}
               {activeSection === "experiences" && (
@@ -84,8 +120,11 @@ const Navbar = () => {
             </button>
             <button
               onClick={() => scrollToSection("skills")}
-              className={`relative text-sm font-medium transition-colors hover:text-foreground py-2 ${activeSection === "skills" ? "text-foreground" : "text-muted-foreground"
-                }`}
+              className={`relative text-sm font-medium transition-colors hover:text-foreground py-2 ${
+                activeSection === "skills"
+                  ? "text-foreground"
+                  : "text-muted-foreground"
+              }`}
             >
               {translate("skills")}
               {activeSection === "skills" && (
@@ -94,8 +133,11 @@ const Navbar = () => {
             </button>
             <button
               onClick={() => scrollToSection("projects")}
-              className={`relative text-sm font-medium transition-colors hover:text-foreground py-2 ${activeSection === "projects" ? "text-foreground" : "text-muted-foreground"
-                }`}
+              className={`relative text-sm font-medium transition-colors hover:text-foreground py-2 ${
+                activeSection === "projects"
+                  ? "text-foreground"
+                  : "text-muted-foreground"
+              }`}
             >
               {translate("projects")}
               {activeSection === "projects" && (
@@ -104,8 +146,11 @@ const Navbar = () => {
             </button>
             <button
               onClick={() => scrollToSection("contacts")}
-              className={`relative text-sm font-medium transition-colors hover:text-foreground py-2 ${activeSection === "contacts" ? "text-foreground" : "text-muted-foreground"
-                }`}
+              className={`relative text-sm font-medium transition-colors hover:text-foreground py-2 ${
+                activeSection === "contacts"
+                  ? "text-foreground"
+                  : "text-muted-foreground"
+              }`}
             >
               {translate("contacts")}
               {activeSection === "contacts" && (
@@ -132,7 +177,7 @@ const Navbar = () => {
         </div>
       </div>
     </nav>
-  );
-};
+  )
+}
 
-export default Navbar;
+export default Navbar
