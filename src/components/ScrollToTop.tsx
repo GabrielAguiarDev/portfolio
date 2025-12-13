@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ArrowUp } from "lucide-react";
+import { FaArrowUp } from "react-icons/fa";
 
 const ScrollToTop = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -29,7 +29,7 @@ const ScrollToTop = () => {
       }`}
       aria-label="Scroll to top"
     >
-      <ArrowUp className="w-5 h-5 text-primary" />
+      <FaArrowUp className="w-5 h-5 text-primary" />
     </button>
   );
 };

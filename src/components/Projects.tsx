@@ -1,4 +1,4 @@
-import { ExternalLink } from "lucide-react";
+import { FaExternalLinkAlt } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import { LegacyRef } from "react";
@@ -66,7 +66,7 @@ const Projects = () => {
         <div className={`text-center scroll-fade-in ${isVisible ? 'visible' : ''}`}>
           <Button variant="outline" size="lg" className="group">
             {translate("moreProjectsOnGitHub")}
-            <ExternalLink className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            <FaExternalLinkAlt className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Button>
         </div>
       </div>
