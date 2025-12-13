@@ -18,6 +18,7 @@ const Skills = () => {
     { name: "Firebase", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/firebase/firebase-original.svg" },
     { name: "Jest", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/jest/jest-plain.svg" },
     { name: "React Testing Library", icon: "https://oss.callstack.com/react-native-testing-library/img/owl.png" },
+    { name: "ESLint", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/eslint/eslint-original-wordmark.svg" },
   ];
 
   return (
