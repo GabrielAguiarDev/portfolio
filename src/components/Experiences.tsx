@@ -1,4 +1,4 @@
-import { ExternalLink } from "lucide-react";
+import { FaExternalLinkAlt } from "react-icons/fa";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -36,7 +36,7 @@ const TimelineCard = ({
             {project.title}
           </h3>
           {project?.link && (
-            <ExternalLink className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+            <FaExternalLinkAlt className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
           )}
         </div>
         <p className="text-xs font-light text-muted-foreground leading-relaxed mb-2">{project.company}</p>
@@ -182,7 +182,7 @@ const MobileTimelineItem = ({
               <h3 className="text-lg font-bold group-hover:text-primary transition-colors">
                 {project.title}
               </h3>
-              <ExternalLink className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+              <FaExternalLinkAlt className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed">
               {project.description}

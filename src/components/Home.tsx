@@ -1,4 +1,4 @@
-import { Github, Instagram, Linkedin } from "lucide-react";
+import { FaInstagram, FaLinkedin, FaGithub } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 
@@ -34,13 +34,13 @@ const Home = () => {
               <p className="text-sm text-muted-foreground">{translate("contactMe")}</p>
               <div className="flex gap-3">
                 <Button size="icon" variant="outline" className="hover:bg-primary hover:text-primary-foreground transition-all">
-                  <Github className="w-4 h-4" />
+                  <FaGithub className="w-4 h-4" />
                 </Button>
                 <Button size="icon" variant="outline" className="hover:bg-primary hover:text-primary-foreground transition-all">
-                  <Linkedin className="w-4 h-4" />
+                  <FaLinkedin className="w-4 h-4" />
                 </Button>
                 <Button size="icon" variant="outline" className="hover:bg-primary hover:text-primary-foreground transition-all">
-                  <Instagram className="w-4 h-4" />
+                  <FaInstagram className="w-4 h-4" />
                 </Button>
               </div>
             </div>
