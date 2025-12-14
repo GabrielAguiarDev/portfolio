@@ -40,7 +40,7 @@ const ItemCard = ({ item, index }: ItemCardProps) => {
     <div
       ref={elementRef}
       key={index}
-      className={`p-6 bg-card border border-border rounded-lg card-hover scroll-fade-in ${isVisible ? 'visible' : ''}`}
+      className={`p-6 bg-card border border-border rounded-lg md:card-hover scroll-fade-in ${isVisible ? 'visible' : ''}`}
     >
       <div className="text-4xl font-bold text-primary mb-4">{item.number}</div>
       <h3 className="text-1xl font-bold mb-3">{translate(item.title)}</h3>

@@ -44,7 +44,7 @@ const TimelineCard = ({
   return (
     <a
       href={project.link}
-      className="flex group bg-card border border-border rounded-lg overflow-hidden card-hover"
+      className="flex group bg-card border border-border rounded-lg overflow-hidden md:card-hover"
     >
       {!isLeft && (
         <div className="w-40 min-h-32 overflow-hidden items-center justify-center flex gap-5 bg-primary/5">
@@ -195,7 +195,7 @@ const MobileTimelineItem = ({ project }: { project: { title: string; description
       <div className="flex-1 pb-8">
         <a
           href={project.link}
-          className="group block bg-card border border-border rounded-lg overflow-hidden card-hover"
+          className="group block bg-card border border-border rounded-lg overflow-hidden md:card-hover"
         >
           <div className="aspect-video overflow-hidden items-center justify-center flex gap-5 bg-primary/5">
             {project.icons?.map((Icon) => Icon)}

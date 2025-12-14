@@ -57,7 +57,7 @@ const PostCard = ({ post }: { post: Post; }) => {
   return (
     <a
       ref={elementRef as any}
-      className={`group block bg-card border border-border rounded-lg overflow-hidden card-hover scroll-fade-in ${isVisible ? "visible" : ""
+      className={`group block bg-card border border-border rounded-lg overflow-hidden md:card-hover scroll-fade-in ${isVisible ? "visible" : ""
         }`}
     >
       <div className={`relative aspect-video flex justify-center items-center overflow-hidden ${post.background}`}>
