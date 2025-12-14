@@ -40,7 +40,7 @@ const Contacts = () => {
                   <a
                     ref={elementRef as any}
                     href={social.link}
-                    className={`flex flex-col items-center gap-3 p-6 bg-card border border-border rounded-lg card-hover scroll-fade-in ${
+                    className={`flex flex-col items-center gap-3 p-6 bg-card border border-border rounded-lg md:card-hover scroll-fade-in ${
                       isVisible ? "visible" : ""
                     }`}
                     target="_blank"

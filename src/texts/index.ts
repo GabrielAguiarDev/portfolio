@@ -13,7 +13,7 @@ export const Texts = {
     descriptionCardQuality: "Implementing practices that prevent bugs, improve performance, and make the app safer for the end user — focusing on stability and smart testing.",
     cardEvolution: "Continuous Evolution",
     descriptionCardEvolution: "Keeping up with trends and constantly learning to deliver modern, efficient solutions aligned with the real needs of people and businesses.",
-    contactMe: "Contact Me",
+    contactMe: "Contact me",
     experiences: "Experiences",
     descriptionExperiences: "Creating mobile and web solutions with solid architecture, consistent performance, and total focus on user experience.",
     skills: "Skills",
