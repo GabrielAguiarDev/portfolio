@@ -17,7 +17,7 @@ const Contacts = () => {
   ]
 
   return (
-    <section id="contacts" className="py-20 bg-background">
+    <section id="contacts" className="md:py-20 py-10 bg-background scroll-mt-10 md:scroll-mt-0">
       <div className="container mx-auto px-4">
         <div
           ref={elementRef}
@@ -32,7 +32,7 @@ const Contacts = () => {
         </div>
 
         <div className="max-w-4xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6 mb-16">
+          <div className="grid grid-cols-3 lg:grid-cols-3 gap-6 md:mb-16 mb-7">
             {socials.map((social, index) => {
               const SocialCard = () => {
                 const { elementRef, isVisible } = useScrollAnimation()
@@ -61,7 +61,7 @@ const Contacts = () => {
               isVisible ? "visible" : ""
             }`}
           >
-            <div className="flex items-center gap-6">
+            <div className="flex md:flex-row flex-col items-center gap-6">
               <img
                 src="/profile.jpeg"
                 alt="YouTube Channel"

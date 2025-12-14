@@ -1,26 +1,29 @@
 import { FaExternalLinkAlt } from "react-icons/fa"
 import { useScrollAnimation } from "@/hooks/use-scroll-animation"
 import { useTranslation } from "react-i18next"
+import { FaApple, FaReact } from "react-icons/fa"
+import { DiAndroid } from "react-icons/di";
+import { MdCss } from "react-icons/md";
+import { RiNextjsFill } from "react-icons/ri";
 
 const projects = [
   {
     title: "mobileDeveloper",
     company: "YaaYoo - Fusion Thinking",
     description: "descriptionExperienceMobileDeveloper",
-    image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b",
+    icons: [<FaApple key="apple" className="w-12 h-12" />, <DiAndroid key="android" className="w-12 h-12" />],
   },
   {
     title: "frontendDeveloper",
     company: "YaaYoo - Fusion Thinking",
     description: "descriptionExperienceFrontendDeveloper",
-    image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5",
+    icons: [<FaReact key="react" className="w-12 h-12" />, <RiNextjsFill key="nextjs" className="w-12 h-12" />],
   },
   {
     title: "portfolioWebsite",
     company: "projectFreelancer",
     description: "descriptionExperienceProjectFreelancer",
-    image: "https://images.unsplash.com/photo-1563206767-5b18f218e8de",
-    link: "#",
+    icons: [<FaReact key="react" className="w-12 h-12" />, <MdCss key="css" className="w-12 h-12" />],
   },
 ]
 
@@ -32,7 +35,7 @@ const TimelineCard = ({
     title: string
     company: string
     description: string
-    image: string
+    icons: JSX.Element[]
     link?: string
   }
   isLeft: boolean
@@ -44,12 +47,8 @@ const TimelineCard = ({
       className="flex group bg-card border border-border rounded-lg overflow-hidden card-hover"
     >
       {!isLeft && (
-        <div className="w-40 min-h-32 overflow-hidden">
-          <img
-            src={project.image}
-            alt={project.title}
-            className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-110"
-          />
+        <div className="w-40 min-h-32 overflow-hidden items-center justify-center flex gap-5 bg-primary/5">
+          {project.icons?.map((Icon) => Icon)}
         </div>
       )}
       <div className="flex-1 p-6">
@@ -69,12 +68,8 @@ const TimelineCard = ({
         </p>
       </div>
       {isLeft && (
-        <div className="w-40 min-h-32 overflow-hidden">
-          <img
-            src={project.image}
-            alt={project.title}
-            className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-110"
-          />
+        <div className="w-40 min-h-32 overflow-hidden items-center justify-center flex gap-5 bg-primary/5">
+          {project.icons?.map((Icon) => Icon)}
         </div>
       )}
     </a>
@@ -89,7 +84,7 @@ const TimelineItem = ({
     title: string
     company: string
     description: string
-    image: string
+    icons: JSX.Element[]
     link?: string
   }
   isLeft: boolean
@@ -165,7 +160,7 @@ const TimelineItem = ({
   )
 }
 
-const MobileTimelineItem = ({ project }: { project: { title: string; description: string; image: string; link?: string } }) => {
+const MobileTimelineItem = ({ project }: { project: { title: string; description: string; icons: JSX.Element[]; link?: string } }) => {
   const { elementRef, isVisible } = useScrollAnimation()
   const { t: translate } = useTranslation()
   return (
@@ -202,19 +197,17 @@ const MobileTimelineItem = ({ project }: { project: { title: string; description
           href={project.link}
           className="group block bg-card border border-border rounded-lg overflow-hidden card-hover"
         >
-          <div className="aspect-video overflow-hidden">
-            <img
-              src={project.image}
-              alt={project.title}
-              className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-110"
-            />
+          <div className="aspect-video overflow-hidden items-center justify-center flex gap-5 bg-primary/5">
+            {project.icons?.map((Icon) => Icon)}
           </div>
           <div className="p-4">
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-lg font-bold group-hover:text-primary transition-colors">
                 {translate(project.title)}
               </h3>
-              <FaExternalLinkAlt className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+              {project?.link && (
+                <FaExternalLinkAlt className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+              )}
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed">
               {translate(project.description)}
@@ -231,7 +224,7 @@ const Experiences = () => {
   const { t: translate } = useTranslation()
 
   return (
-    <section id="experiences" className="py-20 bg-muted/30">
+    <section id="experiences" className="md:py-20 py-10 bg-muted/30 scroll-mt-10 md:scroll-mt-0">
       <div className="container mx-auto px-4">
         <div
           ref={elementRef}

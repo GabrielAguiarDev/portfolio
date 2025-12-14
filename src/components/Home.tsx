@@ -15,12 +15,12 @@ const Home = () => {
          opacity-40
          blur-[140px]"
       ></div>
-      <div className="container mx-auto px-4 py-20 relative z-10">
+      <div className="container mx-auto px-4 pt-20 relative z-10">
         <div className="grid md:grid-cols-2 md:gap-12 gap-0 items-center">
           <div className="space-y-4 animate-fade-in-up">
             <p className="text-secondary font-semibold text-2xl tracking-wider">{translate("iamGabriel")}</p>
             <h1 className="text-5xl md:text-5xl font-bold leading-tight">
-              <span className="block text-foreground text-primary">{translate("mobileDeveloper")}</span>
+              <span className="block text-primary">{translate("mobileDeveloper")}</span>
             </h1>
             <p className="text-muted-foreground text-lg max-w-lg">
               {translate("smallDescription")}

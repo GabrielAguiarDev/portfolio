@@ -2,6 +2,7 @@ export const Texts = {
   english: {
     iamGabriel: "I'm Gabriel",
     smallDescription: "Mobile developer focused on creating modern and efficient interfaces.",
+    home: "Home",
     aboutMe: "About Me",
     descriptionAboutMe: "I develop applications with the goal of making people's lives easier and improving the way they connect with the digital world. My focus is on creating simple, fast, and intuitive experiences — those that make a difference in daily life without the user having to think much.\n\nI enjoy transforming ideas into functional and pleasant interfaces, taking care of everything from the app structure to the small details that make usage smoother. I believe that real technology is the one that solves problems, brings people closer, and makes processes lighter.\n\nAll the projects I build have a common purpose: to deliver reliable, well-thought-out solutions that offer a great experience for those who use them.",
     cardMobileDeveloper: "Mobile Development",
@@ -43,6 +44,7 @@ export const Texts = {
   portuguese: {
     iamGabriel: "Eu sou o Gabriel",
     smallDescription: "Desenvolvedor mobile focado em criar interfaces modernas e eficientes.",
+    home: "Início",
     aboutMe: "Sobre Mim",
     descriptionAboutMe: `Desenvolvo aplicativos com o objetivo de facilitar a vida das pessoas e melhorar a forma como elas se conectam com o mundo digital. Meu foco está em criar experiências simples, rápidas e intuitivas — daquelas que fazem diferença no dia a dia sem que o usuário precise pensar muito.\n\nGosto de transformar ideias em interfaces funcionais e agradáveis, cuidando desde a estrutura do app até os pequenos detalhes que tornam o uso mais fluido. Acredito que tecnologia de verdade é aquela que resolve problemas, aproxima pessoas e torna processos mais leves.\n\nTodos os projetos que construo têm um propósito em comum: entregar soluções confiáveis, bem pensadas e que ofereçam uma ótima experiência para quem usa.`,
     cardMobileDeveloper: "Desenvolvimento Mobile",
