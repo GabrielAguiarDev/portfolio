@@ -55,9 +55,9 @@ const AboutMe = () => {
   const { t: translate } = useTranslation();
 
   return (
-    <section id="aboutMe" className="py-20 bg-background">
-      <div className="container mx-auto px-4 flex gap-20">
-        <div ref={elementRef} className={`w-2/5 scroll-fade-in ${isVisible ? 'visible' : ''}`}>
+    <section id="aboutMe" className="md:py-20 py-10 bg-background scroll-mt-10 md:scroll-mt-0">
+      <div className="container mx-auto px-4 flex md:flex-row flex-col md:gap-20 gap-10">
+        <div ref={elementRef} className={`md:w-2/5 w-full scroll-fade-in ${isVisible ? 'visible' : ''}`}>
           <h2 className="text-4xl md:text-5xl font-bold mb-8">{translate("aboutMe")}</h2>
           <div className="space-y-6">
             <p className="text-lg text-muted-foreground leading-relaxed whitespace-pre-line">
@@ -66,7 +66,7 @@ const AboutMe = () => {
           </div>
         </div>
 
-        <div className="flex-1 mt-16 grid md:grid-cols-2 gap-8">
+        <div className="flex-1 md:mt-16 grid md:grid-cols-2 gap-8">
           {items.map((item, index) =>
             <ItemCard key={item.title} index={index} item={item} />
           )}

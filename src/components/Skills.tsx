@@ -92,7 +92,7 @@ const Skills = () => {
   ]
 
   return (
-    <section id="skills" className="py-20 bg-background">
+    <section id="skills" className="md:py-20 py-10 bg-background scroll-mt-10 md:scroll-mt-0">
       <div className="container mx-auto px-4">
         <div
           ref={elementRef}
@@ -114,7 +114,7 @@ const Skills = () => {
                 <div
                   ref={elementRef}
                   key={index}
-                  className={`flex flex-col items-center gap-3 p-6 bg-card border border-border rounded-lg card-hover scroll-fade-in ${
+                  className={`flex flex-col h-36 justify-center items-center gap-3 p-6 bg-card border border-border rounded-lg card-hover scroll-fade-in ${
                     isVisible ? "visible" : ""
                   }`}
                 >
