@@ -28,7 +28,7 @@ const Navbar = () => {
   const [activeSection, setActiveSection] = useState("home")
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [language, setLanguage] = useState(
-    i18n.language || normalizeLanguage(navigator.language),
+    normalizeLanguage(i18n.language) || normalizeLanguage(navigator.language),
   )
 
   useEffect(() => {
