@@ -9,19 +9,19 @@ import { RiNextjsFill } from "react-icons/ri";
 const projects = [
   {
     title: "mobileDeveloper",
-    company: "YaaYoo - Fusion Thinking",
+    subTitle: "YaaYoo - Fusion Thinking",
     description: "descriptionExperienceMobileDeveloper",
     icons: [<FaApple key="apple" className="w-12 h-12" />, <DiAndroid key="android" className="w-12 h-12" />],
   },
   {
     title: "frontendDeveloper",
-    company: "YaaYoo - Fusion Thinking",
+    subTitle: "YaaYoo - Fusion Thinking",
     description: "descriptionExperienceFrontendDeveloper",
     icons: [<FaReact key="react" className="w-12 h-12" />, <RiNextjsFill key="nextjs" className="w-12 h-12" />],
   },
   {
-    title: "portfolioWebsite",
-    company: "projectFreelancer",
+    title: "titleProjectFreelancer",
+    subTitle: "descriptionProjectFreelancer",
     description: "descriptionExperienceProjectFreelancer",
     icons: [<FaReact key="react" className="w-12 h-12" />, <MdCss key="css" className="w-12 h-12" />],
   },
@@ -33,7 +33,7 @@ const TimelineCard = ({
 }: {
   project: {
     title: string
-    company: string
+    subTitle: string
     description: string
     icons: JSX.Element[]
     link?: string
@@ -61,7 +61,7 @@ const TimelineCard = ({
           )}
         </div>
         <p className="text-xs font-light text-muted-foreground leading-relaxed mb-2">
-          {project.company}
+          {translate(project.subTitle)}
         </p>
         <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line">
           {translate(project.description)}
@@ -82,7 +82,7 @@ const TimelineItem = ({
 }: {
   project: {
     title: string
-    company: string
+    subTitle: string
     description: string
     icons: JSX.Element[]
     link?: string
