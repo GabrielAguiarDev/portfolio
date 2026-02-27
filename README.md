@@ -98,8 +98,6 @@ The portfolio works as a **technical business card**, showing not only _what_ I 
   <img src="./assets/readme/screen-projects.png" alt="Projects section" width="90%" />
 </p>
 
-> _(Tip: export images at 1200px width to keep good quality on GitHub)_
-
 ---
 
 ## ⚙️ Running locally
