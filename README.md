@@ -55,13 +55,13 @@ The portfolio works as a **technical business card**, showing not only _what_ I 
 ## 🧰 Stack
 
 <p>
-  <img src="https://skillicons.dev/icons?i=ts,react,nextjs,styledcomponents,html,css,git,github,vercel&perline=9" />
+  <img src="https://skillicons.dev/icons?i=ts,react,styledcomponents,html,css,git,github,vercel&perline=9" />
 </p>
 
 **Main technologies**
 
 - **TypeScript**
-- **React / Next.js**
+- **React**
 - **Styled Components**
 - **HTML5 & CSS3**
 - **Deployment:** Vercel
