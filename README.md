@@ -16,16 +16,15 @@
 <p align="center">
   <img src="https://img.shields.io/github/last-commit/GabrielAguiarDev/portfolio?style=for-the-badge" />
   <img src="https://img.shields.io/github/repo-size/GabrielAguiarDev/portfolio?style=for-the-badge" />
-  <img src="https://img.shields.io/github/stars/GabrielAguiarDev/portfolio?style=for-the-badge" />
 </p>
 
 <p align="center">
   <a href="https://www.gabrielaguiar.dev" target="_blank">🌐 Portfolio</a> •
-  <a href="#-about">About</a> •
-  <a href="#-stack">Stack</a> •
-  <a href="#-screenshots">Screenshots</a> •
-  <a href="#-running-locally">Running locally</a> •
-  <a href="#-contact">Contact</a>
+  <a href="#about">About</a> •
+  <a href="#stack">Stack</a> •
+  <a href="#screenshots">Screenshots</a> •
+  <a href="#running-locally">Running locally</a> •
+  <a href="#contact">Contact</a>
 </p>
 
 ---
