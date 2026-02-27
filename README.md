@@ -1,77 +1,111 @@
-<<<<<<< HEAD
-# portfolio
-=======
-# Welcome to your Lovable project
+<!-- =========================
+  Portfolio • Gabriel Aguiar
+========================= -->
 
-## Project info
+<p align="center">
+  <img src="./assets/cover.png" alt="Gabriel Aguiar - Portfolio" />
+</p>
 
-**URL**: https://lovable.dev/projects/e2332cf1-f6bd-4ff5-8a4d-6919329fead0
+<h1 align="center">Gabriel Aguiar</h1>
 
-## How can I edit this code?
+<p align="center">
+  Desenvolvedor focado em criar experiências digitais modernas, performáticas e bem estruturadas.<br/>
+  <sub>Front-end • Mobile • Engenharia de Software</sub>
+</p>
 
-There are several ways of editing your application.
+<p align="center">
+  <img src="https://img.shields.io/github/last-commit/GabrielAguiarDev/portfolio?style=for-the-badge" />
+  <img src="https://img.shields.io/github/repo-size/GabrielAguiarDev/portfolio?style=for-the-badge" />
+  <img src="https://img.shields.io/github/stars/GabrielAguiarDev/portfolio?style=for-the-badge" />
+</p>
 
-**Use Lovable**
+<p align="center">
+  <a href="https://www.gabrielaguiar.dev" target="_blank">🌐 Portfolio</a> •
+  <a href="#-sobre">Sobre</a> •
+  <a href="#-stack">Stack</a> •
+  <a href="#-screenshots">Screenshots</a> •
+  <a href="#-como-rodar">Como rodar</a> •
+  <a href="#-contato">Contato</a>
+</p>
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/e2332cf1-f6bd-4ff5-8a4d-6919329fead0) and start prompting.
+---
 
-Changes made via Lovable will be committed automatically to this repo.
+## ✨ Sobre
 
-**Use your preferred IDE**
+Este repositório contém o **código-fonte do meu portfólio pessoal**, onde apresento meus projetos, experiência e forma de pensar como desenvolvedor.
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+O foco não é apenas visual, mas também:
+- **Arquitetura limpa e escalável**
+- **Boas práticas de código**
+- **Performance e experiência do usuário**
+- **Manutenibilidade a longo prazo**
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+O portfólio funciona como um **cartão de visitas técnico**, mostrando não só *o que* eu faço, mas *como* eu faço.
 
-Follow these steps:
+---
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## 🎯 Objetivo do projeto
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+- Centralizar meus projetos e experiências
+- Demonstrar domínio técnico em front-end moderno
+- Servir como base evolutiva para novos experimentos e ideias
+- Facilitar contato profissional
 
-# Step 3: Install the necessary dependencies.
-npm i
+---
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+## 🧰 Stack
 
-**Edit a file directly in GitHub**
+<p>
+  <img src="https://skillicons.dev/icons?i=ts,react,nextjs,styledcomponents,html,css,git,github,vercel&perline=9" />
+</p>
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+**Principais tecnologias**
+- **TypeScript**
+- **React / Next.js**
+- **Styled Components**
+- **HTML5 & CSS3**
+- **Deploy:** Vercel
 
-**Use GitHub Codespaces**
+> A stack foi escolhida priorizando **DX**, **performance**, **SEO** e **escalabilidade**.
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+---
 
-## What technologies are used for this project?
+## 🧠 Destaques técnicos
 
-This project is built with:
+- Componentização bem definida
+- Layout responsivo (mobile first)
+- Animações sutis focadas em UX
+- SEO básico aplicado
+- Código organizado e legível
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+---
 
-## How can I deploy this project?
+## 🚀 Deploy
 
-Simply open [Lovable](https://lovable.dev/projects/e2332cf1-f6bd-4ff5-8a4d-6919329fead0) and click on Share -> Publish.
+🔗 **Acesse o portfólio:**  
+👉 https://www.gabrielaguiar.dev
 
-## Can I connect a custom domain to my Lovable project?
+---
 
-Yes, you can!
+## 🖼️ Screenshots
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+<p align="center">
+  <img src="./assets/screen-home.png" alt="Home" width="32%" />
+  <img src="./assets/screen-projects.png" alt="Projetos" width="32%" />
+  <img src="./assets/screen-about.png" alt="Sobre" width="32%" />
+</p>
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
->>>>>>> d849037498e7db33de876e8e3a0fbe6040a82b75
+> *(Sugestão: exportar imagens em 1200px de largura para manter qualidade no GitHub)*
+
+---
+
+## ⚙️ Como rodar localmente
+
+### Pré-requisitos
+- Node.js `>= 18`
+- PNPM / Yarn / NPM
+
+### Clonar o repositório
+```bash
+git clone https://github.com/GabrielAguiarDev/portfolio.git
+cd portfolio
