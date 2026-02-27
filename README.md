@@ -92,9 +92,9 @@ O portfólio funciona como um **cartão de visitas técnico**, mostrando não s�
 ## 🖼️ Screenshots
 
 <p align="center">
-  <img src="./assets/screen-home.png" alt="Home" width="32%" />
-  <img src="./assets/screen-projects.png" alt="Projetos" width="32%" />
   <img src="./assets/screen-about.png" alt="Sobre" width="32%" />
+  <img src="./assets/screen-projects.png" alt="Projetos" width="32%" />
+  <img src="./assets/screen-projects-mobile.png" alt="Home" width="32%" />
 </p>
 
 > _(Sugestão: exportar imagens em 1200px de largura para manter qualidade no GitHub)_
