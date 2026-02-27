@@ -3,7 +3,7 @@
 ========================= -->
 
 <p align="center">
-  <img src="./assets/cover.png" alt="Gabriel Aguiar - Portfolio" />
+  <img src="./assets/readme/cover.png" alt="Gabriel Aguiar - Portfolio" />
 </p>
 
 <h1 align="center">Gabriel Aguiar</h1>
