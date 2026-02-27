@@ -10,7 +10,7 @@
 
 <p align="center">
   Desenvolvedor focado em criar experiências digitais modernas, performáticas e bem estruturadas.<br/>
-  <sub>Front-end • Mobile • Engenharia de Software</sub>
+  <sub>Mobile • Front-end • Engenharia de Software</sub>
 </p>
 
 <p align="center">
