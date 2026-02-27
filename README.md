@@ -35,12 +35,13 @@
 Este repositório contém o **código-fonte do meu portfólio pessoal**, onde apresento meus projetos, experiência e forma de pensar como desenvolvedor.
 
 O foco não é apenas visual, mas também:
+
 - **Arquitetura limpa e escalável**
 - **Boas práticas de código**
 - **Performance e experiência do usuário**
 - **Manutenibilidade a longo prazo**
 
-O portfólio funciona como um **cartão de visitas técnico**, mostrando não só *o que* eu faço, mas *como* eu faço.
+O portfólio funciona como um **cartão de visitas técnico**, mostrando não só _o que_ eu faço, mas _como_ eu faço.
 
 ---
 
@@ -60,6 +61,7 @@ O portfólio funciona como um **cartão de visitas técnico**, mostrando não s�
 </p>
 
 **Principais tecnologias**
+
 - **TypeScript**
 - **React / Next.js**
 - **Styled Components**
@@ -95,17 +97,20 @@ O portfólio funciona como um **cartão de visitas técnico**, mostrando não s�
   <img src="./assets/screen-about.png" alt="Sobre" width="32%" />
 </p>
 
-> *(Sugestão: exportar imagens em 1200px de largura para manter qualidade no GitHub)*
+> _(Sugestão: exportar imagens em 1200px de largura para manter qualidade no GitHub)_
 
 ---
 
 ## ⚙️ Como rodar localmente
 
 ### Pré-requisitos
+
 - Node.js `>= 18`
 - PNPM / Yarn / NPM
 
 ### Clonar o repositório
+
 ```bash
 git clone https://github.com/GabrielAguiarDev/portfolio.git
 cd portfolio
+```
