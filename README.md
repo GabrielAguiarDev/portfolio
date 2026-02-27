@@ -19,16 +19,15 @@
 </p>
 
 <p align="center">
-  <a href="https://www.gabrielaguiar.dev" target="_blank">🌐 Portfolio</a> •
+  <a href="https://www.gabrielaguiar.dev">🌐 Portfolio</a> •
   <a href="#about">About</a> •
   <a href="#stack">Stack</a> •
   <a href="#screenshots">Screenshots</a> •
-  <a href="#running-locally">Running locally</a> •
-  <a href="#contact">Contact</a>
+  <a href="#running-locally">Running locally</a>
 </p>
 
 ---
-
+<a id="about"></a>
 ## ✨ About
 
 This repository contains the **source code of my personal portfolio**, where I showcase my projects, experience, and the way I approach software development.
@@ -52,7 +51,7 @@ The portfolio works as a **technical business card**, showing not only _what_ I 
 - Make professional contact easier
 
 ---
-
+<a id="stack"></a>
 ## 🧰 Stack
 
 <p>
@@ -87,7 +86,7 @@ The portfolio works as a **technical business card**, showing not only _what_ I 
 👉 https://www.gabrielaguiar.dev
 
 ---
-
+<a id="screenshots"></a>
 ## 🖼️ Screenshots
 
 <p align="center">
@@ -98,7 +97,7 @@ The portfolio works as a **technical business card**, showing not only _what_ I 
 </p>
 
 ---
-
+<a id="running-locally"></a>
 ## ⚙️ Running locally
 
 ### Requirements
