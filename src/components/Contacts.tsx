@@ -1,82 +1,86 @@
 import { FaWhatsapp, FaInstagram, FaLinkedin, FaGithub } from "react-icons/fa"
-import { Button } from "@/components/ui/button"
-import { useScrollAnimation } from "@/hooks/use-scroll-animation"
 import { useTranslation } from "react-i18next"
+
+import { gridDelay, useReveal } from "@/animation"
+import SectionHeader from "@/components/SectionHeader"
+import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
 import { SocialMediaLinks } from "@/utils/links"
 
 const WhatsappLink =
   "https://wa.me/5573998486884?text=Oi!%20Vi%20seu%20portf%C3%B3lio%20e%20queria%20trocar%20uma%20ideia,%20tudo%20bem%3F"
 
-const Contacts = () => {
-  const { t: translate } = useTranslation()
-  const { elementRef, isVisible } = useScrollAnimation()
-  const socials = [
-    { icon: FaLinkedin, label: "LinkedIn", link: SocialMediaLinks.linkedin },
-    { icon: FaGithub, label: "GitHub", link: SocialMediaLinks.github },
-    { icon: FaInstagram, label: "Instagram", link: SocialMediaLinks.instagram },
-  ]
+const socials = [
+  { icon: FaLinkedin, label: "LinkedIn", link: SocialMediaLinks.linkedin },
+  { icon: FaGithub, label: "GitHub", link: SocialMediaLinks.github },
+  { icon: FaInstagram, label: "Instagram", link: SocialMediaLinks.instagram },
+]
+
+const SocialCard = ({
+  social,
+  index,
+}: {
+  social: (typeof socials)[number]
+  index: number
+}) => {
+  const { revealProps } = useReveal<HTMLLIElement>({ delay: gridDelay(index) })
 
   return (
-    <section id="contacts" className="md:py-20 py-10 bg-background scroll-mt-10 md:scroll-mt-0">
-      <div className="container mx-auto px-4">
-        <div
-          ref={elementRef}
-          className={`scroll-fade-in ${isVisible ? "visible" : ""}`}
-        >
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            {translate("contacts")}
-          </h2>
-          <p className="text-muted-foreground mb-12 max-w-3xl">
-            {translate("descriptionContact")}
-          </p>
-        </div>
+    <li {...revealProps} className={revealProps.className}>
+      <a
+        href={social.link}
+        target="_blank"
+        rel="noreferrer noopener"
+        className="surface flex min-h-[6.5rem] flex-col items-center justify-center gap-3 p-5 transition-colors duration-300 hover:border-foreground/25 md:card-lift"
+      >
+        <social.icon className="h-6 w-6 text-foreground" aria-hidden="true" />
+        <span className="text-sm font-medium text-foreground">{social.label}</span>
+      </a>
+    </li>
+  )
+}
 
-        <div className="max-w-4xl mx-auto">
-          <div className="grid grid-cols-3 lg:grid-cols-3 gap-6 md:mb-16 mb-7">
-            {socials.map((social, index) => {
-              const SocialCard = () => {
-                const { elementRef, isVisible } = useScrollAnimation()
-                return (
-                  <a
-                    ref={elementRef as any}
-                    href={social.link}
-                    className={`flex flex-col items-center gap-3 p-6 bg-card border border-border rounded-lg md:card-hover scroll-fade-in ${
-                      isVisible ? "visible" : ""
-                    }`}
-                    target="_blank"
-                  >
-                    <social.icon className="w-8 h-8 text-primary" />
-                    <span className="text-sm text-center font-medium">
-                      {social.label}
-                    </span>
-                  </a>
-                )
-              }
-              return <SocialCard key={index} />
-            })}
-          </div>
+const Contacts = () => {
+  const { t: translate } = useTranslation()
+  const card = useReveal<HTMLDivElement>({ delay: 0.14 })
+
+  return (
+    <section id="contacts" className="scroll-mt-20 py-16 md:py-28">
+      <div className="container">
+        <SectionHeader title={translate("contacts")} lead={translate("descriptionContact")} />
+
+        <div className="mt-11 md:mt-16">
+          <ul className="grid grid-cols-3 gap-4 md:gap-5">
+            {socials.map((social, index) => (
+              <SocialCard key={social.label} social={social} index={index} />
+            ))}
+          </ul>
 
           <div
-            className={`bg-card border border-border rounded-lg p-8 scroll-fade-in ${
-              isVisible ? "visible" : ""
-            }`}
+            {...card.revealProps}
+            className={cn(card.revealProps.className, "surface mt-4 p-6 md:mt-5 md:p-9")}
           >
-            <div className="flex md:flex-row flex-col items-center gap-6">
+            <div className="flex flex-col items-center gap-6 text-center md:flex-row md:items-center md:gap-8 md:text-left">
               <img
                 src="/profile.jpeg"
-                alt="YouTube Channel"
-                className="w-32 h-32 rounded-full object-cover"
+                alt="Gabriel Aguiar"
+                width={128}
+                height={128}
+                loading="lazy"
+                decoding="async"
+                className="h-24 w-24 shrink-0 rounded-full object-cover md:h-28 md:w-28"
               />
               <div className="flex-1">
-                <h3 className="text-2xl font-bold mb-2">Gabriel Aguiar</h3>
-                <p className="text-muted-foreground mb-4">
+                <h3 className="heading-md text-foreground">Gabriel Aguiar</h3>
+                <p className="mt-3 text-pretty text-base leading-relaxed text-muted-foreground">
                   {translate("descriptionLetsTalk")}
                 </p>
                 <Button
-                  onClick={() => window.open(WhatsappLink, "_blank")}
-                  className="bg-primary hover:bg-primary/90 gap-2"
+                  onClick={() => window.open(WhatsappLink, "_blank", "noopener")}
+                  size="lg"
+                  className="mt-6 gap-2"
                 >
-                  <FaWhatsapp className="size-5" />
+                  <FaWhatsapp className="h-[18px] w-[18px]" aria-hidden="true" />
                   {translate("letsTalk")}
                 </Button>
               </div>
