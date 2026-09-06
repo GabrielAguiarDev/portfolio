@@ -2,63 +2,61 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/*
+ * Design system — "Graphite Editorial".
+ *
+ * Warm paper ground, near-black ink, hairline rules instead of shadows, and a
+ * single chromatic accent (brick) spent sparingly: section numbers, the active
+ * nav marker, the timeline rail, project status and the primary call to action.
+ *
+ * All colours are HSL triplets so Tailwind can compose them with opacity.
+ */
 
 @layer base {
   :root {
-    --background: 240 20% 6%;
-    --foreground: 0 0% 98%;
+    --background: 40 20% 97%; /* #F7F6F3 warm paper */
+    --foreground: 0 0% 8%; /* #141414 ink */
 
-    --card: 240 15% 10%;
-    --card-foreground: 0 0% 98%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 8%;
 
-    --popover: 240 15% 10%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 8%;
 
-    --primary: 271 81% 56%;
+    /* The one accent in the system. */
+    --primary: 20 91% 40%; /* #C2410C brick */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 25 95% 53%;
+    /* Second tier of emphasis — deliberately achromatic. */
+    --secondary: 0 0% 8%;
     --secondary-foreground: 0 0% 100%;
 
-    --tertiary: 180 60% 45%;
-    --tertiary-foreground: 0 0% 98%;
+    --tertiary: 40 5% 42%;
+    --tertiary-foreground: 0 0% 100%;
 
-    --muted: 240 10% 15%;
-    --muted-foreground: 240 5% 65%;
+    --muted: 40 16% 93%;
+    --muted-foreground: 40 5% 42%; /* #6B6862 */
 
-    --accent: 271 81% 56%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 40 16% 93%;
+    --accent-foreground: 0 0% 8%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 0 72% 42%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 240 10% 20%;
-    --input: 240 10% 20%;
-    --ring: 271 81% 56%;
+    --border: 40 12% 87%; /* #E4E1DA hairline */
+    --input: 40 12% 87%;
+    --ring: 20 91% 40%;
 
-    --radius: 0.5rem;
+    --radius: 0.875rem;
 
-    /* Cyber theme colors */
-    --cyber-purple: 271 81% 56%;
-    --cyber-orange: 25 95% 53%;
-    --cyber-dark: 240 20% 6%;
-    --cyber-card: 240 15% 10%;
-    --cyber-border: 240 10% 20%;
-
-    /* Gradients */
-    --gradient-primary: linear-gradient(
-      135deg,
-      hsl(271 81% 56%),
-      hsl(240 81% 66%)
-    );
-    --gradient-dark: linear-gradient(180deg, hsl(240 20% 6%), hsl(240 20% 10%));
-
-    /* Shadows */
-    --glow-purple: 0 0 40px hsl(271 81% 56% / 0.3);
-    --glow-orange: 0 0 30px hsl(25 95% 53% / 0.3);
+    /* Motion timings are written here by applyMotionVars() before first paint;
+       these are the fallbacks if that ever fails to run. */
+    --motion-reveal-duration: 0.7s;
+    --motion-reveal-delay: 0s;
+    --motion-reveal-ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --motion-reveal-distance: 26px;
+    --motion-heading-duration: 0.9s;
+    --motion-heading-ease: cubic-bezier(0.16, 1, 0.3, 1);
   }
 }
 
@@ -67,77 +65,209 @@ All colors MUST be HSL.
     @apply border-border;
   }
 
-  body {
-    @apply bg-background text-foreground;
-    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
-      sans-serif;
+  html {
+    /* No visible scrollbar — scrolling is by gesture, smoothed by Lenis. */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
   }
 
-  html {
-    scroll-behavior: smooth;
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
+  }
 
-    ::-webkit-scrollbar {
-      width: 8px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #000000;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: hsl(var(--primary));
-      border-radius: 10px;
-    }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-feature-settings: "cv11", "ss01";
+  }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+
+  ::selection {
+    @apply bg-primary text-primary-foreground;
+  }
+
+  /* Lenis needs the document to size itself naturally. */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+}
+
+@layer components {
+  /*
+   * Display type scale. These live here rather than in tailwind.config's
+   * fontSize, because tailwind-merge reads a custom `text-*` utility as a text
+   * COLOUR and drops it when a real colour class follows in the same cn() call.
+   */
+  .heading-xl {
+    @apply font-display;
+    font-size: clamp(3rem, 13vw, 7rem);
+    line-height: 0.92;
+    letter-spacing: -0.03em;
+  }
+
+  .heading-lg {
+    @apply font-display;
+    font-size: clamp(2.5rem, 8.5vw, 4.75rem);
+    line-height: 0.95;
+    letter-spacing: -0.025em;
+  }
+
+  .heading-md {
+    @apply font-display;
+    font-size: clamp(1.75rem, 5vw, 2.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+
+  /* A hairline-bordered surface. Depth comes from the rule, not a shadow. */
+  .surface {
+    @apply rounded-lg border border-border bg-card;
+  }
+
+  /* Small uppercase label used above every section heading. */
+  .eyebrow {
+    @apply text-[0.7rem] font-medium uppercase tracking-[0.2em] text-muted-foreground;
+  }
+
+  /* Underline that grows from the left on hover — the only link affordance. */
+  .rule-link {
+    @apply relative inline-flex items-center gap-2;
+  }
+
+  .rule-link::after {
+    content: "";
+    @apply absolute -bottom-0.5 left-0 h-px w-full origin-left scale-x-0 bg-primary;
+    transition: transform 0.4s var(--motion-reveal-ease);
+  }
+
+  .rule-link:hover::after,
+  .rule-link:focus-visible::after {
+    @apply scale-x-100;
   }
 }
 
 @layer utilities {
-  .glitch {
-    position: relative;
-    animation: glitch 2s infinite;
-  }
-
-  @keyframes glitch {
-    0%,
-    90%,
-    100% {
-      transform: translate(0);
-    }
-    92% {
-      transform: translate(-2px, 2px);
-    }
-    94% {
-      transform: translate(2px, -2px);
-    }
-    96% {
-      transform: translate(-2px, 2px);
-    }
-  }
-
-  .text-glow {
-    text-shadow: 0 0 20px currentColor;
-  }
-
-  .card-hover {
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .card-hover:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 20px 40px -15px hsl(var(--primary) / 0.4);
-  }
-
-  .scroll-fade-in {
+  /*
+   * Reveal: fade and rise, driven by IntersectionObserver adding .is-revealed.
+   * Only transform and opacity animate.
+   */
+  .reveal {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translate3d(0, var(--motion-reveal-distance), 0);
+    transition:
+      opacity var(--motion-reveal-duration) var(--motion-reveal-ease) var(--motion-reveal-delay),
+      transform var(--motion-reveal-duration) var(--motion-reveal-ease) var(--motion-reveal-delay);
   }
 
-  .scroll-fade-in.visible {
+  .reveal.is-revealed {
     opacity: 1;
-    transform: translateY(0);
-    transition: opacity 0.6s ease-out, transform 0.2s ease-out, box-shadow 0.1s ease-out;
+    transform: translate3d(0, 0, 0);
   }
 
-  .scroll-fade-in.visible.card-hover:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 20px 40px -15px hsl(271 81% 56% / 0.4);
+  /*
+   * Word-by-word heading mask. The mask clips the word until .is-revealed
+   * lands on the heading; padding/margin pair gives descenders room.
+   */
+  .reveal-text__mask {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: bottom;
+    padding-bottom: 0.16em;
+    margin-bottom: -0.16em;
+  }
+
+  .reveal-text__word {
+    display: inline-block;
+    transform: translate3d(0, 110%, 0);
+    opacity: 0;
+    transition:
+      transform var(--motion-heading-duration) var(--motion-heading-ease),
+      opacity var(--motion-heading-duration) var(--motion-heading-ease);
+  }
+
+  .reveal-text.is-revealed .reveal-text__word {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+
+  /* Card lift, desktop pointers only — applied via md: in the markup. */
+  .card-lift {
+    transition:
+      transform 0.45s var(--motion-reveal-ease),
+      border-color 0.45s var(--motion-reveal-ease);
+    will-change: transform;
+  }
+
+  .card-lift:hover {
+    transform: translate3d(0, -6px, 0);
+    @apply border-foreground/25;
+  }
+
+  /* Text balancing for short headings and leads. */
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .text-pretty {
+    text-wrap: pretty;
+  }
+}
+
+/*
+ * Reduced motion: everything non-essential is switched off and the content is
+ * shown in its final state immediately. Not scoped to a layer so it always
+ * wins over the utilities above.
+ */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+
+  .reveal,
+  .reveal-text__word {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .card-lift {
+    transition: none !important;
+    will-change: auto;
+  }
+
+  .card-lift:hover {
+    transform: none !important;
+  }
+
+  .rule-link::after {
+    transition: none !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
   }
 }
