@@ -3,60 +3,70 @@
 @tailwind utilities;
 
 /*
- * Design system — "Graphite Editorial".
+ * ─────────────────────────────────────────────────────────────────────────────
+ *  Design system — "Signal"
+ * ─────────────────────────────────────────────────────────────────────────────
+ * Near-black ground, warm off-white ink, hairline rules instead of shadows,
+ * and a single ember accent spent only where the eye must go: the active nav
+ * marker, a live status, one word of a headline, the primary call to action.
  *
- * Warm paper ground, near-black ink, hairline rules instead of shadows, and a
- * single chromatic accent (brick) spent sparingly: section numbers, the active
- * nav marker, the timeline rail, project status and the primary call to action.
+ * Depth comes from three things and nothing else — the hairline, a barely-lit
+ * surface one step above the ground, and a very soft light bloom behind large
+ * compositions. No drop shadows, no heavy glass.
  *
- * All colours are HSL triplets so Tailwind can compose them with opacity.
+ * Colours are HSL triplets so Tailwind can compose them with opacity.
  */
 
 @layer base {
   :root {
-    --background: 40 20% 97%; /* #F7F6F3 warm paper */
-    --foreground: 0 0% 8%; /* #141414 ink */
+    --background: 220 14% 4%; /* #090A0C — cool near-black */
+    --foreground: 40 22% 96%; /* #F7F5F1 — warm ink, the contrast that gives it life */
 
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 8%;
+    /* One step above the ground. Panels, device bezels, quiet cards. */
+    --card: 220 12% 7%;
+    --card-foreground: 40 22% 96%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 8%;
+    --popover: 220 14% 6%;
+    --popover-foreground: 40 22% 96%;
 
-    /* The one accent in the system. */
-    --primary: 20 91% 40%; /* #C2410C brick */
-    --primary-foreground: 0 0% 100%;
+    /* The single accent in the system. Used sparingly, on purpose. */
+    --primary: 20 94% 55%; /* #F86B27 ember */
+    --primary-foreground: 220 14% 4%;
 
-    /* Second tier of emphasis — deliberately achromatic. */
-    --secondary: 0 0% 8%;
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 40 22% 96%;
+    --secondary-foreground: 220 14% 4%;
 
-    --tertiary: 40 5% 42%;
-    --tertiary-foreground: 0 0% 100%;
+    --tertiary: 220 6% 46%;
+    --tertiary-foreground: 40 22% 96%;
 
-    --muted: 40 16% 93%;
-    --muted-foreground: 40 5% 42%; /* #6B6862 */
+    --muted: 220 12% 9%;
+    --muted-foreground: 220 7% 56%; /* #878C94 — the quiet voice */
 
-    --accent: 40 16% 93%;
-    --accent-foreground: 0 0% 8%;
+    --accent: 220 12% 11%;
+    --accent-foreground: 40 22% 96%;
 
-    --destructive: 0 72% 42%;
-    --destructive-foreground: 0 0% 100%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 40 22% 96%;
 
-    --border: 40 12% 87%; /* #E4E1DA hairline */
-    --input: 40 12% 87%;
-    --ring: 20 91% 40%;
+    --border: 220 10% 15%; /* hairline */
+    --input: 220 10% 15%;
+    --ring: 20 94% 55%;
 
-    --radius: 0.875rem;
+    --radius: 1rem;
 
     /* Motion timings are written here by applyMotionVars() before first paint;
        these are the fallbacks if that ever fails to run. */
-    --motion-reveal-duration: 0.7s;
+    --motion-reveal-duration: 0.9s;
     --motion-reveal-delay: 0s;
     --motion-reveal-ease: cubic-bezier(0.22, 1, 0.36, 1);
-    --motion-reveal-distance: 26px;
-    --motion-heading-duration: 0.9s;
+    --motion-reveal-distance: 28px;
+    --motion-heading-duration: 1.05s;
     --motion-heading-ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+    /* Height of the fixed navbar. Sections use it for scroll clearance. */
+    --nav-h: 4rem;
+
+    color-scheme: dark;
   }
 }
 
@@ -66,9 +76,11 @@
   }
 
   html {
-    /* No visible scrollbar — scrolling is by gesture, smoothed by Lenis. */
+    /* Scrolling is by gesture, smoothed by Lenis — the bar would only add noise. */
     scrollbar-width: none;
     -ms-overflow-style: none;
+    /* Guards every section against a stray wide child pushing the page sideways. */
+    overflow-x: hidden;
   }
 
   html::-webkit-scrollbar,
@@ -81,7 +93,8 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    font-feature-settings: "cv11", "ss01";
+    font-feature-settings: "cv11", "ss01", "ss03";
+    overflow-x: hidden;
   }
 
   :focus-visible {
@@ -113,39 +126,78 @@
 
 @layer components {
   /*
-   * Display type scale. These live here rather than in tailwind.config's
-   * fontSize, because tailwind-merge reads a custom `text-*` utility as a text
-   * COLOUR and drops it when a real colour class follows in the same cn() call.
+   * Display scale.
+   *
+   * Defined here rather than in tailwind.config's fontSize because
+   * tailwind-merge reads a custom `text-*` utility as a text COLOUR and drops
+   * it when a real colour class follows in the same cn() call.
    */
-  .heading-xl {
+  .display-xl {
     @apply font-display;
-    font-size: clamp(3rem, 13vw, 7rem);
-    line-height: 0.92;
+    font-size: clamp(2.25rem, 5vw, 4.5rem);
+    font-weight: 600;
+    line-height: 0.98;
+    letter-spacing: -0.038em;
+  }
+
+  .display-lg {
+    @apply font-display;
+    font-size: clamp(1.9rem, 4vw, 3.4rem);
+    font-weight: 600;
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+  }
+
+  .display-md {
+    @apply font-display;
+    font-size: clamp(1.5rem, 2.6vw, 2.125rem);
+    font-weight: 600;
+    line-height: 1.1;
     letter-spacing: -0.03em;
   }
 
-  .heading-lg {
+  .display-sm {
     @apply font-display;
-    font-size: clamp(2.5rem, 8.5vw, 4.75rem);
-    line-height: 0.95;
-    letter-spacing: -0.025em;
-  }
-
-  .heading-md {
-    @apply font-display;
-    font-size: clamp(1.75rem, 5vw, 2.5rem);
-    line-height: 1.05;
+    font-size: clamp(1.0625rem, 1.5vw, 1.3125rem);
+    font-weight: 600;
+    line-height: 1.25;
     letter-spacing: -0.02em;
   }
 
-  /* A hairline-bordered surface. Depth comes from the rule, not a shadow. */
-  .surface {
-    @apply rounded-lg border border-border bg-card;
+  /* The editorial counterpoint. One or two words per page, never a sentence. */
+  .serif {
+    @apply font-serif italic;
+    font-weight: 400;
+    letter-spacing: -0.01em;
   }
 
-  /* Small uppercase label used above every section heading. */
+  /* Small uppercase label. The system's only all-caps type. */
   .eyebrow {
-    @apply text-[0.7rem] font-medium uppercase tracking-[0.2em] text-muted-foreground;
+    @apply text-[0.6875rem] font-medium uppercase tracking-[0.22em] text-muted-foreground;
+  }
+
+  /* A panel one step above the ground. Depth from the rule, not a shadow. */
+  .surface {
+    @apply rounded-[--radius] border border-border bg-card;
+  }
+
+  /* Used only where content genuinely sits over an image or a brand field. */
+  .glass {
+    @apply border border-white/10 bg-white/[0.04];
+    backdrop-filter: blur(20px) saturate(140%);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+  }
+
+  /* Hairline that fades out at both ends — a rule with no hard stop. */
+  .hairline {
+    @apply h-px w-full border-0;
+    background: linear-gradient(
+      to right,
+      transparent,
+      hsl(var(--border)) 15%,
+      hsl(var(--border)) 85%,
+      transparent
+    );
   }
 
   /* Underline that grows from the left on hover — the only link affordance. */
@@ -155,20 +207,31 @@
 
   .rule-link::after {
     content: "";
-    @apply absolute -bottom-0.5 left-0 h-px w-full origin-left scale-x-0 bg-primary;
-    transition: transform 0.4s var(--motion-reveal-ease);
+    @apply absolute -bottom-0.5 left-0 h-px w-full origin-left scale-x-0 bg-current;
+    transition: transform 0.45s var(--motion-reveal-ease);
   }
 
   .rule-link:hover::after,
   .rule-link:focus-visible::after {
     @apply scale-x-100;
   }
+
+  /* A tool or platform name. Typographic, never a logo chip. */
+  .tag {
+    @apply inline-flex items-center rounded-full border border-border px-3 py-1
+           text-xs font-medium tracking-tight text-muted-foreground
+           transition-colors duration-300;
+  }
+
+  .tag:hover {
+    @apply border-foreground/25 text-foreground;
+  }
 }
 
 @layer utilities {
   /*
    * Reveal: fade and rise, driven by IntersectionObserver adding .is-revealed.
-   * Only transform and opacity animate.
+   * Only transform and opacity animate, so it never triggers layout.
    */
   .reveal {
     opacity: 0;
@@ -191,8 +254,8 @@
     display: inline-block;
     overflow: hidden;
     vertical-align: bottom;
-    padding-bottom: 0.16em;
-    margin-bottom: -0.16em;
+    padding-bottom: 0.18em;
+    margin-bottom: -0.18em;
   }
 
   .reveal-text__word {
@@ -212,14 +275,42 @@
   /* Card lift, desktop pointers only — applied via md: in the markup. */
   .card-lift {
     transition:
-      transform 0.45s var(--motion-reveal-ease),
-      border-color 0.45s var(--motion-reveal-ease);
+      transform 0.5s var(--motion-reveal-ease),
+      border-color 0.5s var(--motion-reveal-ease);
     will-change: transform;
   }
 
   .card-lift:hover {
-    transform: translate3d(0, -6px, 0);
+    transform: translate3d(0, -5px, 0);
     @apply border-foreground/25;
+  }
+
+  /* Fades a horizontally scrolling strip out at its edges. */
+  .mask-fade-x {
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 4rem,
+      #000 calc(100% - 4rem),
+      transparent
+    );
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 4rem,
+      #000 calc(100% - 4rem),
+      transparent
+    );
+  }
+
+  /* Hides a scrollbar on a deliberately scrollable strip. */
+  .no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
   }
 
   /* Text balancing for short headings and leads. */
@@ -230,12 +321,17 @@
   .text-pretty {
     text-wrap: pretty;
   }
+
+  /* Clearance under the fixed navbar for every scroll target. */
+  .section-anchor {
+    scroll-margin-top: calc(var(--nav-h) + 1.5rem);
+  }
 }
 
 /*
- * Reduced motion: everything non-essential is switched off and the content is
- * shown in its final state immediately. Not scoped to a layer so it always
- * wins over the utilities above.
+ * Reduced motion: everything non-essential is switched off and content is shown
+ * in its final state immediately. Not scoped to a layer so it always wins over
+ * the utilities above.
  */
 @media (prefers-reduced-motion: reduce) {
   html {
@@ -249,13 +345,11 @@
     transition: none !important;
   }
 
-  .card-lift {
-    transition: none !important;
-    will-change: auto;
-  }
-
+  .card-lift,
   .card-lift:hover {
+    transition: none !important;
     transform: none !important;
+    will-change: auto;
   }
 
   .rule-link::after {

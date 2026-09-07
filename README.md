@@ -63,29 +63,30 @@ The portfolio works as a **technical business card**, showing not only _what_ I 
 - **TypeScript**
 - **React 18** (single-page app, `react-router-dom`)
 - **Vite 5** — dev server and build
-- **Tailwind CSS 3** + **shadcn/ui** (Radix primitives)
-- **react-i18next** — PT/EN with browser language detection
+- **Tailwind CSS 3** — utility-first styling
+- **react-i18next** — PT/EN with browser language detection (language detection and persistence only; copy lives next to content)
 - **GSAP + ScrollTrigger** and **Lenis** — scroll-linked motion, code-split and loaded after the LCP
 - **Package manager:** npm
 - **Deployment:** Vercel
 
 > The stack was chosen with a strong focus on **developer experience**, **performance**, **SEO**, and **scalability**.
 
+> Several packages in `package.json` (`shadcn/ui` components, `@radix-ui` packages, `@tanstack/react-query`) are no longer used by the site and are pending cleanup.
+
 ---
 
 ## 🧠 Technical highlights
 
-- Well-defined component structure
-- Responsive layout (mobile-first — mobile is the primary target, not a reduced version)
-- Scroll-driven motion: word-by-word heading reveals, `IntersectionObserver` reveals,
-  parallax and a self-drawing experience timeline
+- Dark, editorial design system ("Signal") with near-black ground, warm off-white type, and a single ember accent
+- Typed content layer (`src/content/`) keeps prose next to the data it describes rather than in a flat key namespace
+- Device mockups rendered in CSS (not images) — they scale smoothly at any size and ship as bytes instead of kilobytes
+- Scroll-driven motion: word-by-word heading reveals, section reveals via `IntersectionObserver`, parallax, and pinned horizontal scroll on desktop
 - Every timing, easing, delay and parallax amplitude lives in one file,
   [`src/animation/config.ts`](src/animation/config.ts), including master on/off switches
-- `prefers-reduced-motion` is respected: the animation libraries are never even fetched,
-  and content renders in its final state
-- Animation is a progressive enhancement — if the motion chunk fails to load,
-  the page stays fully readable and navigable
-- Skill icons are self-hosted and lazily loaded rather than pulled from third-party CDNs
+- `prefers-reduced-motion` is respected: the animation libraries are never even fetched, and content renders in its final state
+- Animation is a progressive enhancement — if the motion chunk fails to load, the page stays fully readable and navigable
+- Deep linking with `/#work`, `/#yago` etc. works via `useHashScroll` on the single-page app
+- Mobile-first responsive layout (mobile is the primary target, not a reduced version)
 - Basic SEO best practices applied
 - Clean, readable, and maintainable code
 
@@ -100,12 +101,7 @@ The portfolio works as a **technical business card**, showing not only _what_ I 
 <a id="screenshots"></a>
 ## 🖼️ Screenshots
 
-<p align="center">
-  <img src="./assets/readme/screen-about.png" alt="About section" width="90%" />
-  <img src="./assets/readme/screen-experience.png" alt="Projects section" width="90%" />
-  <img src="./assets/readme/screen-skills.png" alt="Projects section" width="90%" />
-  <img src="./assets/readme/screen-projects.png" alt="Projects section" width="90%" />
-</p>
+The screenshot images in `./assets/readme/` reflect the previous design and are pending an update to reflect the current dark, editorial visual identity. Screenshots from the new design will be added soon.
 
 ---
 <a id="running-locally"></a>

@@ -19,7 +19,7 @@ export default {
         lg: "3rem",
       },
       screens: {
-        "2xl": "1360px",
+        "2xl": "1440px",
       },
     },
     extend: {
@@ -31,8 +31,16 @@ export default {
           "Segoe UI",
           "sans-serif",
         ],
-        /* Editorial serif, headings only. */
-        display: ["Instrument Serif", "Iowan Old Style", "Georgia", "serif"],
+        /* Tight grotesk for display type — the voice of every headline. */
+        display: [
+          "Inter Tight",
+          "Inter",
+          "-apple-system",
+          "BlinkMacSystemFont",
+          "sans-serif",
+        ],
+        /* Editorial counterpoint. A word or two per page, never a sentence. */
+        serif: ["Instrument Serif", "Iowan Old Style", "Georgia", "serif"],
       },
       colors: {
         border: "hsl(var(--border))",

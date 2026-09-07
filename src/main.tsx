@@ -1,7 +1,7 @@
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
-import "./texts/config.ts";
+import "./i18n/config.ts";
 import { applyMotionVars, scheduleMotionRuntime } from "./animation";
 
 // Sync the animation config onto CSS variables before the first paint, then
