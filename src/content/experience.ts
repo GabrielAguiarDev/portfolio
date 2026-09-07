@@ -29,8 +29,8 @@ export const ROLES: Role[] = [
     company: "YaaYoo — Fusion Thinking",
     period: null, // TODO: add the period for this role
     summary: {
-      pt: "Responsável pelo desenvolvimento mobile e pelo ciclo completo dos aplicativos, do planejamento à publicação nas lojas.",
-      en: "Responsible for mobile development and the apps' full cycle, from planning through to store release.",
+      pt: "Responsável pela arquitetura e pelo ciclo completo dos aplicativos — do desenho da estrutura à publicação nas lojas e à manutenção depois disso.",
+      en: "Responsible for the architecture and the apps' full cycle — from designing the structure through to store release and the maintenance after it.",
     },
     responsibilities: [
       {
@@ -38,12 +38,12 @@ export const ROLES: Role[] = [
         en: "Android and iOS apps in React Native and TypeScript.",
       },
       {
-        pt: "Arquitetura da aplicação com MVVM e Clean Architecture.",
-        en: "Application architecture using MVVM and Clean Architecture.",
+        pt: "Definição da arquitetura — camadas, estado e navegação — com MVVM e Clean Architecture.",
+        en: "Defining the architecture — layers, state and navigation — with MVVM and Clean Architecture.",
       },
       {
-        pt: "Integração com APIs, estado compartilhado e cache de rede.",
-        en: "API integration, shared state and network caching.",
+        pt: "Contrato de API, estado compartilhado, cache de rede e tratamento de sessão.",
+        en: "The API contract, shared state, network caching and session handling.",
       },
       {
         pt: "Testes automatizados com Jest e React Native Testing Library.",
@@ -60,8 +60,8 @@ export const ROLES: Role[] = [
     ],
     highlights: [
       {
-        pt: "Ownership completo do app: nenhuma etapa do ciclo dependia de outra pessoa.",
-        en: "Full ownership of the app: no stage of the cycle depended on someone else.",
+        pt: "Ownership completo: da decisão de arquitetura à revisão na loja, nenhuma etapa dependia de outra pessoa.",
+        en: "Full ownership: from the architectural decision to store review, no stage depended on someone else.",
       },
       {
         pt: "Arquitetura pensada para a versão seguinte, não só para a entrega atual.",
@@ -81,8 +81,8 @@ export const ROLES: Role[] = [
     company: "YaaYoo — Fusion Thinking",
     period: null, // TODO: add the period for this role
     summary: {
-      pt: "Aplicações web do ecossistema Y-Studio — Booking, CRM, CMS e portais internos.",
-      en: "Web applications across the Y-Studio ecosystem — Booking, CRM, CMS and internal portals.",
+      pt: "Aplicações web do ecossistema Y-Studio — Booking, CRM, CMS e portais internos, todos partindo da mesma base de componentes.",
+      en: "Web applications across the Y-Studio ecosystem — Booking, CRM, CMS and internal portals, all built from the same component base.",
     },
     responsibilities: [
       {

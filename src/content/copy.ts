@@ -17,12 +17,12 @@ export const COPY = {
 
   hero: {
     headline: {
-      pt: "Apps que conquistam seu lugar na tela inicial.",
-      en: "Apps that earn their place on the home screen.",
+      pt: "Construo o produto inteiro, não só a tela.",
+      en: "I build the whole product, not just the screen.",
     },
     lead: {
-      pt: "Especializado em React Native. Levo aplicativos do primeiro commit até a App Store e o Google Play — e continuo cuidando deles depois disso.",
-      en: "React Native specialist. I take apps from the first commit to the App Store and Google Play — and keep looking after them from there.",
+      pt: "Arquitetura, mobile e web. Uso IA no fluxo de trabalho para chegar mais rápido na solução certa — e trato segurança como decisão de projeto, não como revisão de última hora.",
+      en: "Architecture, mobile and web. I use AI in the workflow to reach the right solution faster — and treat security as a design decision, not a last-minute review.",
     },
     primary: { pt: "Ver os produtos", en: "See the work" },
     secondary: { pt: "Entrar em contato", en: "Get in touch" },
@@ -36,8 +36,8 @@ export const COPY = {
       en: "Products that are out there.",
     },
     lead: {
-      pt: "Três produtos reais, com usuários reais. Cada um resolveu um problema diferente e me deu um tipo diferente de responsabilidade.",
-      en: "Three real products with real users. Each solved a different problem and handed me a different kind of ownership.",
+      pt: "Três produtos reais, com usuários reais — dois mobile e um ecossistema web. Cada um pediu um tipo diferente de decisão de arquitetura.",
+      en: "Three real products with real users — two mobile, one web platform. Each demanded a different kind of architectural decision.",
     },
     live: { pt: "Em produção", en: "Live" },
     building: { pt: "Em desenvolvimento", en: "In development" },
@@ -46,46 +46,65 @@ export const COPY = {
     more: { pt: "Mais projetos no GitHub", en: "More projects on GitHub" },
   },
 
-  mobile: {
-    eyebrow: { pt: "Mobile", en: "Mobile" },
-    title: { pt: "Built for mobile.", en: "Built for mobile." },
-    lead: {
-      pt: "Não é web adaptada para uma tela menor. É um app pensado para o telefone desde a primeira decisão de arquitetura.",
-      en: "Not web squeezed into a smaller screen. An app shaped for the phone from the first architectural decision.",
+  /**
+   * The four pillars the whole page now argues for. Same layout as before, a
+   * much wider claim: architecture first, one base across mobile and web, AI
+   * as part of the working method, and security treated as design.
+   */
+  foundations: {
+    eyebrow: { pt: "Engineering", en: "Engineering" },
+    title: {
+      pt: "A arquitetura vem antes da tela.",
+      en: "Architecture comes before the screen.",
     },
-    /** Each one is a real constraint of the platform, paired with the tool that answers it. */
+    lead: {
+      pt: "As telas mudam. O que decide se um produto continua barato de evoluir são as escolhas feitas antes de existir qualquer tela — e o método usado para chegar nelas.",
+      en: "Screens change. What decides whether a product stays cheap to evolve are the choices made before any screen exists — and the method used to reach them.",
+    },
     principles: [
       {
-        title: { pt: "Abre rápido ou não abre", en: "It opens fast or not at all" },
-        body: {
-          pt: "Uma tela que demora três segundos já perdeu a pessoa. Navegação e dados são resolvidos antes da interface aparecer.",
-          en: "A screen that takes three seconds has already lost someone. Navigation and data resolve before the interface shows up.",
+        title: {
+          pt: "Estrutura decidida uma vez",
+          en: "Structure decided once",
         },
-        tools: ["React Native", "Expo", "React Navigation"],
+        body: {
+          pt: "Camadas, estado e fronteiras definidos no começo. O teste real de uma arquitetura não é a entrega de hoje: é quanto custa a próxima versão.",
+          en: "Layers, state and boundaries settled up front. The real test of an architecture isn't today's delivery — it's what the next version costs.",
+        },
+        tools: ["Clean Architecture", "MVVM", "TypeScript", "Design system"],
       },
       {
-        title: { pt: "O estado é o produto", en: "State is the product" },
-        body: {
-          pt: "Carrinho, sessão, cache de rede e dado offline precisam concordar entre si. É onde a maior parte dos bugs de app mora.",
-          en: "Cart, session, network cache and offline data have to agree with each other. That's where most app bugs live.",
+        title: {
+          pt: "Mobile e web, mesma base",
+          en: "Mobile and web, one base",
         },
-        tools: ["TanStack Query", "Zustand", "TypeScript"],
+        body: {
+          pt: "Um app de loja e um painel no navegador resolvem problemas diferentes, mas repetem as mesmas decisões: navegação, estado, cache e contrato de API.",
+          en: "A store app and a browser dashboard solve different problems, but repeat the same decisions: navigation, state, caching and the API contract.",
+        },
+        tools: ["React Native", "Expo", "React", "Next.js"],
       },
       {
-        title: { pt: "Quebrar na loja é caro", en: "Breaking in the store is expensive" },
-        body: {
-          pt: "Uma correção mobile leva dias para chegar no usuário. Por isso teste e pipeline não são opcionais.",
-          en: "A mobile fix takes days to reach a user. Which is why tests and a pipeline aren't optional.",
+        title: {
+          pt: "IA como método, não atalho",
+          en: "AI as method, not shortcut",
         },
-        tools: ["Jest", "Testing Library", "Fastlane"],
+        body: {
+          pt: "Agentes trabalhando em paralelo em worktrees separadas, contexto real do projeto via MCP e RAG. Acelera o caminho até a solução certa — desde que você saiba reconhecer qual é.",
+          en: "Agents working in parallel across separate worktrees, real project context through MCP and RAG. It shortens the path to the right solution — provided you can recognise which one that is.",
+        },
+        tools: ["MCP", "RAG", "Multi-agent", "Subagents", "Git worktrees"],
       },
       {
-        title: { pt: "Publicar faz parte do trabalho", en: "Shipping is part of the job" },
-        body: {
-          pt: "Assinatura, certificado, versionamento, revisão da Apple. Já passei por isso o suficiente para não ser surpresa.",
-          en: "Signing, certificates, versioning, Apple review. I've been through it enough times for it not to be a surprise.",
+        title: {
+          pt: "Segurança no desenho",
+          en: "Security in the design",
         },
-        tools: ["GitHub Actions", "App Store", "Google Play"],
+        body: {
+          pt: "Autenticação, sessão, permissão e o que nunca deveria sair do servidor. Já vi o suficiente do que dá errado para resolver isso na arquitetura, e não numa revisão no fim.",
+          en: "Authentication, session, permission, and what should never leave the server. I've seen enough of what goes wrong to settle it in the architecture rather than in a review at the end.",
+        },
+        tools: ["Auth & sessions", "Permissions", "Input validation", "Secrets"],
       },
     ],
   },
@@ -97,29 +116,36 @@ export const COPY = {
       en: "Working code is the halfway point.",
     },
     lead: {
-      pt: "O ciclo completo de um aplicativo, do primeiro desenho até a versão que sobe semana que vem.",
-      en: "The full cycle of an app, from the first sketch to the version that ships next week.",
+      pt: "O ciclo completo de um produto — mobile ou web — do primeiro desenho até a versão que sobe semana que vem.",
+      en: "The full cycle of a product — mobile or web — from the first sketch to the version that ships next week.",
     },
     steps: [
       {
-        title: { pt: "Ideia", en: "Idea" },
+        title: { pt: "Problema", en: "Problem" },
         body: {
-          pt: "Entender o que o produto precisa resolver antes de escolher qualquer tecnologia.",
-          en: "Understand what the product has to solve before choosing any technology.",
+          pt: "Entender o que precisa ser resolvido antes de escolher qualquer tecnologia.",
+          en: "Understand what has to be solved before choosing any technology.",
         },
       },
       {
         title: { pt: "Arquitetura", en: "Architecture" },
         body: {
-          pt: "Estrutura de pastas, camadas, estado e navegação. Decidido uma vez, no começo.",
-          en: "Folder structure, layers, state and navigation. Decided once, up front.",
+          pt: "Camadas, estado, navegação e contrato de API. Decidido uma vez, no começo.",
+          en: "Layers, state, navigation and the API contract. Decided once, up front.",
+        },
+      },
+      {
+        title: { pt: "Superfície de risco", en: "Risk surface" },
+        body: {
+          pt: "Onde entra dado de fora, quem pode o quê, e o que nunca sai do servidor.",
+          en: "Where outside data enters, who is allowed what, and what never leaves the server.",
         },
       },
       {
         title: { pt: "Desenvolvimento", en: "Development" },
         body: {
-          pt: "Telas, componentes reaproveitáveis e integração com a API.",
-          en: "Screens, reusable components and API integration.",
+          pt: "Telas e componentes reaproveitáveis, com agentes trabalhando em paralelo no que é repetitivo.",
+          en: "Screens and reusable components, with agents running in parallel on whatever is repetitive.",
         },
       },
       {
@@ -137,10 +163,10 @@ export const COPY = {
         },
       },
       {
-        title: { pt: "App Store & Google Play", en: "App Store & Google Play" },
+        title: { pt: "Deploy", en: "Deploy" },
         body: {
-          pt: "Submissão, revisão e release nas duas lojas.",
-          en: "Submission, review and release on both stores.",
+          pt: "App Store, Google Play e web. Submissão, revisão e release.",
+          en: "App Store, Google Play and web. Submission, review and release.",
         },
       },
       {
@@ -162,8 +188,8 @@ export const COPY = {
     eyebrow: { pt: "Experience", en: "Experience" },
     title: { pt: "Onde eu construí isso.", en: "Where I built it." },
     lead: {
-      pt: "Responsável pelo desenvolvimento mobile e pelo ciclo completo dos aplicativos — da arquitetura à loja.",
-      en: "Responsible for mobile development and the apps' full cycle — from architecture to the store.",
+      pt: "Responsável pela arquitetura e pelo ciclo completo dos produtos que construí — mobile e web, do primeiro desenho à manutenção.",
+      en: "Responsible for the architecture and the full cycle of the products I built — mobile and web, from first sketch to maintenance.",
     },
     responsibilities: { pt: "Responsabilidades", en: "Responsibilities" },
     highlights: { pt: "Principais contribuições", en: "Key contributions" },
@@ -173,8 +199,8 @@ export const COPY = {
     eyebrow: { pt: "About", en: "About" },
     title: { pt: "Como eu trabalho.", en: "How I work." },
     body: {
-      pt: "Trabalho com mobile porque é onde o produto encosta na vida da pessoa. O app está no bolso dela, precisa abrir na hora, e se travar ela desinstala. Isso muda a forma de decidir tudo — arquitetura, estado, o que carrega primeiro.\n\nMeu trabalho não acaba quando a tela funciona no meu simulador. Acaba quando o build passa, sobe para a loja, e a versão seguinte continua fácil de mexer. Já cuidei do ciclo inteiro de um app: estrutura, integração, teste, pipeline, publicação e o que vem depois.\n\nGosto de código que a próxima pessoa entende sem precisar me perguntar nada.",
-      en: "I work on mobile because it's where a product touches someone's actual day. The app is in their pocket, it has to open right now, and if it stutters they delete it. That changes how you decide everything — architecture, state, what loads first.\n\nMy job isn't done when the screen works in my simulator. It's done when the build passes, ships to the store, and the next version is still easy to change. I've carried an app through the whole cycle: structure, integration, tests, pipeline, release, and everything after.\n\nI like code the next person can read without having to ask me anything.",
+      pt: "Comecei pelo mobile e é onde tenho mais estrada, mas parei de me apresentar por plataforma faz tempo. O que muda de um app de loja para um painel no navegador é a superfície; o que decide se o produto sobrevive é a estrutura por baixo — camadas, estado, contrato de API, quem pode o quê.\n\nUso IA todo dia, e não como autocomplete. Agentes rodando em paralelo em worktrees separadas, contexto real do projeto entrando por MCP e RAG. Isso encurta muito o caminho até a solução — mas só se você souber reconhecer a solução certa quando ela aparece. A parte difícil continua sendo decidir, não digitar.\n\nSegurança eu trato no desenho. Não é minha especialidade, é uma responsabilidade: já lidei com o suficiente do que dá errado — token, sessão, permissão, dado confiando em quem não devia — para saber que isso não se resolve numa revisão no fim.\n\nGosto de código que a próxima pessoa entende sem precisar me perguntar nada.",
+      en: "I started in mobile and that's where I have the most road behind me, but I stopped introducing myself by platform a while ago. What changes between a store app and a browser dashboard is the surface; what decides whether the product survives is the structure underneath — layers, state, the API contract, who is allowed what.\n\nI use AI every day, and not as autocomplete. Agents running in parallel across separate worktrees, real project context coming in through MCP and RAG. It shortens the path to a solution enormously — but only if you can recognise the right one when it shows up. The hard part is still deciding, not typing.\n\nSecurity I handle in the design. It isn't my specialism, it's a responsibility: I've dealt with enough of what goes wrong — tokens, sessions, permissions, data trusting something it shouldn't — to know it doesn't get solved in a review at the end.\n\nI like code the next person can read without having to ask me anything.",
     },
   },
 
@@ -182,8 +208,8 @@ export const COPY = {
     eyebrow: { pt: "Toolkit", en: "Toolkit" },
     title: { pt: "Tools I build with.", en: "Tools I build with." },
     lead: {
-      pt: "Escolhidas por resolverem um problema específico, não por estarem na moda.",
-      en: "Picked because they solve a specific problem, not because they're fashionable.",
+      pt: "Agrupadas pela camada do produto a que pertencem. Escolhidas por resolverem um problema específico, não por estarem na moda.",
+      en: "Grouped by the layer of the product they belong to. Picked because they solve a specific problem, not because they're fashionable.",
     },
   },
 
@@ -191,8 +217,8 @@ export const COPY = {
     eyebrow: { pt: "Contact", en: "Contact" },
     title: { pt: "Tem um produto em mente?", en: "Have a product in mind?" },
     lead: {
-      pt: "Se você precisa de alguém que leve um aplicativo da ideia até a loja — e continue cuidando dele —, me chama.",
-      en: "If you need someone to take an app from idea to store — and keep looking after it — get in touch.",
+      pt: "Se você precisa de alguém que decida a arquitetura, construa o produto — mobile, web ou os dois — e continue cuidando dele depois, me chama.",
+      en: "If you need someone to settle the architecture, build the product — mobile, web or both — and keep looking after it afterwards, get in touch.",
     },
     cta: { pt: "Vamos construir algo", en: "Let's build something" },
     emailPending: {

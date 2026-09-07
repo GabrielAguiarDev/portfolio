@@ -8,12 +8,15 @@ import { useLocale } from "@/i18n/useLocale"
 import { cn } from "@/lib/utils"
 
 /**
- * The mobile argument.
+ * The engineering argument.
  *
- * A row of four real interfaces, then four constraints of the platform — each
- * paired with the tools that answer it. The tools appear *inside* the reasoning
- * rather than in a grid of logos, because a logo wall says "I have heard of
- * these" and this says "here is the problem each one solves".
+ * A row of real product surfaces, then the four decisions that sit underneath
+ * all of them: structure, one base across mobile and web, AI as part of the
+ * method, and security handled in the design.
+ *
+ * The tools appear *inside* the reasoning rather than in a grid of logos,
+ * because a logo wall says "I have heard of these" and this says "here is the
+ * problem each one solves".
  */
 
 const shelf = [
@@ -53,13 +56,13 @@ const ShelfPhone = ({
   )
 }
 
-const BuiltForMobile = () => {
+const Foundations = () => {
   const { pick } = useLocale()
   const eyebrow = useReveal<HTMLParagraphElement>()
   const lead = useReveal<HTMLParagraphElement>({ delay: 0.14 })
 
   return (
-    <section id="mobile" className="section-anchor relative overflow-hidden border-t border-border py-20 md:py-28 lg:py-36">
+    <section id="foundations" className="section-anchor relative overflow-hidden border-t border-border py-20 md:py-28 lg:py-36">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[60%] bg-[radial-gradient(60%_100%_at_50%_0%,rgba(248,107,39,0.06),transparent_70%)]"
@@ -68,12 +71,12 @@ const BuiltForMobile = () => {
       <div className="container">
         <div className="max-w-3xl">
           <p {...eyebrow.revealProps} className={cn(eyebrow.revealProps.className, "eyebrow")}>
-            {pick(COPY.mobile.eyebrow)}
+            {pick(COPY.foundations.eyebrow)}
           </p>
           <h2 className="mt-5">
             <RevealText
               as="span"
-              text={pick(COPY.mobile.title)}
+              text={pick(COPY.foundations.title)}
               className="display-lg block text-balance text-foreground"
             />
           </h2>
@@ -84,7 +87,7 @@ const BuiltForMobile = () => {
               "mt-6 max-w-[48ch] text-pretty text-sm leading-relaxed text-muted-foreground md:text-base",
             )}
           >
-            {pick(COPY.mobile.lead)}
+            {pick(COPY.foundations.lead)}
           </p>
         </div>
       </div>
@@ -101,7 +104,7 @@ const BuiltForMobile = () => {
 
       <div className="container mt-16 md:mt-24">
         <ul className="grid gap-x-10 gap-y-10 md:grid-cols-2 lg:gap-x-16">
-          {COPY.mobile.principles.map((principle, index) => (
+          {COPY.foundations.principles.map((principle, index) => (
             <Principle key={principle.title.en} principle={principle} index={index} />
           ))}
         </ul>
@@ -114,7 +117,7 @@ const Principle = ({
   principle,
   index,
 }: {
-  principle: (typeof COPY.mobile.principles)[number]
+  principle: (typeof COPY.foundations.principles)[number]
   index: number
 }) => {
   const { pick } = useLocale()
@@ -144,4 +147,4 @@ const Principle = ({
   )
 }
 
-export default BuiltForMobile
+export default Foundations

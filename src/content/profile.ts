@@ -24,15 +24,23 @@ export const APPS_SHIPPED: number | null = null // TODO: e.g. 3
 export const PROFILE = {
   name: "Gabriel Aguiar",
   firstName: "Gabriel",
+  /**
+   * The professional title, in one place.
+   *
+   * Broadened from "Mobile & Frontend Developer": the page now argues for
+   * architecture, mobile and web, an AI-assisted workflow and security as a
+   * design concern, and a mobile-only title undersells all of that. Change it
+   * here and it updates the hero, the footer and the page metadata together.
+   */
   role: {
-    pt: "Mobile & Frontend Developer",
-    en: "Mobile & Frontend Developer",
+    pt: "Software Engineer · Mobile & Web",
+    en: "Software Engineer · Mobile & Web",
   } satisfies Localized,
   location: {
     pt: "Brasil — remoto",
     en: "Brazil — remote",
   } satisfies Localized,
-  photo: "/profile.jpeg",
+  photo: "/profile.png",
 }
 
 export const LINKS = {

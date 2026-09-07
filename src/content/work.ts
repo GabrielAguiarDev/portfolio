@@ -65,8 +65,8 @@ export const PROJECTS: Project[] = [
       en: "Resort guests waste their stay hunting for restaurant hours, the day's schedule and how to book a table. Yago pulls all of it onto the phone and surfaces it at the right moment.",
     },
     role: {
-      pt: "Desenvolvimento mobile — do planejamento ao deploy nas lojas",
-      en: "Mobile development — from planning through to store release",
+      pt: "Arquitetura e desenvolvimento mobile — do planejamento ao deploy nas lojas",
+      en: "Architecture and mobile development — from planning through to store release",
     },
     beats: [
       {
@@ -114,8 +114,8 @@ export const PROJECTS: Project[] = [
       en: "Hotel management, CRM, CMS, chat and guest experience running as parts of one product — each operation assembles the configuration it needs without forking into a separate system.",
     },
     role: {
-      pt: "Desenvolvimento frontend — Booking, CRM, CMS e portais internos",
-      en: "Frontend development — Booking, CRM, CMS and internal portals",
+      pt: "Desenvolvimento web — Booking, CRM, CMS e portais internos",
+      en: "Web development — Booking, CRM, CMS and internal portals",
     },
     beats: [
       {
@@ -163,8 +163,8 @@ export const PROJECTS: Project[] = [
       en: "Promotions, products and services from different stores in a single storefront. Customers buy in the app and follow the order from payment to delivery.",
     },
     role: {
-      pt: "Desenvolvimento mobile — arquitetura e ciclo completo do app",
-      en: "Mobile development — architecture and the app's full cycle",
+      pt: "Arquitetura e desenvolvimento mobile — ciclo completo do app",
+      en: "Architecture and mobile development — the app's full cycle",
     },
     beats: [
       {
