@@ -30,8 +30,12 @@ export const animation = {
     reveal: true,
     /** Scroll-linked parallax on the hero portrait and project images. */
     parallax: true,
-    /** The experience timeline rail drawing itself as you scroll. */
-    timelineDraw: true,
+    /** Scrubbed drift and tilt on device mockups. */
+    deviceFloat: true,
+    /** The process track scrolling sideways while its section is pinned. */
+    horizontalTrack: true,
+    /** Impact figures counting up the first time they are seen. */
+    counters: true,
   },
 
   easing: {
@@ -74,9 +78,46 @@ export const animation = {
    * `+amount / 2`, so its resting position stays centred.
    */
   parallax: {
-    heroPortrait: { desktop: 56, mobile: 16 },
-    heroHalo: { desktop: 96, mobile: 24 },
-    projectImage: { desktop: 40, mobile: 12 },
+    heroDevice: { desktop: 64, mobile: 18 },
+    heroDeviceBack: { desktop: 110, mobile: 26 },
+    heroGlow: { desktop: 120, mobile: 30 },
+    portrait: { desktop: 48, mobile: 14 },
+    caseDevice: { desktop: 72, mobile: 20 },
+    caseDeviceLead: { desktop: 44, mobile: 14 },
+    caseCard: { desktop: 96, mobile: 24 },
+  },
+
+  /**
+   * Scrubbed tilt on device mockups, in degrees, applied on top of the resting
+   * rotation set in the markup. Total travel across the viewport, centred.
+   */
+  tilt: {
+    device: { desktop: 4, mobile: 0 },
+  },
+
+  /**
+   * The pinned horizontal track. `overscroll` is how much extra vertical
+   * scroll, as a multiple of viewport height, the pin consumes beyond the
+   * track's own width.
+   */
+  track: {
+    overscroll: 0.35,
+    /** Below this width the track is a native horizontal scroller instead. */
+    pinFrom: 1024,
+  },
+
+  /**
+   * Impact figures counting up from zero.
+   *
+   * Duration scales with the figure. Counting 0→3 over a flat 1400ms shows
+   * four numbers held for ~470ms each, which reads as a loading glitch rather
+   * than a flourish; the same ramp over 50 needs the full time to feel smooth.
+   */
+  counter: {
+    msPerUnit: 110,
+    minDurationMs: 420,
+    maxDurationMs: 1400,
+    ease: (t: number) => 1 - Math.pow(1 - t, 4),
   },
 
   /** Where in the viewport things start and stop animating. */
@@ -88,9 +129,8 @@ export const animation = {
     /** ScrollTrigger start/end for parallax. */
     parallaxStart: "top bottom",
     parallaxEnd: "bottom top",
-    /** ScrollTrigger start/end for the timeline rail draw. */
-    timelineStart: "top 78%",
-    timelineEnd: "bottom 65%",
+    /** ScrollTrigger start for the pinned horizontal track. */
+    trackStart: "top top",
   },
 
   /**

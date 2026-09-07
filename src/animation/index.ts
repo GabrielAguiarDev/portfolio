@@ -11,5 +11,7 @@ export {
 } from "./runtime"
 export { gridDelay, useReveal } from "./useReveal"
 export { useParallax } from "./useParallax"
-export { useTimelineDraw } from "./useTimelineDraw"
+export { useFloat } from "./useFloat"
+export { useCounter } from "./useCounter"
+export { useHorizontalTrack } from "./useHorizontalTrack"
 export { applyMotionVars } from "./vars"
