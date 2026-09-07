@@ -38,17 +38,17 @@ const About = () => {
                   ref={portrait}
                   src={PROFILE.photo}
                   alt={PROFILE.name}
-                  width={1738}
-                  height={2098}
+                  width={1254}
+                  height={1254}
                   loading="lazy"
                   decoding="async"
-                  className="aspect-[4/5] w-full scale-[1.08] object-cover object-[50%_22%] grayscale contrast-[1.08] brightness-[0.92] sepia-[0.12]"
+                  className="aspect-[4/5] w-full scale-[1.04] object-cover object-[50%_26%] grayscale contrast-[1.04] brightness-[1.12] sepia-[0.08]"
                 />
                 {/* Grounds the portrait into the page rather than letting it
                     sit on the dark like a cut-out. */}
                 <div
                   aria-hidden="true"
-                  className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background via-background/10 to-transparent"
+                  className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/75 via-background/5 to-transparent"
                 />
               </div>
 

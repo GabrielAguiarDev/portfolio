@@ -48,16 +48,16 @@ const counted: Stat[] = [
 /** Qualitative facts. True by construction — no number required. */
 const claims: { value: string; label: Localized }[] = [
   {
-    value: "iOS + Android",
-    label: { pt: "Uma única base de código", en: "One single codebase" },
+    value: "Mobile + Web",
+    label: { pt: "Produtos nas duas frentes", en: "Products on both fronts" },
   },
   {
-    value: "App Store + Google Play",
-    label: { pt: "Publicação conduzida por mim", en: "Release handled by me" },
+    value: "Arquitetura → deploy",
+    label: { pt: "Ciclo completo, conduzido por mim", en: "Full cycle, carried by me" },
   },
   {
-    value: "React Native",
-    label: { pt: "Especialidade principal", en: "Primary specialism" },
+    value: "IA no fluxo diário",
+    label: { pt: "MCP, RAG e agentes em paralelo", en: "MCP, RAG and agents in parallel" },
   },
 ]
 

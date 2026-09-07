@@ -32,6 +32,8 @@ export const animation = {
     parallax: true,
     /** Scrubbed drift and tilt on device mockups. */
     deviceFloat: true,
+    /** The interactive point field behind the hero. */
+    pointField: true,
     /** The process track scrolling sideways while its section is pinned. */
     horizontalTrack: true,
     /** Impact figures counting up the first time they are seen. */
@@ -78,9 +80,6 @@ export const animation = {
    * `+amount / 2`, so its resting position stays centred.
    */
   parallax: {
-    heroDevice: { desktop: 64, mobile: 18 },
-    heroDeviceBack: { desktop: 110, mobile: 26 },
-    heroGlow: { desktop: 120, mobile: 30 },
     portrait: { desktop: 48, mobile: 14 },
     caseDevice: { desktop: 72, mobile: 20 },
     caseDeviceLead: { desktop: 44, mobile: 14 },
@@ -104,6 +103,95 @@ export const animation = {
     overscroll: 0.35,
     /** Below this width the track is a native horizontal scroller instead. */
     pinFrom: 1024,
+  },
+
+  /**
+   * The hero's point field — a sphere of points, projected in perspective,
+   * that turns on its own and answers the pointer.
+   *
+   * Counts are deliberately modest. This runs every frame behind the LCP
+   * element on a portfolio whose whole argument is that its author cares about
+   * performance, so it is sized to disappear into a frame budget rather than
+   * to look impressive in a screenshot.
+   */
+  pointField: {
+    count: { desktop: 3000, mobile: 800 },
+    /**
+     * Where the sphere sits inside the canvas, as a fraction of its width.
+     *
+     * The canvas itself always covers the whole hero. Offsetting the sphere
+     * here rather than by shrinking the canvas is what lets points scatter
+     * across the full screen on scroll, instead of hitting an invisible wall
+     * at the canvas edge.
+     */
+    center: { desktop: 0.746, mobile: 0.5 },
+    /**
+     * Sphere radius as a fraction of the smaller canvas dimension.
+     *
+     * The near hemisphere projects outward by up to `perspective / (perspective
+     * - 1)` — about 1.31x here — so the drawn object is a third wider than this
+     * number suggests. 0.38 is what keeps the whole sphere inside a 100svh hero
+     * instead of clipping it against the navbar and the fold.
+     */
+    radius: 0.38,
+    /**
+     * Perspective distance, in radius units. Lower is more dramatic, but too
+     * low and the near hemisphere's points fly so far past the silhouette that
+     * the whole thing stops reading as a sphere and becomes drifting dust.
+     */
+    perspective: 4.2,
+    /** Radians per frame of unattended rotation. A full turn takes ~90s. */
+    autoYaw: { desktop: 0.0012, mobile: 0.0018 },
+    /** How far the field leans toward the pointer, in radians. */
+    tilt: 0.26,
+    /** How quickly the lean catches up to the pointer. */
+    tiltEase: 0.045,
+    /** Screen-space radius, in px, within which the pointer pushes points. */
+    cursorRadius: 215,
+    cursorForce: 3.6,
+    /**
+     * How deep into the cursor's reach a point has to be before it takes the
+     * accent colour, 0–1. Kept separate from `cursorRadius` on purpose: the
+     * shove should stay wide and soft, while the colour stays a small, bright
+     * core. Raising this shrinks the orange without weakening the interaction.
+     */
+    emberThreshold: 0.44,
+    /** Spring pulling a pushed point back to where projection says it belongs. */
+    springBack: 0.055,
+    damping: 0.87,
+    /** Dot radius in CSS px, before depth scaling. */
+    dotSize: 1.45,
+    /** Opacity of the field as a whole. It is scenery, not content. */
+    opacity: 0.82,
+    /** Device pixel ratio is capped — past 2 the cost is real and invisible. */
+    dprMax: 2,
+
+    /**
+     * Scrolling away scatters the field; scrolling back gathers it again.
+     *
+     * The whole thing is a pure function of scroll position rather than an
+     * animation with its own state, which is what makes it reversible for free
+     * — drag the scrollbar back up and the sphere reassembles exactly.
+     */
+    disperse: {
+      /** Fraction of the hero's height over which the field fully scatters. */
+      span: 0.85,
+      /** Farthest a point travels, as a fraction of the canvas's longer side. */
+      distance: 0.95,
+      /** Largest per-point head start, as a fraction of total progress. */
+      stagger: 0.42,
+      /** How much of a point's direction is random vs. straight outward. */
+      randomness: 0.72,
+      /**
+       * Height of the soft bottom edge, as a fraction of the canvas.
+       *
+       * It opens up only as the field scatters. The canvas ends where the hero
+       * ends, so points flying downward used to be guillotined against that
+       * line; this dissolves them into it instead. At rest the sphere never
+       * reaches down here, so there is nothing to fade and the falloff is off.
+       */
+      bottomFade: 0.38,
+    },
   },
 
   /**

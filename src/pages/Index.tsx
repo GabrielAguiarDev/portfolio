@@ -1,7 +1,7 @@
 import Nav from "@/components/sections/Nav"
 import Hero from "@/components/sections/Hero"
 import Work from "@/components/sections/Work"
-import BuiltForMobile from "@/components/sections/BuiltForMobile"
+import Foundations from "@/components/sections/Foundations"
 import Process from "@/components/sections/Process"
 import Impact from "@/components/sections/Impact"
 import About from "@/components/sections/About"
@@ -16,7 +16,7 @@ import { useHashScroll } from "@/hooks/useHashScroll"
  *
  *   Hero      — who, and what he makes
  *   Work      — the products themselves, straight away
- *   Mobile    — why they are built the way they are
+ *   Foundations — the decisions underneath all of them
  *   Process   — the cycle behind them, end to end
  *   Impact    — the same claim, as figures
  *   About     — the person, once the work has earned the attention
@@ -41,7 +41,7 @@ const Index = () => {
     <main id="main">
       <Hero />
       <Work />
-      <BuiltForMobile />
+      <Foundations />
       <Process />
       <Impact />
       <About />
