@@ -48,16 +48,19 @@ const Hero = () => {
       */}
       <PointField
         className={cn(
-          // On a phone the type sits right where the field is densest. Masking
-          // the middle out turns it into a ring: a sphere is already densest at
-          // its silhouette, so what survives is the part worth seeing, and the
-          // paragraph gets a clean ground to sit on.
-          "opacity-60 [mask-image:radial-gradient(closest-side,transparent_34%,#000_72%)]",
+          // On a phone the type sits right on top of the glyph. It cannot be
+          // masked into a ring the way a sphere could — punching out the middle
+          // would take the slash with it — so it just drops to a level where it
+          // reads as texture behind the copy, with its top and bottom edges
+          // dissolved so it never looks cropped by the fold.
+          "opacity-[0.28] [mask-image:linear-gradient(to_bottom,transparent,#000_22%,#000_78%,transparent)]",
           "-z-10 lg:opacity-100",
-          // A plain left-hand fade, not a vignette: the sphere stays whole and
-          // only the edge running under the type falls away. It also catches
-          // the points that scatter leftward across the copy on scroll.
-          "lg:[mask-image:linear-gradient(to_right,transparent_14%,#000_55%)]",
+          // A plain left-hand fade, not a vignette: the glyph stays whole and
+          // only the edge running under the type falls away. Held well left of
+          // where the "<" starts, so the tag is never dimmed at one end. It
+          // also catches the points that scatter leftward across the copy on
+          // scroll.
+          "lg:[mask-image:linear-gradient(to_right,transparent_14%,#000_42%)]",
         )}
       />
 

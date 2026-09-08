@@ -106,8 +106,8 @@ export const animation = {
   },
 
   /**
-   * The hero's point field — a sphere of points, projected in perspective,
-   * that turns on its own and answers the pointer.
+   * The hero's point field — a `</>` built out of points, projected in
+   * perspective, swaying on its own and answering the pointer.
    *
    * Counts are deliberately modest. This runs every frame behind the LCP
    * element on a portfolio whose whole argument is that its author cares about
@@ -115,33 +115,87 @@ export const animation = {
    * to look impressive in a screenshot.
    */
   pointField: {
-    count: { desktop: 3000, mobile: 800 },
+    count: { desktop: 2000, mobile: 650 },
     /**
-     * Where the sphere sits inside the canvas, as a fraction of its width.
+     * The object itself: `</>` built out of thick 3D bars.
      *
-     * The canvas itself always covers the whole hero. Offsetting the sphere
+     * `bars` are the centre lines of the glyph in a normalised space where it
+     * spans roughly -1..1 horizontally. `thickness` is each bar's half-width in
+     * that same space and `depth` its half-extrusion along z — equal by
+     * default, so every bar has a square cross-section and turning the glyph
+     * reveals a real side wall rather than a paper edge.
+     *
+     * Points are scattered over the *surface* of those bars, not through their
+     * volume, for the same reason the field used to be a sphere shell: a hollow
+     * shell shows its far side through its near side, which is most of what
+     * makes a cloud of dots read as a solid.
+     */
+    glyph: {
+      bars: [
+        // "<"
+        { ax: -0.6, ay: 0.47, bx: -0.99, by: 0 },
+        { ax: -0.99, ay: 0, bx: -0.6, by: -0.47 },
+        // "/"
+        { ax: -0.19, ay: -0.62, bx: 0.19, by: 0.62 },
+        // ">"
+        { ax: 0.6, ay: 0.47, bx: 0.99, by: 0 },
+        { ax: 0.99, ay: 0, bx: 0.6, by: -0.47 },
+      ],
+      thickness: 0.115,
+      depth: 0.115,
+    },
+    /**
+     * Where the glyph sits inside the canvas, as a fraction of its width.
+     *
+     * The canvas itself always covers the whole hero. Offsetting the glyph
      * here rather than by shrinking the canvas is what lets points scatter
      * across the full screen on scroll, instead of hitting an invisible wall
      * at the canvas edge.
      */
-    center: { desktop: 0.746, mobile: 0.5 },
+    center: { desktop: 0.74, mobile: 0.5 },
     /**
-     * Sphere radius as a fraction of the smaller canvas dimension.
+     * One normalised glyph unit, as a fraction of the smaller canvas dimension.
      *
-     * The near hemisphere projects outward by up to `perspective / (perspective
-     * - 1)` — about 1.31x here — so the drawn object is a third wider than this
-     * number suggests. 0.38 is what keeps the whole sphere inside a 100svh hero
-     * instead of clipping it against the navbar and the fold.
+     * This is only the ceiling. The glyph is nearly twice as wide as it is tall
+     * and it is parked off-centre, so the draw loop also fits it to whatever
+     * room is actually left to the right of the type and above the fold, and
+     * takes whichever of the three is smallest. That keeps `</>` whole on a
+     * phone and on an ultrawide without a breakpoint for either.
      */
     radius: 0.38,
     /**
-     * Perspective distance, in radius units. Lower is more dramatic, but too
-     * low and the near hemisphere's points fly so far past the silhouette that
-     * the whole thing stops reading as a sphere and becomes drifting dust.
+     * Clear space kept around the glyph, as a fraction of the canvas.
+     *
+     * The fit above would otherwise let it grow until it touched the edge of
+     * the viewport and the last line of the headline. It is the subject of the
+     * hero, but the headline is the LCP element and the one that has to be read
+     * first, so the glyph is given a margin rather than every pixel that is
+     * technically free.
+     */
+    margin: 0.05,
+    /**
+     * Perspective distance, in glyph units. Lower is more dramatic, but too
+     * low and the near face's points fly so far past the silhouette that the
+     * bars stop reading as bars and become drifting dust.
      */
     perspective: 4.2,
-    /** Radians per frame of unattended rotation. A full turn takes ~90s. */
-    autoYaw: { desktop: 0.0012, mobile: 0.0018 },
+    /**
+     * The unattended motion.
+     *
+     * A sphere could turn forever because every angle of it looks the same. A
+     * glyph cannot: a quarter turn puts it edge-on and `</>` stops being
+     * readable at all. So it sways instead of spinning — `speed` is radians of
+     * phase per frame, `swing` the peak yaw it reaches, `bob` a nod on the
+     * other axis running at a different rate so the pair never repeats on a
+     * beat you can count. ~25s per sway at 60fps.
+     */
+    sway: {
+      speed: { desktop: 0.0042, mobile: 0.0055 },
+      swing: 0.38,
+      bob: 0.1,
+    },
+    /** Resting pitch, in radians, before the bob and the pointer lean. */
+    basePitch: -0.1,
     /** How far the field leans toward the pointer, in radians. */
     tilt: 0.26,
     /** How quickly the lean catches up to the pointer. */
@@ -171,7 +225,7 @@ export const animation = {
      *
      * The whole thing is a pure function of scroll position rather than an
      * animation with its own state, which is what makes it reversible for free
-     * — drag the scrollbar back up and the sphere reassembles exactly.
+     * — drag the scrollbar back up and the glyph reassembles exactly.
      */
     disperse: {
       /** Fraction of the hero's height over which the field fully scatters. */
@@ -187,7 +241,7 @@ export const animation = {
        *
        * It opens up only as the field scatters. The canvas ends where the hero
        * ends, so points flying downward used to be guillotined against that
-       * line; this dissolves them into it instead. At rest the sphere never
+       * line; this dissolves them into it instead. At rest the glyph never
        * reaches down here, so there is nothing to fade and the falloff is off.
        */
       bottomFade: 0.38,
