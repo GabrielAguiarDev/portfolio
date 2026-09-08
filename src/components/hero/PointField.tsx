@@ -6,27 +6,29 @@ import { cn } from "@/lib/utils"
 /**
  * The object behind the hero.
  *
- * A sphere of points, projected in real perspective, turning slowly on its own
- * axis. It leans toward the pointer and the points nearest the cursor are
- * shoved outward, then spring back — so the field reads as something physically
- * there rather than a looping background video.
+ * `</>` — the tag every developer reads without being told — built out of
+ * points, projected in real perspective, swaying slowly on its own axis. It
+ * leans toward the pointer and the points nearest the cursor are shoved
+ * outward, then spring back, so the field reads as something physically there
+ * rather than a looping background video.
  *
- * Why a sphere of points and not a galaxy or a formed glyph: the phones already
- * say "mobile". This has to say "engineering" without adding one more piece of
- * app iconography, and it has to be its own object rather than a nod to
- * somebody else's landing page.
+ * It is a solid, not a logo: five bars with a square cross-section, extruded
+ * along z, with points scattered over their surface. Turning it shows real
+ * side walls and the far face glows faintly through the near one — the same
+ * trick that made the sphere it replaces read as an object rather than a
+ * sticker.
  *
- * Why canvas 2D and not WebGL/three.js: 880 points is nowhere near needing a
- * GPU pipeline, and three.js would add ~150kB gzip to a page whose entire
- * argument is that its author knows what a bundle costs. The whole effect is a
- * few hundred lines and no dependency.
+ * Why canvas 2D and not WebGL/three.js: a couple of thousand points is nowhere
+ * near needing a GPU pipeline, and three.js would add ~150kB gzip to a page
+ * whose entire argument is that its author knows what a bundle costs. The
+ * whole effect is a few hundred lines and no dependency.
  *
  * It is decorative, so it is aria-hidden and pointer-events-none. It never
  * intercepts a click meant for the buttons sitting on top of it.
  */
 
 type Point = {
-  /** Position on the unit sphere. */
+  /** Position in glyph space, roughly -1..1 across. */
   ux: number
   uy: number
   uz: number
@@ -42,49 +44,128 @@ type Point = {
   ddelay: number
 }
 
+/** Half-extents of the built glyph, used to fit and to normalise depth. */
+type Extent = { x: number; y: number; z: number }
+
 /**
- * Fibonacci sphere: the cheapest way to scatter points over a sphere without
- * the clumping at the poles that naive lat/long sampling produces.
+ * Scatter points over the surface of the glyph.
+ *
+ * Each bar is a box: a length, a half-thickness across the page, a
+ * half-depth into it. Points land on the four lateral walls and the two end
+ * caps, never inside — a shell, so the far wall shows through the near one.
+ * Bars get points in proportion to their surface area, which is what keeps the
+ * slash from reading thinner than the chevrons just because it is longer.
  */
-function buildSphere(count: number): Point[] {
+function buildGlyph(count: number): { points: Point[]; extent: Extent } {
+  const { bars, thickness: t, depth: h } = animation.pointField.glyph
+
+  // Perimeter of the 2t x 2h cross-section, and the area of one end cap.
+  const perimeter = 4 * (t + h)
+  const capArea = 4 * t * h
+
+  const shapes = bars.map((bar) => {
+    const vx = bar.bx - bar.ax
+    const vy = bar.by - bar.ay
+    const length = Math.hypot(vx, vy) || 1
+
+    return {
+      ax: bar.ax,
+      ay: bar.ay,
+      length,
+      // Along the bar, and across it in the plane of the page.
+      dx: vx / length,
+      dy: vy / length,
+      nx: -vy / length,
+      ny: vx / length,
+      area: length * perimeter + 2 * capArea,
+    }
+  })
+
+  const total = shapes.reduce((sum, shape) => sum + shape.area, 0)
   const points: Point[] = []
-  const golden = Math.PI * (3 - Math.sqrt(5))
+  const extent: Extent = { x: 0, y: 0, z: 0 }
 
-  for (let i = 0; i < count; i += 1) {
-    const uy = 1 - (i / (count - 1)) * 2
-    const ring = Math.sqrt(Math.max(1 - uy * uy, 0))
-    const theta = golden * i
+  shapes.forEach((shape, index) => {
+    // The last bar takes whatever rounding left over, so the total is exact.
+    const share =
+      index === shapes.length - 1
+        ? count - points.length
+        : Math.round((shape.area / total) * count)
 
-    const ux = Math.cos(theta) * ring
-    const uz = Math.sin(theta) * ring
+    const capChance = (2 * capArea) / shape.area
 
+    for (let i = 0; i < share; i += 1) {
+      let along: number
+      let across: number
+      let z: number
+
+      if (Math.random() < capChance) {
+        // An end cap: a filled rectangle at one end of the bar.
+        along = Math.random() < 0.5 ? 0 : shape.length
+        across = (Math.random() * 2 - 1) * t
+        z = (Math.random() * 2 - 1) * h
+      } else {
+        // A lateral wall. Walk the cross-section's perimeter and read off
+        // which of the four sides `p` landed on.
+        along = Math.random() * shape.length
+        const p = Math.random() * perimeter
+
+        if (p < 2 * t) {
+          across = p - t
+          z = h
+        } else if (p < 2 * t + 2 * h) {
+          across = t
+          z = h - (p - 2 * t)
+        } else if (p < 4 * t + 2 * h) {
+          across = t - (p - 2 * t - 2 * h)
+          z = -h
+        } else {
+          across = -t
+          z = -h + (p - 4 * t - 2 * h)
+        }
+      }
+
+      const ux = shape.ax + shape.dx * along + shape.nx * across
+      const uy = shape.ay + shape.dy * along + shape.ny * across
+
+      extent.x = Math.max(extent.x, Math.abs(ux))
+      extent.y = Math.max(extent.y, Math.abs(uy))
+      extent.z = Math.max(extent.z, Math.abs(z))
+
+      points.push({
+        ux,
+        uy,
+        uz: z,
+        ox: 0,
+        oy: 0,
+        vx: 0,
+        vy: 0,
+        dx: 0,
+        dy: 0,
+        dmag: 0.45 + Math.random() * 0.95,
+        ddelay: Math.random() * animation.pointField.disperse.stagger,
+      })
+    }
+  })
+
+  // Scatter directions, once the extents are known so "outward" means outward
+  // from the glyph's own box rather than from a circle it does not fill.
+  for (const point of points) {
     // Mostly random, with a bias straight out from the centre. Pure randomness
     // sends half the points inward first and the scatter reads as mush; pure
     // outward reads as a firework. The blend looks like something coming apart.
+    const outX = point.ux / (extent.x || 1)
+    const outY = point.uy / (extent.y || 1)
     const angle = Math.random() * Math.PI * 2
     const r = animation.pointField.disperse.randomness
-    let dx = Math.cos(angle) * r + ux * (1 - r)
-    let dy = Math.sin(angle) * r + uy * (1 - r)
+    const dx = Math.cos(angle) * r + outX * (1 - r)
+    const dy = Math.sin(angle) * r + outY * (1 - r)
     const length = Math.hypot(dx, dy) || 1
-    dx /= length
-    dy /= length
-
-    points.push({
-      ux,
-      uy,
-      uz,
-      ox: 0,
-      oy: 0,
-      vx: 0,
-      vy: 0,
-      dx,
-      dy,
-      dmag: 0.45 + Math.random() * 0.95,
-      ddelay: Math.random() * animation.pointField.disperse.stagger,
-    })
+    point.dx = dx / length
+    point.dy = dy / length
   }
 
-  return points
+  return { points, extent }
 }
 
 const PointField = ({ className }: { className?: string }) => {
@@ -101,16 +182,18 @@ const PointField = ({ className }: { className?: string }) => {
     const isMobile = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`).matches
     const reduced = prefersReducedMotion()
 
-    let points = buildSphere(isMobile ? config.count.mobile : config.count.desktop)
+    const built = buildGlyph(isMobile ? config.count.mobile : config.count.desktop)
+    const extent = built.extent
+    let points = built.points
     let width = 0
     let height = 0
     let dpr = 1
 
-    // `yaw` accumulates the unattended rotation forever. The pointer lean is a
-    // separate offset added on top, so leaning never fights or resets the spin.
-    let yaw = 0.6
+    // `phase` accumulates forever and drives the sway; the pointer lean is a
+    // separate offset added on top, so leaning never fights or resets it.
+    let phase = 0
     let yawOffset = 0
-    let pitch = -0.12
+    let pitchOffset = 0
     let targetYawOffset = 0
     let targetPitch = 0
 
@@ -164,12 +247,40 @@ const PointField = ({ className }: { className?: string }) => {
 
       const cx = width * (isMobile ? config.center.mobile : config.center.desktop)
       const cy = height / 2
-      const radius = Math.min(width, height) * config.radius
+
+      // One glyph unit in px. The configured fraction is only a ceiling: the
+      // glyph is nearly twice as wide as it is tall and it is parked off to one
+      // side, so it is also fitted to the room actually left to the right of it
+      // and above the fold, minus the margin it is not allowed to spend.
+      // Smallest of the three wins.
+      const unit = Math.min(
+        Math.min(width, height) * config.radius,
+        (width - cx - width * config.margin) / (extent.x || 1),
+        (height / 2 - height * config.margin) / (extent.y || 1),
+      )
+
       const spread = Math.max(width, height) * config.disperse.distance
-      const cosY = Math.cos(yaw + yawOffset)
-      const sinY = Math.sin(yaw + yawOffset)
+
+      // The sway, plus the pointer's lean on top of it.
+      const yaw = Math.sin(phase) * config.sway.swing + yawOffset
+      const pitch = config.basePitch + Math.sin(phase * 0.63) * config.sway.bob + pitchOffset
+
+      const cosY = Math.cos(yaw)
+      const sinY = Math.sin(yaw)
       const cosX = Math.cos(pitch)
       const sinX = Math.sin(pitch)
+
+      // How far the glyph currently reaches toward and away from the viewer.
+      // Depth shading is normalised against this rather than against a fixed
+      // range: face-on the whole glyph is only ~0.23 units deep, and a fixed
+      // range would flatten the near and far faces into the same grey. This
+      // keeps the front bright and the back ghosted at every angle, and it
+      // moves smoothly with the sway, so nothing pops.
+      const zExtent = Math.max(
+        0.05,
+        extent.y * Math.abs(sinX) +
+          (extent.z * Math.abs(cosY) + extent.x * Math.abs(sinY)) * Math.abs(cosX),
+      )
 
       for (let i = 0; i < BUCKETS; i += 1) {
         inkPath[i] = new Path2D()
@@ -183,12 +294,13 @@ const PointField = ({ className }: { className?: string }) => {
         const y2 = point.uy * cosX - z1 * sinX
         const z2 = point.uy * sinX + z1 * cosX
 
-        // Perspective divide. Points at the front of the sphere are larger and
-        // brighter than the ones showing through from the back.
+        // Perspective divide. Points on the near face are larger and brighter
+        // than the ones showing through from the far one.
         const scale = config.perspective / (config.perspective - z2)
-        const baseX = cx + x1 * radius * scale
-        const baseY = cy + y2 * radius * scale
-        const depth = (z2 + 1) / 2
+        const baseX = cx + x1 * unit * scale
+        const baseY = cy + y2 * unit * scale
+        const raw = 0.5 + z2 / (zExtent * 2)
+        const depth = raw < 0 ? 0 : raw > 1 ? 1 : raw
 
         let heat = 0
 
@@ -223,7 +335,7 @@ const PointField = ({ className }: { className?: string }) => {
         let alpha = (0.16 + depth * 0.84) * (0.75 + heat * 0.9)
 
         if (scatter > 0) {
-          // Each point starts moving at its own moment, so the sphere comes
+          // Each point starts moving at its own moment, so the glyph comes
           // apart in a cascade instead of every point leaving at once.
           const local = (scatter - point.ddelay) / (1 - point.ddelay)
 
@@ -237,7 +349,7 @@ const PointField = ({ className }: { className?: string }) => {
         }
 
         // Dissolve into the canvas's bottom edge instead of being cut off by
-        // it. Scaled by `scatter`, so the resting sphere is untouched.
+        // it. Scaled by `scatter`, so the resting glyph is untouched.
         if (scatter > 0) {
           const fadeHeight = height * config.disperse.bottomFade * scatter
           const fadeStart = height - fadeHeight
@@ -278,11 +390,11 @@ const PointField = ({ className }: { className?: string }) => {
     // ── Loop, paused whenever it cannot be seen ────────────────────────────
     let frame = 0
     let running = false
-    const autoYaw = isMobile ? config.autoYaw.mobile : config.autoYaw.desktop
+    const swaySpeed = isMobile ? config.sway.speed.mobile : config.sway.speed.desktop
 
     const tick = () => {
-      yaw += autoYaw
-      pitch += (targetPitch - pitch) * config.tiltEase
+      phase += swaySpeed
+      pitchOffset += (targetPitch - pitchOffset) * config.tiltEase
       yawOffset += (targetYawOffset - yawOffset) * config.tiltEase
       draw()
       frame = requestAnimationFrame(tick)
