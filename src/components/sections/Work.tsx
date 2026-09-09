@@ -27,9 +27,15 @@ const Work = () => {
   const eyebrow = useReveal<HTMLParagraphElement>()
   const cta = useReveal<HTMLDivElement>({ delay: 0.08 })
 
+  // The top padding sits on the <section>, not on the container inside it,
+  // because the section is the element carrying the `id` — and
+  // `sectionScrollTop` reads the anchor's own padding to work out where its
+  // content starts. With the padding on the child, a jump to #work landed a
+  // full 9rem short of the heading. Visually the two are identical: the
+  // container only adds horizontal gutters.
   return (
-    <section id="work" className="section-anchor">
-      <div className="container pt-20 md:pt-28 lg:pt-36">
+    <section id="work" className="section-anchor pt-20 md:pt-28 lg:pt-36">
+      <div className="container">
         <div className="grid gap-8 lg:grid-cols-12">
           <div className="lg:col-span-7">
             <p {...eyebrow.revealProps} className={cn(eyebrow.revealProps.className, "eyebrow")}>

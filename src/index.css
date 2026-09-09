@@ -304,7 +304,7 @@
   }
 
   /*
-   * Dissolves a portrait into the page instead of framing it.
+   * Dissolves the top and bottom of a portrait into the page.
    *
    * A mask, not an overlay gradient. An overlay paints a colour on top, which
    * only disappears where the ground is exactly `--background` — and this
@@ -313,26 +313,25 @@
    * instead means whatever is behind shows through, and there is no edge left
    * to see at any point along the fade.
    *
-   * Two gradients intersected: the vertical one does the work the eye notices,
-   * the horizontal one is only there so the sides do not end in two hard
-   * lines once the top and bottom have gone — it stays narrow, because the
-   * subject of a portrait sits near the sides and a wide side fade eats a
-   * shoulder.
+   * Vertical only. The sides keep their straight edges, which also means one
+   * gradient instead of two intersected — no `mask-composite`, and nothing to
+   * degrade on a browser that lacks it.
    *
-   * The vertical fade is deliberately lopsided. The top of this frame is wall,
-   * which can go to nothing over a long ramp and only looks better for it; the
-   * bottom is the subject, and a fade as long there would leave the caption
-   * beneath it floating in a stretch of empty page.
+   * The ramps are long on purpose: roughly a quarter of the height at the top
+   * and a fifth at the bottom, so the photograph arrives out of the ground
+   * rather than starting at a line. They are also deliberately lopsided — the
+   * top of this frame is wall, which can go to nothing over as long a ramp as
+   * it likes, while the bottom is the subject and the caption sits under it.
    */
   .portrait-fade {
-    -webkit-mask-image:
-      linear-gradient(to bottom, transparent, #000 20%, #000 87%, transparent),
-      linear-gradient(to right, transparent, #000 4%, #000 96%, transparent);
-    -webkit-mask-composite: source-in;
-    mask-image:
-      linear-gradient(to bottom, transparent, #000 20%, #000 87%, transparent),
-      linear-gradient(to right, transparent, #000 4%, #000 96%, transparent);
-    mask-composite: intersect;
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent,
+      #000 26%,
+      #000 82%,
+      transparent
+    );
+    mask-image: linear-gradient(to bottom, transparent, #000 26%, #000 82%, transparent);
   }
 
   /* Hides a scrollbar on a deliberately scrollable strip. */
@@ -388,9 +387,16 @@
     text-wrap: pretty;
   }
 
-  /* Clearance under the fixed navbar for every scroll target. */
+  /*
+   * Clearance under the fixed navbar for every scroll target.
+   *
+   * This is now the whole distance between the top of the viewport and a
+   * section's first line of text after a jump — `sectionScrollTop` cancels the
+   * section's own top padding, so this value is not added to anything. Change
+   * it and every navbar click and deep link moves with it.
+   */
   .section-anchor {
-    scroll-margin-top: calc(var(--nav-h) + 1.5rem);
+    scroll-margin-top: calc(var(--nav-h) + 2rem);
   }
 }
 
