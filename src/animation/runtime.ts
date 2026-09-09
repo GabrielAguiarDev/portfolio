@@ -109,37 +109,63 @@ export function scheduleMotionRuntime() {
 }
 
 /**
+ * Where the page has to sit for a section to read as "you are at its top".
+ *
+ * Two separate amounts stack above a section's first line of text, and only
+ * one of them belongs to navigation:
+ *
+ *   `scroll-margin-top`  clearance under the fixed navbar — a navigation
+ *                        concern, and the one thing a jump should respect.
+ *   `padding-top`        the section's own air, up to 9rem on a wide screen —
+ *                        a layout concern. It exists so that *scrolling*
+ *                        through the page has room to breathe between
+ *                        sections, and it has no business deciding where a
+ *                        click in the navbar lands.
+ *
+ * Landing on the section's box put both of them above the content: nearly
+ * 240px of empty page, which reads as having arrived somewhere between two
+ * sections rather than at the top of one. Adding the padding back here
+ * cancels it, so the first line always arrives exactly `scroll-margin-top`
+ * below the viewport's top edge, whatever the section's padding happens to be
+ * at that breakpoint.
+ *
+ * This is why every section carries its top padding on the element that holds
+ * the `id` — see the note in Work, the one section where it used to sit on a
+ * container inside.
+ */
+export function sectionScrollTop(element: HTMLElement): number {
+  const styles = getComputedStyle(element)
+  const scrollMargin = Number.parseFloat(styles.scrollMarginTop)
+  const paddingTop = Number.parseFloat(styles.paddingTop)
+
+  return (
+    element.getBoundingClientRect().top +
+    window.scrollY +
+    (Number.isNaN(paddingTop) ? 0 : paddingTop) -
+    (Number.isNaN(scrollMargin) ? 0 : scrollMargin)
+  )
+}
+
+/**
  * Scrolls to an element or offset, routed through Lenis when it is available
  * and falling back to native smooth scrolling when it is not.
  *
- * Clearance under the fixed navbar comes from the target's `scroll-margin-top`
- * (the `scroll-mt-*` on each section), which is the one place it is defined.
- * Lenis subtracts it natively; the fallback below does the same so both paths
- * land in the same spot.
+ * The destination is resolved here, to a number, for both paths. Lenis can
+ * take an element and work out `scroll-margin-top` itself, but it knows
+ * nothing about the padding correction above — so letting it resolve the
+ * target would mean two subtly different landings depending on whether the
+ * motion chunk had finished loading yet.
  */
 export function motionScrollTo(target: HTMLElement | number, offset = 0) {
   const runtime = getMotionRuntime()
+  const top = (typeof target === "number" ? target : sectionScrollTop(target)) + offset
 
   if (runtime?.lenis) {
-    runtime.lenis.scrollTo(target, { offset })
+    runtime.lenis.scrollTo(top)
     return
   }
 
-  const behavior: ScrollBehavior = prefersReducedMotion() ? "auto" : "smooth"
-
-  if (typeof target === "number") {
-    window.scrollTo({ top: target + offset, behavior })
-    return
-  }
-
-  const scrollMargin = Number.parseFloat(getComputedStyle(target).scrollMarginTop)
-  const top =
-    target.getBoundingClientRect().top +
-    window.scrollY +
-    offset -
-    (Number.isNaN(scrollMargin) ? 0 : scrollMargin)
-
-  window.scrollTo({ top, behavior })
+  window.scrollTo({ top, behavior: prefersReducedMotion() ? "auto" : "smooth" })
 }
 
 /** Pauses or resumes smooth scrolling — used while the mobile menu is open. */

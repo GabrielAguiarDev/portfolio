@@ -1,5 +1,7 @@
 import { useEffect } from "react"
 
+import { sectionScrollTop } from "@/animation"
+
 /**
  * Honours a section fragment in the URL on first load.
  *
@@ -13,8 +15,11 @@ import { useEffect } from "react"
  * of scrolling past everything above, and would race the motion runtime, which
  * is still initialising at this point in the page's life.
  *
- * Clearance under the fixed navbar comes from each target's `scroll-margin-top`
- * (the `.section-anchor` utility), which `scrollIntoView` honours natively.
+ * Where it lands comes from `sectionScrollTop`, the same function the navbar
+ * uses, so a shared link and a click arrive at exactly the same place.
+ * `scrollIntoView` would honour the target's `scroll-margin-top` but not the
+ * section's own top padding, which would leave a deep link 9rem short of the
+ * heading it was pointing at.
  */
 export function useHashScroll() {
   useEffect(() => {
@@ -35,7 +40,7 @@ export function useHashScroll() {
       // `getElementById` rejects the empty string and tolerates anything else,
       // so a malformed fragment simply finds nothing.
       const element = document.getElementById(id)
-      element?.scrollIntoView()
+      if (element) window.scrollTo({ top: sectionScrollTop(element), behavior: "auto" })
     }
 
     // One frame in, the sections exist.

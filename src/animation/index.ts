@@ -5,6 +5,7 @@ export {
   getMotionRuntime,
   loadMotionRuntime,
   motionScrollTo,
+  sectionScrollTop,
   prefersReducedMotion,
   scheduleMotionRuntime,
   setSmoothScrollPaused,
