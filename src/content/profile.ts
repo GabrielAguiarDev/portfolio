@@ -27,14 +27,16 @@ export const PROFILE = {
   /**
    * The professional title, in one place.
    *
-   * Broadened from "Mobile & Frontend Developer": the page now argues for
-   * architecture, mobile and web, an AI-assisted workflow and security as a
-   * design concern, and a mobile-only title undersells all of that. Change it
-   * here and it updates the hero, the footer and the page metadata together.
+   * Deliberately unqualified. It started as "Mobile & Frontend Developer",
+   * then "Software Engineer · Mobile & Web", and every platform suffix had the
+   * same problem: it narrows the reader's expectation to one surface before
+   * they have read a word of the argument, which is that the surface is the
+   * least durable decision in a product. Change it here and it updates the
+   * hero, the footer and the page metadata together.
    */
   role: {
-    pt: "Software Engineer · Mobile & Web",
-    en: "Software Engineer · Mobile & Web",
+    pt: "Software Engineer",
+    en: "Software Engineer",
   } satisfies Localized,
   location: {
     pt: "Brasil — remoto",

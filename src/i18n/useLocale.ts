@@ -12,6 +12,28 @@ export type Locale = "pt" | "en"
  */
 export type Localized = Record<Locale, string>
 
+/**
+ * A short label in a chip: either a name that is the same in every language,
+ * or a phrase that has to be translated.
+ *
+ * Both live in the same lists, so both have to be expressible in one type. A
+ * product, a protocol or an acronym — React Native, MCP, RAG, Jest — is not
+ * translated in any language and would be silly to write twice; a description
+ * in words — "Input validation", "Least privilege" — has to be, or a
+ * Portuguese page ends up with English chips scattered through it.
+ */
+export type Tag = string | Localized
+
+/**
+ * A tag's key, independent of the active language.
+ *
+ * The rendered text cannot be the React key: it changes when the language
+ * does, which would remount every chip in the list on a locale switch.
+ */
+export function tagKey(value: Tag): string {
+  return typeof value === "string" ? value : value.en
+}
+
 export function normalizeLocale(language?: string): Locale {
   return language?.toLowerCase().startsWith("pt") ? "pt" : "en"
 }
@@ -30,6 +52,8 @@ export function useLocale() {
     locale,
     /** Pick the active language out of a `Localized` value. */
     pick: (value: Localized) => value[locale],
+    /** Pick a tag, passing a name that needs no translation straight through. */
+    pickTag: (value: Tag) => (typeof value === "string" ? value : value[locale]),
     setLocale: (next: Locale) => i18n.changeLanguage(next),
   }
 }

@@ -28,7 +28,10 @@ const Footer = () => {
             <p className="mt-1 text-sm text-muted-foreground">{pick(PROFILE.location)}</p>
           </div>
 
-          <nav className="flex flex-wrap items-center gap-x-7 gap-y-3" aria-label="Social">
+          <nav
+            className="flex flex-wrap items-center gap-x-7 gap-y-3"
+            aria-label={pick(COPY.a11y.social)}
+          >
             {links.map((link) => (
               <a
                 key={link.label}

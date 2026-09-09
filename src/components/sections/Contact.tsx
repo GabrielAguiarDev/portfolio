@@ -98,13 +98,27 @@ const Contact = () => {
             channels.length === 3 ? "md:grid-cols-3" : "md:grid-cols-2",
           )}
         >
-          {channels.map(({ icon: Icon, label, value, href, external }) => (
-            <li key={label} className="border-b border-border md:border-b-0 md:border-r md:last:border-r-0">
+          {channels.map(({ icon: Icon, label, value, href, external }, index) => (
+            <li
+              key={label}
+              className="border-b border-border md:border-b-0 md:border-r md:last:border-r-0"
+            >
               <a
                 href={href}
                 target={external ? "_blank" : undefined}
                 rel={external ? "noreferrer noopener" : undefined}
-                className="group flex items-center gap-4 py-6 transition-colors md:px-6 md:first:pl-0"
+                className={cn(
+                  "group flex items-center gap-4 py-6 transition-colors md:px-6",
+                  // The gutters are decided by position in the row, not with a
+                  // `first:`/`last:` variant: this anchor is the only child of
+                  // its own <li>, so those variants match every column and used
+                  // to strip the left padding from all of them — which put the
+                  // second column's icon flush against the divider it sits
+                  // behind. The outer edges stay flush with the container so
+                  // the row lines up with the type above it.
+                  index === 0 && "md:pl-0",
+                  index === channels.length - 1 && "md:pr-0",
+                )}
               >
                 <Icon
                   size={17}

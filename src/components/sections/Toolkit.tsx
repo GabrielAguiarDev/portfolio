@@ -1,7 +1,7 @@
 import { RevealText, gridDelay, useReveal } from "@/animation"
 import { COPY } from "@/content/copy"
 import { TOOLKIT, type ToolGroup } from "@/content/toolkit"
-import { useLocale } from "@/i18n/useLocale"
+import { tagKey, useLocale } from "@/i18n/useLocale"
 import { cn } from "@/lib/utils"
 
 /**
@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils"
  * — the products are the argument, this is just the appendix that backs it up.
  */
 const Group = ({ group, index }: { group: ToolGroup; index: number }) => {
-  const { pick } = useLocale()
+  const { pick, pickTag } = useLocale()
   const { revealProps } = useReveal<HTMLDivElement>({ delay: gridDelay(index) })
 
   return (
@@ -27,14 +27,14 @@ const Group = ({ group, index }: { group: ToolGroup; index: number }) => {
 
       <ul className="flex flex-wrap items-baseline gap-x-2 gap-y-2.5 md:gap-x-3">
         {group.tools.map((tool, toolIndex) => (
-          <li key={tool} className="flex items-baseline gap-2 md:gap-3">
+          <li key={tagKey(tool)} className="flex items-baseline gap-2 md:gap-3">
             {toolIndex > 0 ? (
               <span aria-hidden="true" className="text-muted-foreground/35">
                 /
               </span>
             ) : null}
             <span className="text-[0.9375rem] font-medium tracking-tight text-foreground/85 transition-colors duration-300 hover:text-foreground md:text-base">
-              {tool}
+              {pickTag(tool)}
             </span>
           </li>
         ))}
