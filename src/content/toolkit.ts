@@ -1,4 +1,4 @@
-import type { Localized } from "@/i18n/useLocale"
+import type { Localized, Tag } from "@/i18n/useLocale"
 
 /**
  * Tools, grouped by the layer of the product they belong to.
@@ -10,7 +10,12 @@ import type { Localized } from "@/i18n/useLocale"
  */
 export type ToolGroup = {
   label: Localized
-  tools: string[]
+  /**
+   * Product and protocol names stay as plain strings — they read the same in
+   * every language. Anything that is a description in words is written per
+   * language, so a Portuguese page does not carry English chips.
+   */
+  tools: Tag[]
 }
 
 export const TOOLKIT: ToolGroup[] = [
@@ -28,7 +33,15 @@ export const TOOLKIT: ToolGroup[] = [
   },
   {
     label: { pt: "IA", en: "AI" },
-    tools: ["MCP", "RAG", "Multi-agent", "Subagents", "Git worktrees"],
+    tools: [
+      "LLMs",
+      { pt: "Engenharia de prompt", en: "Prompt engineering" },
+      "RAG",
+      "MCP",
+      { pt: "Agentes e subagentes", en: "Agents & subagents" },
+      { pt: "Especialização de agentes", en: "Agent specialization" },
+      { pt: "Controle de custo", en: "Cost control" },
+    ],
   },
   {
     label: { pt: "Estado", en: "State" },
@@ -40,7 +53,14 @@ export const TOOLKIT: ToolGroup[] = [
   },
   {
     label: { pt: "Segurança", en: "Security" },
-    tools: ["Auth & sessions", "Permissions", "Input validation", "Secrets"],
+    tools: [
+      { pt: "Auth e sessões", en: "Auth & sessions" },
+      { pt: "Permissões", en: "Permissions" },
+      { pt: "Validação de entrada", en: "Input validation" },
+      { pt: "Segredos", en: "Secrets" },
+      "Prompt injection",
+      { pt: "Vazamento de dados", en: "Data leakage" },
+    ],
   },
   {
     label: { pt: "Testes", en: "Testing" },

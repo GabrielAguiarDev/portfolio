@@ -113,7 +113,7 @@ const Nav = () => {
             Gabriel<span className="text-primary">.</span>
           </button>
 
-          <nav className="hidden items-center gap-8 md:flex" aria-label="Sections">
+          <nav className="hidden items-center gap-8 md:flex" aria-label={pick(COPY.a11y.sections)}>
             {NAV.map((item) => (
               <a
                 key={item.id}
@@ -144,7 +144,7 @@ const Nav = () => {
               type="button"
               onClick={() => setLocale(locale === "pt" ? "en" : "pt")}
               className="hidden h-8 items-center rounded-full border border-border px-3 text-[0.6875rem] font-medium uppercase tracking-[0.14em] text-muted-foreground transition-colors hover:border-foreground/25 hover:text-foreground sm:flex"
-              aria-label={locale === "pt" ? "Switch to English" : "Mudar para Português"}
+              aria-label={pick(COPY.nav.language)}
             >
               {locale === "pt" ? "PT" : "EN"}
             </button>

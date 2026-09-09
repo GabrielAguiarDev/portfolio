@@ -34,6 +34,8 @@ export const animation = {
     deviceFloat: true,
     /** The interactive point field behind the hero. */
     pointField: true,
+    /** The exploded layer stack in the Foundations section. */
+    layerStack: true,
     /** The process track scrolling sideways while its section is pinned. */
     horizontalTrack: true,
     /** Impact figures counting up the first time they are seen. */
@@ -249,6 +251,109 @@ export const animation = {
   },
 
   /**
+   * The exploded layer stack behind the engineering argument.
+   *
+   * A product drawn as what it actually is: a short pile of planes, of which
+   * the screen is only the top one. Scrolling into the section pulls them
+   * apart, scrolling back presses them together again — and, like the hero's
+   * point field, the whole thing is a pure function of scroll position rather
+   * than a timeline with its own state, so it runs backwards for free.
+   *
+   * Angles are radians, distances are in plane units (one plane is 2 units
+   * wide), and the on-screen size is fitted to the canvas at every resize —
+   * nothing here is a pixel value that could overflow a viewport.
+   */
+  layerStack: {
+    /**
+     * Half-extents of one plane: wider across the page than into it.
+     *
+     * An exploded stack of five is naturally about as tall as it is wide, and
+     * a plane can only ever contribute `halfWidth * cos(yaw) + halfDepth *
+     * sin(yaw)` to the silhouette — so widening the planes is the only way to
+     * stop the composition being a narrow column in a landscape box.
+     */
+    halfWidth: 1.3,
+    halfDepth: 0.66,
+    /**
+     * Vertical distance between neighbouring planes, pressed together and
+     * fully apart. `collapsed` is deliberately not 0 — a stack with a visible
+     * seam reads as layers waiting to separate, where a single slab reads as
+     * a mistake.
+     */
+    gap: { collapsed: 0.1, expanded: 0.56 },
+    /**
+     * The window, as a fraction of the section's travel across the viewport,
+     * over which the planes separate.
+     *
+     * 0.5 is the point where the diagram is dead centre in the viewport, so
+     * the separation has to be complete a little before that — otherwise the
+     * stack is still opening at the moment it is being read, and is only ever
+     * seen fully apart on the way out.
+     */
+    separate: { from: 0.1, to: 0.46 },
+    /**
+     * How far the scene is tilted toward the viewer. Small values look
+     * edge-on with wide gaps; large values look top-down with none. This sits
+     * where each plane still reads as a surface without swallowing its
+     * neighbour.
+     */
+    pitch: -0.34,
+    /** Resting turn, and how much more of it the scroll adds. */
+    yaw: { base: -0.44, travel: 0.22 },
+    /** Perspective distance, in plane units. */
+    perspective: 5.4,
+    /** Fraction of the canvas the fitted stack is allowed to fill. */
+    fill: { desktop: 0.94, mobile: 0.9 },
+    /** Grid divisions ruled across each plane, per axis. */
+    grid: 5,
+    /**
+     * Inks, as alpha at full brightness. Everything else scales off these.
+     *
+     * `backing` is the opacity of the ground colour painted under each plane,
+     * which is what makes a near plane read as solid over the one behind it.
+     * The colour itself is read from `--background` at runtime rather than
+     * written here, so the two can never drift apart.
+     */
+    alpha: { edge: 0.55, grid: 0.1, fill: 0.03, spine: 0.2, backing: 0.82 },
+    /**
+     * The connectors between neighbouring planes, as the fraction of each gap
+     * left clear at either end. 0 draws one unbroken line down the stack,
+     * which closes the silhouette into a box; this leaves each plane its own
+     * clearance so the connector reads as a joint.
+     */
+    spine: { inset: 0.28 },
+    /** Pointer lean, in radians, and how fast it catches up. */
+    tilt: { yaw: 0.16, pitch: 0.07 },
+    tiltEase: 0.055,
+    /**
+     * Unattended sway, so a stationary reader is not shown a still image.
+     * `speed` is radians of phase per SECOND, not per frame — the pulse below
+     * runs on wall-clock time and the two have to share a clock, or the sway
+     * runs at double speed against it on a 120Hz display.
+     */
+    sway: { speed: 0.156, yaw: 0.05, pitch: 0.018 },
+    /**
+     * A request travelling down through the layers.
+     *
+     * `period` is one full pass in seconds; `reach` is how many layers either
+     * side of the pulse pick up any of its light, which is what turns four
+     * separate flashes into one continuous move. The layer it is passing
+     * through is reported upward so the label beside the diagram can light up
+     * with it — the diagram and its index are the same object, not two.
+     *
+     * `litThreshold` is how much of that light a layer needs before it is the
+     * one reported. It reads as an ink level but it is not: it decides which
+     * row of the written index highlights, and it is coupled to `reach` —
+     * together they resolve to "within `reach * (1 - litThreshold)` layers of
+     * the pulse". Raise it and the highlight becomes brief and definite; lower
+     * it and two rows are lit at once through the handover.
+     */
+    pulse: { period: 5.2, reach: 0.85, lift: 1.5, dotSize: 3.2, litThreshold: 0.34 },
+    /** Device pixel ratio is capped — past 2 the cost is real and invisible. */
+    dprMax: 2,
+  },
+
+  /**
    * Impact figures counting up from zero.
    *
    * Duration scales with the figure. Counting 0→3 over a flat 1400ms shows
@@ -278,9 +383,30 @@ export const animation = {
   /**
    * Lenis smooth scroll. `syncTouch: false` leaves touch scrolling native,
    * which is both faster and the expected feel on a phone.
+   *
+   * ── THE DIAL FOR HOW HEAVY SCROLLING FEELS ──────────────────────────────
+   *
+   * `lerp` is the one that matters. It is the fraction of the remaining
+   * distance the page covers each frame, so it sets how long the page keeps
+   * gliding after the wheel stops:
+   *
+   *   0.06 – 0.09   very heavy, long glide (cinematic, easy to overshoot)
+   *   0.10 – 0.13   smooth but noticeably weighted
+   *   0.14 – 0.18   light — still eased, tracks the wheel closely  ← here
+   *   0.20 – 0.30   nearly native, the smoothing is barely perceptible
+   *   1.0           identical to native scrolling
+   *
+   * `wheelMultiplier` scales how much distance one wheel notch asks for. Raise
+   * it if the page feels slow to cross rather than slow to settle; it does not
+   * change the glide, only the reach. Leave it at 1 unless the travel itself
+   * is the complaint — above ~1.3 it starts to feel like the page is slipping.
+   *
+   * If you would rather have no smoothing at all, set
+   * `enabled.smoothScroll: false` above: Lenis is then never even downloaded
+   * and the browser's own scrolling takes over.
    */
   lenis: {
-    lerp: 0.11,
+    lerp: 0.15,
     wheelMultiplier: 1,
     touchMultiplier: 1.6,
     syncTouch: false,

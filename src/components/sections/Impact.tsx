@@ -45,19 +45,31 @@ const counted: Stat[] = [
   },
 ]
 
-/** Qualitative facts. True by construction — no number required. */
-const claims: { value: string; label: Localized }[] = [
+/**
+ * Qualitative facts. True by construction — no number required.
+ *
+ * Localised like everything else on the page: these used to be Portuguese
+ * strings shown to an English reader, which is the kind of detail a portfolio
+ * arguing for attention to detail cannot afford.
+ */
+const claims: { value: Localized; label: Localized }[] = [
   {
-    value: "Mobile + Web",
-    label: { pt: "Produtos nas duas frentes", en: "Products on both fronts" },
-  },
-  {
-    value: "Arquitetura → deploy",
+    value: { pt: "Arquitetura → deploy", en: "Architecture → deploy" },
     label: { pt: "Ciclo completo, conduzido por mim", en: "Full cycle, carried by me" },
   },
   {
-    value: "IA no fluxo diário",
-    label: { pt: "MCP, RAG e agentes em paralelo", en: "MCP, RAG and agents in parallel" },
+    value: { pt: "IA como engenharia", en: "AI as engineering" },
+    label: {
+      pt: "Orquestração, guardrails e custo",
+      en: "Orchestration, guardrails and cost",
+    },
+  },
+  {
+    value: { pt: "Segurança no desenho", en: "Security in the design" },
+    label: {
+      pt: "Sessão, permissão e segredo",
+      en: "Sessions, permissions and secrets",
+    },
   },
 ]
 
@@ -122,7 +134,7 @@ const Impact = () => {
 
         <ul className="mt-14 grid gap-x-10 gap-y-8 border-t border-border pt-10 md:grid-cols-3">
           {claims.map((claim) => (
-            <Claim key={claim.value} claim={claim} />
+            <Claim key={claim.value.en} claim={claim} />
           ))}
         </ul>
       </div>
@@ -130,13 +142,13 @@ const Impact = () => {
   )
 }
 
-const Claim = ({ claim }: { claim: { value: string; label: Localized } }) => {
+const Claim = ({ claim }: { claim: { value: Localized; label: Localized } }) => {
   const { pick } = useLocale()
   const { revealProps } = useReveal<HTMLLIElement>()
 
   return (
     <li {...revealProps} className={revealProps.className}>
-      <p className="display-sm text-balance text-foreground">{claim.value}</p>
+      <p className="display-sm text-balance text-foreground">{pick(claim.value)}</p>
       <p className="mt-2 text-[0.8125rem] text-muted-foreground">{pick(claim.label)}</p>
     </li>
   )
