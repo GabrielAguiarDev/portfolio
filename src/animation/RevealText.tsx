@@ -14,6 +14,8 @@ type RevealTextProps = {
   className?: string
   /** Extra delay in seconds before the first word starts. */
   delay?: number
+  /** Holds the words back until it goes false. See `useReveal`. */
+  hold?: boolean
 }
 
 /**
@@ -27,9 +29,9 @@ type RevealTextProps = {
  * With reduced motion, or with `headingReveal` disabled, it renders as plain
  * text with no wrapper spans at all.
  */
-const RevealText = ({ text, as, className, delay = 0 }: RevealTextProps) => {
+const RevealText = ({ text, as, className, delay = 0, hold = false }: RevealTextProps) => {
   const Tag = (as ?? "span") as ElementType
-  const { ref, revealed } = useReveal<HTMLElement>()
+  const { ref, revealed } = useReveal<HTMLElement>({ hold })
 
   if (!animation.enabled.headingReveal || prefersReducedMotion()) {
     return <Tag className={className}>{text}</Tag>

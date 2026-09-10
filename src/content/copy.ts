@@ -492,6 +492,13 @@ export const COPY = {
       pt: "Agrupadas pela camada do produto a que pertencem. Escolhidas por resolverem um problema específico, não por estarem na moda.",
       en: "Grouped by the layer of the product they belong to. Picked because they solve a specific problem, not because they're fashionable.",
     },
+    /**
+     * Shown only where the rows are too long to fit and scroll sideways
+     * instead — see the note in Toolkit.tsx. Deliberately an instruction and
+     * not a description: it is the one line on the page whose job is to tell
+     * the visitor what to do with their thumb.
+     */
+    swipe: { pt: "Arraste para ver mais", en: "Swipe to see more" },
   },
 
   contact: {
