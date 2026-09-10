@@ -1,16 +1,17 @@
-import Nav from "@/components/sections/Nav"
-import Hero from "@/components/sections/Hero"
-import Work from "@/components/sections/Work"
-import Foundations from "@/components/sections/Foundations"
-import AiEngineering from "@/components/sections/AiEngineering"
-import Process from "@/components/sections/Process"
-import Impact from "@/components/sections/Impact"
+import PageShell from "@/components/layout/PageShell"
 import About from "@/components/sections/About"
-import Experience from "@/components/sections/Experience"
-import Toolkit from "@/components/sections/Toolkit"
+import AiEngineering from "@/components/sections/AiEngineering"
 import Contact from "@/components/sections/Contact"
-import Footer from "@/components/sections/Footer"
+import Experience from "@/components/sections/Experience"
+import Foundations from "@/components/sections/Foundations"
+import Hero from "@/components/sections/Hero"
+import Impact from "@/components/sections/Impact"
+import Process from "@/components/sections/Process"
+import Toolkit from "@/components/sections/Toolkit"
+import Work from "@/components/sections/Work"
 import { COPY } from "@/content/copy"
+import { PROFILE } from "@/content/profile"
+import { useDocumentMeta } from "@/hooks/useDocumentMeta"
 import { useHashScroll } from "@/hooks/useHashScroll"
 import { useLocale } from "@/i18n/useLocale"
 
@@ -27,23 +28,25 @@ import { useLocale } from "@/i18n/useLocale"
  *   Experience— where it happened
  *   Toolkit   — the appendix
  *   Contact   — the close
+ *
+ * Work used to carry every case study inline. It now carries the index and the
+ * case studies live at `/work/<id>` — see `components/sections/Work.tsx`.
  */
 const Index = () => {
   const { pick } = useLocale()
+
   useHashScroll()
+  useDocumentMeta({
+    title: `${PROFILE.name} — ${pick(PROFILE.role)}`,
+    // Not the hero's line: that one is written to be the first thing read on a
+    // page you are already on, and this one has to stand on its own in a search
+    // result. See the note in copy.ts.
+    description: pick(COPY.meta.home),
+    path: "/",
+  })
 
   return (
-  <>
-    <a
-      href="#main"
-      className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[70] focus:rounded-full focus:border focus:border-border focus:bg-card focus:px-5 focus:py-3 focus:text-sm focus:font-medium"
-    >
-      {pick(COPY.a11y.skip)}
-    </a>
-
-    <Nav />
-
-    <main id="main">
+    <PageShell>
       <Hero />
       <Work />
       <Foundations />
@@ -54,10 +57,7 @@ const Index = () => {
       <Experience />
       <Toolkit />
       <Contact />
-    </main>
-
-    <Footer />
-    </>
+    </PageShell>
   )
 }
 

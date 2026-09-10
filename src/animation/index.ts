@@ -7,6 +7,8 @@ export {
   motionScrollTo,
   sectionScrollTop,
   prefersReducedMotion,
+  refreshScrollTriggers,
+  resizeSmoothScroll,
   scheduleMotionRuntime,
   setSmoothScrollPaused,
 } from "./runtime"

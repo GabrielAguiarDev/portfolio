@@ -199,12 +199,12 @@ export const ShoppingOrder = () => {
         <p className="text-[10px] font-medium uppercase tracking-[0.16em] text-[#A8A296]">
           {pick(order.label)} #1042
         </p>
-        <h1
+        <p
           className="mt-[6px] text-[22px] font-semibold leading-[1.12] tracking-[-0.03em]"
           style={{ color: INK }}
         >
           {pick(order.eta)}
-        </h1>
+        </p>
       </div>
 
       <div className="mt-[24px] px-[20px]">
@@ -295,12 +295,12 @@ export const ShoppingCheckout = () => {
       <StatusBar />
 
       <div className="px-[20px] pt-[6px]">
-        <h1
+        <p
           className="text-[24px] font-semibold leading-[1.1] tracking-[-0.03em]"
           style={{ color: INK }}
         >
           {pick(checkout.title)}
-        </h1>
+        </p>
       </div>
 
       <div className="mt-[20px] px-[20px]">

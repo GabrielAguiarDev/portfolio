@@ -1,49 +1,93 @@
 import { RevealText, useCounter, useReveal } from "@/animation"
 import { COPY } from "@/content/copy"
-import { APPS_SHIPPED, YEARS_OF_EXPERIENCE } from "@/content/profile"
-import { PROJECTS } from "@/content/work"
+import {
+  APP_INSTALLS,
+  REVENUE_TRANSACTED_MILLIONS,
+  SURFACES_LIVE,
+  yearsOfExperience,
+} from "@/content/profile"
+import { PUBLISHED_PROJECTS, liveSurfacesOf, sectorNamesOf } from "@/content/work"
 import { useLocale, type Localized } from "@/i18n/useLocale"
 import { cn } from "@/lib/utils"
 
 /**
  * Impact.
  *
- * Only two figures here are counted, and both are derived from data in this
- * repository rather than asserted: the number of products in `work.ts`, and
- * how many of them are live. Anything that needed a fact from outside the repo
- * is a `null` in `profile.ts` and renders as an obvious empty slot — a blank
- * to fill, never a number nobody can stand behind.
+ * Every figure here is either calculated or counted, and none is typed in by
+ * hand as a claim.
+ *
+ * Three things this section used to get wrong. It counted `PROJECTS`, which
+ * includes the drafts, so the page published a total covering two case studies
+ * nobody could read, resting on a `status` that was still a TODO. The year and
+ * app figures were both `null`, rendering as visible dashes, because they were
+ * facts nobody had typed in. And four figures stood here where three of them
+ * measured the same thing: products built, surfaces built and products live are
+ * one question asked three times.
+ *
+ * What is left asks three different ones. How long, how much, how far. The
+ * counts come from the published projects only, the years are calculated from a
+ * start date that never goes stale, and each total can be raised in
+ * `profile.ts` to cover work that cannot be shown here, so an unset total is
+ * conservative rather than wrong.
  */
 
-const live = PROJECTS.filter((project) => project.status === "live").length
-
 type Stat = {
-  /** `null` renders the slot as an unfilled placeholder. */
+  /** Unset figures are dropped rather than rendered as a gap. */
   value: number | null
+  prefix?: string
   suffix?: string
   label: Localized
+  /** Thousand separators. Off for small counts, where they read as clutter. */
+  grouped?: boolean
 }
 
-const counted: Stat[] = [
+/*
+  Two kinds of figure, and the second is the one that matters.
+
+  The first three measure output: how long, how much, how far. They were the
+  whole section, and a section made only of them argues that a lot was built
+  while saying nothing about whether any of it holds anything up.
+
+  The last two measure weight. A system carrying a real operation, taking real
+  money, surviving the week of the year when everyone arrives at once, is a
+  different order of evidence from a count of products. They live in
+  `profile.ts` because no repository can derive them, and they are dropped while
+  unset so the row shows fewer real things instead of a blank.
+*/
+const candidates: Stat[] = [
   {
-    value: PROJECTS.length,
-    label: { pt: "Produtos construídos", en: "Products built" },
-  },
-  {
-    value: live,
-    label: { pt: "Em produção agora", en: "Live right now" },
-  },
-  {
-    value: YEARS_OF_EXPERIENCE,
+    value: yearsOfExperience(),
     suffix: "+",
-    label: { pt: "Anos de experiência", en: "Years of experience" },
+    label: COPY.impact.years,
   },
   {
-    value: APPS_SHIPPED,
+    value: SURFACES_LIVE ?? liveSurfacesOf(PUBLISHED_PROJECTS),
+    label: COPY.impact.surfaces,
+  },
+  {
+    value: REVENUE_TRANSACTED_MILLIONS,
+    prefix: "R$ ",
+    suffix: "M+",
+    label: COPY.impact.revenue,
+  },
+  {
+    value: APP_INSTALLS,
     suffix: "+",
-    label: { pt: "Apps publicados", en: "Apps published" },
+    grouped: true,
+    label: COPY.impact.installs,
   },
 ]
+
+const counted = candidates.filter((stat) => stat.value !== null)
+
+/** Columns that divide the figures evenly, so no row is left with one orphan. */
+const COLUMNS: Record<number, string> = {
+  1: "sm:grid-cols-1",
+  2: "sm:grid-cols-2",
+  3: "sm:grid-cols-3",
+  4: "sm:grid-cols-2 lg:grid-cols-4",
+  5: "sm:grid-cols-3 lg:grid-cols-5",
+}
 
 /**
  * Qualitative facts. True by construction — no number required.
@@ -74,30 +118,19 @@ const claims: { value: Localized; label: Localized }[] = [
 ]
 
 const Figure = ({ stat, index }: { stat: Stat; index: number }) => {
-  const { pick } = useLocale()
+  const { pick, locale } = useLocale()
   const { ref, value } = useCounter(stat.value ?? 0)
   const { revealProps } = useReveal<HTMLDivElement>({ delay: index * 0.06 })
 
-  const pending = stat.value === null
+  const shown = stat.grouped ? value.toLocaleString(locale === "pt" ? "pt-BR" : "en-US") : value
 
   return (
     <div {...revealProps} className={cn(revealProps.className, "border-t border-border pt-5")}>
-      {pending ? (
-        // An unfilled slot. Deliberately visible to a sighted reader, but
-        // aria-hidden so a screen reader is not handed a meaningless "dash" —
-        // it reads the label alone, which is the honest amount of information.
-        // The developer reminder lives in a dev-only console warning rather
-        // than a `title`, which would surface an internal TODO as a tooltip to
-        // every visitor.
-        <span aria-hidden="true" className="display-lg block text-foreground/15">
-          —
-        </span>
-      ) : (
-        <span ref={ref} className="display-lg block tabular-nums text-foreground">
-          {value}
-          {stat.suffix ? <span className="text-primary">{stat.suffix}</span> : null}
-        </span>
-      )}
+      <span ref={ref} className="display-lg block tabular-nums text-foreground">
+        {stat.prefix ? <span className="text-muted-foreground">{stat.prefix}</span> : null}
+        {shown}
+        {stat.suffix ? <span className="text-primary">{stat.suffix}</span> : null}
+      </span>
 
       <p className="mt-3 text-pretty text-[0.8125rem] leading-snug text-muted-foreground">
         {pick(stat.label)}
@@ -107,8 +140,27 @@ const Figure = ({ stat, index }: { stat: Stat; index: number }) => {
 }
 
 const Impact = () => {
-  const { pick } = useLocale()
+  const { pick, locale } = useLocale()
+
+  /*
+    The businesses, by name, joined the way the reader's language joins a list.
+    Derived rather than written into the copy so adding a project in a new
+    business updates the sentence instead of quietly contradicting it.
+
+    Hand-rolled rather than `Intl.ListFormat`, which is not in this project's
+    TypeScript lib target and is not worth widening it for one conjunction.
+  */
+  // Lowercased on the way into the sentence: the field is stored capitalised
+  // because it is a label, and these are common nouns, not proper ones.
+  const names = sectorNamesOf(PUBLISHED_PROJECTS).map((sector) => pick(sector).toLocaleLowerCase())
+  const last = locale === "pt" ? "e" : "and"
+  const sectors =
+    names.length > 1
+      ? `${names.slice(0, -1).join(", ")} ${last} ${names[names.length - 1]}`
+      : (names[0] ?? "")
+
   const eyebrow = useReveal<HTMLParagraphElement>()
+  const note = useReveal<HTMLParagraphElement>({ delay: 0.1 })
 
   return (
     <section id="impact" className="section-anchor border-t border-border py-20 md:py-28">
@@ -126,11 +178,26 @@ const Impact = () => {
           </h2>
         </div>
 
-        <div className="mt-14 grid grid-cols-2 gap-x-6 gap-y-10 md:mt-16 md:grid-cols-4 md:gap-x-10">
+        <div
+          className={cn(
+            "mt-14 grid gap-x-10 gap-y-10 md:mt-16",
+            COLUMNS[counted.length] ?? "sm:grid-cols-3",
+          )}
+        >
           {counted.map((stat, index) => (
             <Figure key={stat.label.en} stat={stat} index={index} />
           ))}
         </div>
+
+        <p
+          {...note.revealProps}
+          className={cn(
+            note.revealProps.className,
+            "mt-12 max-w-[68ch] text-pretty text-sm leading-relaxed text-muted-foreground",
+          )}
+        >
+          {pick(COPY.impact.selection).replace("{sectors}", sectors)}
+        </p>
 
         <ul className="mt-14 grid gap-x-10 gap-y-8 border-t border-border pt-10 md:grid-cols-3">
           {claims.map((claim) => (

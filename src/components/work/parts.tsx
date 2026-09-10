@@ -1,6 +1,6 @@
 import { useReveal } from "@/animation"
 import { COPY } from "@/content/copy"
-import type { Project } from "@/content/work"
+import { platformsOf, type Project } from "@/content/work"
 import { useLocale } from "@/i18n/useLocale"
 import { cn } from "@/lib/utils"
 
@@ -40,7 +40,16 @@ export const StatusPill = ({ status }: { status: Project["status"] }) => {
   )
 }
 
-/** Kind → name → headline → summary. The reading order of every case study. */
+/**
+ * Kind → name → headline → summary. The reading order of every case study.
+ *
+ * The name is the page's `<h1>`. It used to be an `<h3>`, which was right when
+ * a case study was a block inside the home page, under the Work section's
+ * `<h2>` and the hero's `<h1>`. On its own route none of that is above it, so
+ * an `<h3>` left the page with no heading at all for Google and a level-3
+ * orphan for anyone navigating by heading. `display-lg` carries the size, so
+ * the level is free to be correct.
+ */
 export const CaseTitle = ({
   project,
   index,
@@ -55,10 +64,15 @@ export const CaseTitle = ({
 
   return (
     <div {...revealProps} className={cn(revealProps.className, className)}>
-      <div className="flex items-center gap-4">
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
         <CaseIndex index={index} />
         <span aria-hidden="true" className="h-px w-8 bg-border" />
         <StatusPill status={project.status} />
+        {project.year ? (
+          <span className="font-mono text-[0.6875rem] tracking-[0.1em] text-muted-foreground">
+            {project.year}
+          </span>
+        ) : null}
       </div>
 
       <p className="mt-6 text-[0.8125rem] font-medium tracking-tight text-muted-foreground">
@@ -69,7 +83,7 @@ export const CaseTitle = ({
           composition, where it always ended up colliding with a screen. */}
       <div className="mt-3 flex items-center gap-3.5">
         <BrandMark project={project} className="h-9 w-9 shrink-0 rounded-[0.625rem]" />
-        <h3 className="display-lg text-balance text-foreground">{project.name}</h3>
+        <h1 className="display-lg text-balance text-foreground">{project.name}</h1>
       </div>
 
       <p className="display-sm mt-6 max-w-[24ch] text-balance text-foreground/80">
@@ -139,9 +153,21 @@ export const CaseFacts = ({
       </div>
 
       <div className="mt-6">
+        <p className="eyebrow">{pick(COPY.work.context)}</p>
+        {/* Who it was for, and — where it is not obvious from the name — on
+            what terms. */}
+        <p className="mt-2 text-sm leading-relaxed text-foreground/85">
+          {project.context.company}
+        </p>
+        {project.context.kind === "freelance" ? (
+          <p className="mt-1 text-xs text-muted-foreground">{pick(COPY.work.freelance)}</p>
+        ) : null}
+      </div>
+
+      <div className="mt-6">
         <p className="eyebrow">{pick(COPY.work.stack)}</p>
-        <ul className="mt-3 flex flex-wrap gap-2">
-          {project.platforms.map((platform) => (
+        <ul className="mt-3 flex flex-wrap gap-2 empty:mt-0">
+          {platformsOf(project).map((platform) => (
             <li
               key={platform}
               className="tag border-foreground/25 text-foreground"
@@ -160,20 +186,26 @@ export const CaseFacts = ({
   )
 }
 
-/** The project's logo on its own brand field. Used as a quiet corner mark. */
-export const BrandMark = ({ project, className }: { project: Project; className?: string }) => {
-  if (!project.logo) return null
-
-  return (
-    <div
-      className={cn(
-        "flex items-center justify-center rounded-2xl border border-white/10",
-        className,
-      )}
-      style={{
-        background: `linear-gradient(140deg, ${project.brand.from}, ${project.brand.to})`,
-      }}
-    >
+/**
+ * The project's logo on its own brand field. Used as a quiet corner mark.
+ *
+ * A project without a logo still renders the field, carrying its initial. It
+ * used to render nothing at all, which was fine when the mark only ever sat
+ * beside a heading — but in the index it holds a column, and one missing tile
+ * makes the whole list look misaligned rather than making one project look
+ * logo-less.
+ */
+export const BrandMark = ({ project, className }: { project: Project; className?: string }) => (
+  <div
+    className={cn(
+      "flex items-center justify-center overflow-hidden rounded-2xl border border-white/10",
+      className,
+    )}
+    style={{
+      background: `linear-gradient(140deg, ${project.brand.from}, ${project.brand.to})`,
+    }}
+  >
+    {project.logo ? (
       <img
         src={project.logo}
         alt={project.name}
@@ -181,6 +213,14 @@ export const BrandMark = ({ project, className }: { project: Project; className?
         decoding="async"
         className="max-h-[46%] max-w-[58%] object-contain"
       />
-    </div>
-  )
-}
+    ) : (
+      <span
+        aria-hidden="true"
+        className="font-display text-[0.875rem] font-semibold leading-none"
+        style={{ color: project.brand.ink }}
+      >
+        {project.name.trim().charAt(0).toUpperCase()}
+      </span>
+    )}
+  </div>
+)

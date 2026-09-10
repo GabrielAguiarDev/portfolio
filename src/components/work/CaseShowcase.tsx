@@ -58,7 +58,7 @@ const Devices = ({ project }: { project: Project }) => {
           ref={lead}
           className="min-w-0 w-1/2 sm:absolute sm:right-0 sm:top-0 sm:z-10 sm:w-[44%]"
         >
-          <PhoneFrame screenshot={project.screenshots?.[0]} alt={project.name}>
+          <PhoneFrame screenshot={project.figures?.[0]?.src} alt={project.name}>
             <YagoBooking />
           </PhoneFrame>
         </div>
@@ -68,7 +68,7 @@ const Devices = ({ project }: { project: Project }) => {
           className="min-w-0 w-[38%] sm:absolute sm:bottom-0 sm:left-0 sm:z-0 sm:w-[30%]"
           aria-hidden="true"
         >
-          <PhoneFrame lit={false} screenshot={project.screenshots?.[1]} className="opacity-95">
+          <PhoneFrame lit={false} screenshot={project.figures?.[1]?.src} className="opacity-95">
             <YagoHome />
           </PhoneFrame>
         </div>
@@ -107,7 +107,7 @@ const CaseShowcase = ({ project, index }: { project: Project; index: number }) =
   const devices = useReveal<HTMLDivElement>({ delay: 0.08 })
 
   return (
-    <article id={project.id} className="section-anchor container py-20 md:py-28 lg:py-32">
+    <article className="container pb-20 pt-10 md:pb-28 md:pt-12 lg:pb-32 lg:pt-14">
       <div className="grid gap-12 lg:grid-cols-12 lg:gap-10">
         <div className="min-w-0 lg:col-span-5 lg:pt-6">
           <CaseTitle project={project} index={index} />

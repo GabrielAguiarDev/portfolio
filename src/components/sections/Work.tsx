@@ -1,31 +1,29 @@
-import { ArrowUpRight } from "lucide-react"
-
 import { RevealText, useReveal } from "@/animation"
-import CaseConstellation from "@/components/work/CaseConstellation"
-import CaseImmersive from "@/components/work/CaseImmersive"
-import CaseShowcase from "@/components/work/CaseShowcase"
+import WorkIndex from "@/components/work/WorkIndex"
 import { COPY } from "@/content/copy"
-import { LINKS } from "@/content/profile"
-import { PROJECTS, type Layout, type Project } from "@/content/work"
 import { useLocale } from "@/i18n/useLocale"
 import { cn } from "@/lib/utils"
 
 /**
- * Each project picks its own composition. Repeating one layout three times
- * would turn a portfolio of products back into a grid of cards, which is the
- * one thing this section exists to avoid.
+ * The work section, on the home page.
+ *
+ * It used to render every case study inline, each in its own bespoke
+ * composition. That was the right shape for three projects and the wrong one
+ * for five: the section grew past nine viewports, and each new project made
+ * the page longer without making the argument stronger.
+ *
+ * The compositions did not go away — they moved to `/work/<id>`, one page per
+ * project, and what stays here is the index that leads to them. See
+ * `components/work/WorkIndex.tsx`.
+ *
+ * The link out to GitHub used to sit under the grid as a footnote. It is now
+ * the grid's last cell, which is both a better place for it and the thing that
+ * fills the sixth slot five projects leave empty.
  */
-const LAYOUTS: Record<Layout, (props: { project: Project; index: number }) => JSX.Element> = {
-  showcase: CaseShowcase,
-  immersive: CaseImmersive,
-  constellation: CaseConstellation,
-}
-
 const Work = () => {
   const { pick } = useLocale()
   const lead = useReveal<HTMLParagraphElement>({ delay: 0.14 })
   const eyebrow = useReveal<HTMLParagraphElement>()
-  const cta = useReveal<HTMLDivElement>({ delay: 0.08 })
 
   // The top padding sits on the <section>, not on the container inside it,
   // because the section is the element carrying the `id` — and
@@ -60,32 +58,8 @@ const Work = () => {
             {pick(COPY.work.lead)}
           </p>
         </div>
-      </div>
 
-      {PROJECTS.map((project, index) => {
-        const Case = LAYOUTS[project.layout]
-        return <Case key={project.id} project={project} index={index} />
-      })}
-
-      <div className="container pb-4">
-        <div
-          {...cta.revealProps}
-          className={cn(cta.revealProps.className, "border-t border-border pt-10")}
-        >
-          <a
-            href={`${LINKS.github}?tab=repositories`}
-            target="_blank"
-            rel="noreferrer noopener"
-            className="group inline-flex items-center gap-2 text-sm font-medium tracking-tight text-muted-foreground transition-colors hover:text-foreground"
-          >
-            <span className="rule-link">{pick(COPY.work.more)}</span>
-            <ArrowUpRight
-              size={15}
-              className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-              aria-hidden="true"
-            />
-          </a>
-        </div>
+        <WorkIndex />
       </div>
     </section>
   )

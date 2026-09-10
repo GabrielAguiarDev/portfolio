@@ -29,20 +29,57 @@ export const COPY = {
    * same reason everything else is: a screen reader set to Portuguese
    * announcing "Skip to content" is the one visitor who cannot skip past it.
    */
+  /*
+   * Page metadata, read by `useDocumentMeta`.
+   *
+   * Separate from the hero because the two are read in different places and
+   * under different constraints: the hero is the first line of a page someone
+   * is already looking at, and this is a paragraph that has to stand alone in a
+   * search result, next to nine competitors, describing a person the reader has
+   * never heard of.
+   */
+  meta: {
+    home: {
+      pt: "Gabriel Aguiar, desenvolvedor de software. Construo aplicativos móveis e plataformas web, trabalhando em todas as etapas: arquitetura, desenvolvimento, testes e publicação. Projetos em produção com usuários reais.",
+      en: "Gabriel Aguiar, software developer. I build mobile apps and web platforms, working across every stage: architecture, development, testing and release. Projects in production with real users.",
+    },
+  },
+
   a11y: {
     skip: { pt: "Pular para o conteúdo", en: "Skip to content" },
     sections: { pt: "Seções", en: "Sections" },
     social: { pt: "Redes sociais", en: "Social" },
   },
 
+  /*
+   * The hero.
+   *
+   * Short on purpose, and plain on purpose.
+   *
+   * It has been through two wrong versions. The first defined itself by
+   * negation ("not just the screen"), which spends half a sentence correcting
+   * an expectation nobody stated. The second replaced that with a dash and a
+   * three-part list, which is the house style of copy written by a machine and
+   * reads as such. Both were trying to prove something in the first breath.
+   *
+   * This one just says what he builds and that he builds all of it. Experience
+   * is not a word that appears here, and it does not need to be: naming two
+   * kinds of product and claiming every stage of both is a larger claim than
+   * any adjective, and the sections below spend the rest of the page backing
+   * it up.
+   *
+   * `lead` is the hero's line only. The page's meta description lives in
+   * `meta.home` below, so search results can be fuller than the hero without
+   * dragging the hero out to match.
+   */
   hero: {
     headline: {
-      pt: "Construo o produto inteiro, não só a tela.",
-      en: "I build the whole product, not just the screen.",
+      pt: "Construo aplicativos e plataformas web.",
+      en: "I build mobile apps and web platforms.",
     },
     lead: {
-      pt: "Arquitetura, produto e entrega — do primeiro desenho ao release. Trabalho com IA todos os dias e trato as decisões em volta dela como engenharia; segurança, do mesmo jeito: decisão de projeto, não revisão de última hora.",
-      en: "Architecture, product and delivery — from the first sketch to the release. I work with AI every day and treat the decisions around it as engineering; security the same way: a design decision, not a last-minute review.",
+      pt: "Trabalho em todas as etapas, da arquitetura até o produto no ar.",
+      en: "I work across every stage, from the architecture to the product going live.",
     },
     primary: { pt: "Ver os produtos", en: "See the work" },
     secondary: { pt: "Entrar em contato", en: "Get in touch" },
@@ -56,14 +93,50 @@ export const COPY = {
       en: "Products that are out there.",
     },
     lead: {
-      pt: "Três produtos reais, com usuários reais — dois mobile e um ecossistema web. Cada um pediu um tipo diferente de decisão de arquitetura.",
-      en: "Three real products with real users — two mobile, one web platform. Each demanded a different kind of architectural decision.",
+      pt: "Produtos reais, com usuários reais — mobile, web e um ecossistema inteiro. Cada um pediu um tipo diferente de decisão de arquitetura. Abra qualquer um para ver como foi resolvido.",
+      en: "Real products with real users — mobile, web, and one full platform. Each demanded a different kind of architectural decision. Open any of them to see how it was solved.",
     },
     live: { pt: "Em produção", en: "Live" },
     building: { pt: "Em desenvolvimento", en: "In development" },
     stack: { pt: "Stack", en: "Stack" },
     role: { pt: "Meu papel", en: "My role" },
     more: { pt: "Mais projetos no GitHub", en: "More projects on GitHub" },
+    /* The last cell of the grid — a way out, not a sixth project. */
+    moreKind: { pt: "Repositórios públicos", en: "Public repositories" },
+
+    /* The system section on a case-study page. */
+    surfaces: { pt: "O sistema", en: "The system" },
+    surfaceCount: { pt: "superfícies", en: "surfaces" },
+    surfacesTitle: {
+      pt: "Um produto, várias superfícies.",
+      en: "One product, several surfaces.",
+    },
+    surfacesLead: {
+      pt: "Cada peça atende uma pessoa diferente e resolve um problema diferente, partindo da mesma base.",
+      en: "Each piece serves a different person and solves a different problem, off the same foundation.",
+    },
+    surfaceAudience: { pt: "Para", en: "For" },
+
+    /* The case-study pages. */
+    backToWork: { pt: "Projetos", en: "Work" },
+    next: { pt: "Próximo projeto", en: "Next project" },
+    /** Where the work happened — employer or client. */
+    context: { pt: "Contexto", en: "Context" },
+    freelance: { pt: "Freelancer", en: "Freelance" },
+    /**
+     * Shown wherever a case study exists as structure but has not been
+     * written. Deliberately blunt: a placeholder that reads as finished copy
+     * is worse than no page at all.
+     */
+    draft: { pt: "Case em preparação", en: "Case study in progress" },
+    noFigures: {
+      pt: "As telas deste projeto ainda não foram adicionadas.",
+      en: "This project's screens haven't been added yet.",
+    },
+    draftBody: {
+      pt: "Este projeto ainda não foi documentado. O conteúdo abaixo é estrutura, não descrição — nada aqui deve ser lido como informação sobre o produto.",
+      en: "This project hasn't been documented yet. What follows is structure, not description — nothing here should be read as information about the product.",
+    },
   },
 
   /**
@@ -347,17 +420,60 @@ export const COPY = {
   impact: {
     eyebrow: { pt: "Impacto", en: "Impact" },
     title: { pt: "O que isso significa na prática.", en: "What that means in practice." },
+    /*
+     * Three figures, three different questions. There were four, and three of
+     * them answered the same one: products built, surfaces built and products
+     * live all measured volume, so the row said one thing three times over.
+     *
+     * How long, how much, how far.
+     */
+    years: { pt: "Anos de experiência", en: "Years of experience" },
+    /*
+     * Counts surfaces, not products, and only the ones actually running. Every
+     * product here is a system: a panel, an admin, one or two apps. "Apps
+     * published" left all of that out and framed the work as mobile, which had
+     * stopped being true.
+     */
+    surfaces: { pt: "Sistemas e apps em produção", en: "Systems and apps in production" },
+
+    /*
+     * The weight figures. They answer the question the others cannot: not how
+     * much was built, but what it carries. Rendered only once set in
+     * profile.ts, so the row never shows a gap where a number should be.
+     */
+    revenue: {
+      pt: "Transacionados nos sistemas em que trabalhei",
+      en: "Transacted through systems I worked on",
+    },
+    installs: { pt: "Instalações dos apps publicados", en: "Installs of the apps shipped" },
+    /*
+     * The reason the figures above are larger than the grid further up. Said
+     * plainly, because "I have done more than this" reads as a boast when it is
+     * implied and as a fact when it is stated.
+     */
+    /*
+     * Carries the half of the argument that has no number attached to it, and
+     * needs none: what these systems hold up. A count of products says nothing
+     * about whether any of them survived the week of the year when everybody
+     * arrives at once.
+     */
+    selection: {
+      pt: "Os projetos abertos aqui são uma seleção; parte do que construí é interna e não pode ser mostrada. São sistemas em uso diário, em {sectors}, sustentando operação e receita reais, e que já seguraram campanhas com milhares de acessos simultâneos.",
+      en: "The projects opened here are a selection; some of what I have built is internal and cannot be shown. These are systems in daily use across {sectors}, holding up real operations and real revenue, that have already carried campaigns with thousands of concurrent users.",
+    },
   },
 
   experience: {
     eyebrow: { pt: "Experiência", en: "Experience" },
     title: { pt: "Onde eu construí isso.", en: "Where I built it." },
     lead: {
-      pt: "Responsável pela arquitetura e pelo ciclo completo dos produtos que construí — do primeiro desenho à manutenção depois de estarem no ar.",
-      en: "Responsible for the architecture and the full cycle of the products I built — from the first sketch to the maintenance after they were live.",
+      pt: "Arquitetura e ciclo completo dos produtos que construí — do primeiro desenho à manutenção depois de estarem no ar, dentro de uma agência e para clientes diretos.",
+      en: "Architecture and the full cycle of the products I built — from the first sketch to the maintenance after they were live, inside an agency and for direct clients.",
     },
     responsibilities: { pt: "Responsabilidades", en: "Responsibilities" },
     highlights: { pt: "Principais contribuições", en: "Key contributions" },
+    /* Only shown where the company name doesn't already say what this was. */
+    kindFreelance: { pt: "Freelancer", en: "Freelance" },
   },
 
   about: {

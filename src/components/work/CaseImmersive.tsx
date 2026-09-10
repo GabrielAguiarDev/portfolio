@@ -22,7 +22,7 @@ const CaseImmersive = ({ project, index }: { project: Project; index: number }) 
   const phone = useFloat<HTMLDivElement>({ y: animation.parallax.caseDevice, rotate: -4 })
 
   return (
-    <article id={project.id} className="section-anchor relative overflow-hidden border-y border-border py-20 md:py-28 lg:py-32">
+    <article className="relative overflow-hidden border-b border-border pb-20 pt-10 md:pb-28 md:pt-12 lg:pb-32 lg:pt-14">
       {/* The brand field. Two soft washes, no hard edges — the colour has to
           feel like light in the room, not a coloured rectangle. */}
       <div
@@ -75,7 +75,7 @@ const CaseImmersive = ({ project, index }: { project: Project; index: number }) 
             ref={phone}
             className="absolute -bottom-12 right-[8%] w-[27%] max-w-[168px] sm:-bottom-16 sm:w-[22%] lg:-bottom-20 lg:right-[16%]"
           >
-            <PhoneFrame screenshot={project.screenshots?.[0]} alt={project.name}>
+            <PhoneFrame screenshot={project.figures?.[0]?.src} alt={project.name}>
               <StudioChat />
             </PhoneFrame>
           </div>

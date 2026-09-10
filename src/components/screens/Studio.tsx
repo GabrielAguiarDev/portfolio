@@ -29,10 +29,16 @@ export const BrowserFrame = ({
   children,
   url,
   className,
+  screenshot,
+  alt,
 }: {
-  children: ReactNode
+  /** The interface drawn in code. Omitted when `screenshot` carries the view. */
+  children?: ReactNode
   url: string
   className?: string
+  /** Capture path. When set it replaces the coded view entirely. */
+  screenshot?: string
+  alt?: string
 }) => (
   <div
     className={cn(
@@ -55,7 +61,17 @@ export const BrowserFrame = ({
       </div>
       <div className="w-[42px]" aria-hidden="true" />
     </div>
-    {children}
+    {screenshot ? (
+      <img
+        src={screenshot}
+        alt={alt ?? ""}
+        loading="lazy"
+        decoding="async"
+        className="block w-full"
+      />
+    ) : (
+      children
+    )}
   </div>
 )
 

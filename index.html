@@ -9,7 +9,7 @@
         <title>Gabriel Aguiar — Software Engineer</title>
         <meta
             name="description"
-            content="Gabriel Aguiar builds complete software products — architecture, implementation and delivery. Treats AI as engineering (prompt engineering, RAG, MCP, orchestrated subagents, guardrails and cost control) and security as a design decision. Selected work: Yago, Y-Studio and Porto Seguro Shopping."
+            content="Gabriel Aguiar builds complete software products — architecture, implementation and delivery. Treats AI as engineering (prompt engineering, RAG, MCP, orchestrated subagents, guardrails and cost control) and security as a design decision."
         />
         <meta name="author" content="Gabriel Aguiar" />
         <link rel="canonical" href="https://gabrielaguiar.dev/" />
@@ -26,10 +26,19 @@
             property="og:description"
             content="I build the whole product, not just the screen. Architecture, product and delivery — with AI treated as engineering and security treated as a design decision."
         />
+        <meta property="og:url" content="https://gabrielaguiar.dev/" />
         <meta property="og:type" content="website" />
         <meta property="og:locale" content="pt_BR" />
         <meta property="og:locale:alternate" content="en_US" />
-        <meta name="twitter:card" content="summary_large_image" />
+        <!--
+            summary_large_image needs an image; without one the card renders
+            empty. There is no share image in /public yet, so the card is the
+            small variant until one exists — an accurate small card beats a
+            broken large one.
+            TODO: add /public/og.png (1200x630) and switch this back to
+            summary_large_image, adding <meta property="og:image">.
+        -->
+        <meta name="twitter:card" content="summary" />
 
         <script type="application/ld+json">
             {

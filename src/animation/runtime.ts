@@ -155,17 +155,51 @@ export function sectionScrollTop(element: HTMLElement): number {
  * nothing about the padding correction above — so letting it resolve the
  * target would mean two subtly different landings depending on whether the
  * motion chunk had finished loading yet.
+ *
+ * `immediate` jumps without animating. A route change needs it: arriving at a
+ * new page should feel like arriving, not like being scrolled there.
  */
-export function motionScrollTo(target: HTMLElement | number, offset = 0) {
+export function motionScrollTo(
+  target: HTMLElement | number,
+  offset = 0,
+  { immediate = false }: { immediate?: boolean } = {},
+) {
   const runtime = getMotionRuntime()
   const top = (typeof target === "number" ? target : sectionScrollTop(target)) + offset
 
   if (runtime?.lenis) {
-    runtime.lenis.scrollTo(top)
+    runtime.lenis.scrollTo(top, immediate ? { immediate: true } : undefined)
     return
   }
 
-  window.scrollTo({ top, behavior: prefersReducedMotion() ? "auto" : "smooth" })
+  window.scrollTo({ top, behavior: immediate || prefersReducedMotion() ? "auto" : "smooth" })
+}
+
+/**
+ * Re-measures every scroll-linked position.
+ *
+ * ScrollTrigger measures the document once, when a trigger is created, and
+ * again on `document.fonts.ready` (see `init`). A route change replaces the
+ * entire document body and changes its height by thousands of pixels without
+ * either of those firing, which leaves triggers created before the swap
+ * anchored to a page that no longer exists. No-ops until the runtime loads.
+ */
+export function refreshScrollTriggers() {
+  getMotionRuntime()?.ScrollTrigger.refresh()
+}
+
+/**
+ * Forces the smooth-scroll runtime to re-measure the document.
+ *
+ * Lenis clamps every scroll target against a cached limit, and that cache is
+ * refreshed by a ResizeObserver debounced by 250ms. A route change replaces the
+ * document in a single frame, so for a quarter of a second afterwards Lenis
+ * still believes the *previous* page's height — and a restore past that height
+ * is silently clamped down to it. Anything that jumps immediately after
+ * swapping the document has to re-measure first.
+ */
+export function resizeSmoothScroll() {
+  getMotionRuntime()?.lenis?.resize()
 }
 
 /** Pauses or resumes smooth scrolling — used while the mobile menu is open. */
