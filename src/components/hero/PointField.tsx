@@ -203,6 +203,9 @@ const PointField = ({ className, onFormed }: PointFieldProps) => {
     const disperseSpan = isMobile
       ? config.disperse.span.mobile
       : config.disperse.span.desktop
+    const bottomFade = isMobile
+      ? config.disperse.bottomFade.mobile
+      : config.disperse.bottomFade.desktop
     const extent = built.extent
     let points = built.points
     let width = 0
@@ -273,10 +276,19 @@ const PointField = ({ className, onFormed }: PointFieldProps) => {
       canvas.height = Math.round(height * dpr)
       context.setTransform(dpr, 0, 0, dpr, 0, 0)
 
-      // Cached here so the scroll handler and the draw loop never have to read
+      // The scatter is keyed to the hero being scrolled away, so it measures
+      // the element the canvas is positioned inside rather than the canvas.
+      // The two used to be the same box; on a phone the canvas now bleeds past
+      // the hero at both edges (`pointField.bleed`), and measuring itself here
+      // would report a top above the top of the page — opening the field
+      // already part-scattered, by exactly the height of the bleed.
+      //
+      // Cached so the scroll handler and the draw loop never have to read
       // layout, which would force a reflow on every frame of every scroll.
-      heroTop = rect.top + window.scrollY
-      heroHeight = rect.height || 1
+      const host = canvas.offsetParent ?? canvas
+      const hostRect = host.getBoundingClientRect()
+      heroTop = hostRect.top + window.scrollY
+      heroHeight = hostRect.height || 1
       readScroll()
     }
 
@@ -419,7 +431,7 @@ const PointField = ({ className, onFormed }: PointFieldProps) => {
         // opposite: points arriving from beyond the fold should be visible on
         // their way in, not held back until they clear an invisible line.
         if (scrollScatter > 0) {
-          const fadeHeight = height * config.disperse.bottomFade * scrollScatter
+          const fadeHeight = height * bottomFade * scrollScatter
           const fadeStart = height - fadeHeight
 
           if (fadeHeight > 0 && screenY > fadeStart) {
@@ -594,7 +606,12 @@ const PointField = ({ className, onFormed }: PointFieldProps) => {
     <canvas
       ref={canvasRef}
       aria-hidden="true"
-      className={cn("pointer-events-none absolute inset-0 h-full w-full", className)}
+      // Written as `inset-x-0 top-0 h-full` rather than `inset-0 h-full`, which
+      // is the same box: it lets a caller move the top and bottom edges (the
+      // phone's bleed, in `Hero.tsx`) and have tailwind-merge actually drop the
+      // value being replaced. Against `inset-0` both classes survive the merge
+      // and the winner is decided by stylesheet order instead of by the caller.
+      className={cn("pointer-events-none absolute inset-x-0 top-0 h-full w-full", className)}
     />
   )
 }

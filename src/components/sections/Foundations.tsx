@@ -101,6 +101,11 @@ const LayerDiagram = () => {
   // The canvas is a progressive enhancement, so the index has to hold the
   // section on its own when it is switched off — without leaving half the row
   // as an empty box where the diagram would have been.
+  //
+  // It is drawn on a phone too, and deliberately so. The mobile trim on this
+  // page cuts text, not pictures: a diagram earns its vertical space by saying
+  // something a paragraph would need four sentences to say, which is exactly
+  // the trade a narrow screen wants. See `content/mobile.ts`.
   const drawn = animation.enabled.layerStack
 
   return (
@@ -125,7 +130,12 @@ const LayerDiagram = () => {
       <div className={cn(drawn ? "lg:col-span-5 lg:col-start-8" : "lg:col-span-8")}>
         <ol>
           {layers.map((layer, index) => {
-            const lit = active === index
+            // Gated on `drawn` as well as on `active`: nothing should be lit
+            // when there is no diagram above it to explain the highlight. The
+            // canvas reports a null layer when it scrolls out of view, but not
+            // when it unmounts, so this is what keeps the two honest if the
+            // flag above ever becomes something that changes at runtime again.
+            const lit = drawn && active === index
 
             return (
               <li
@@ -158,6 +168,9 @@ const LayerDiagram = () => {
           })}
         </ol>
 
+        {/* One line, and it is what turns the diagram above from an object
+            into an argument — so it stays on a phone with the diagram it
+            frames. The trim is for paragraphs, not for labels. */}
         <p className="mt-6 max-w-[38ch] text-pretty text-[0.8125rem] leading-relaxed text-muted-foreground">
           {pick(COPY.foundations.layersCaption)}
         </p>
@@ -189,7 +202,11 @@ const Principle = ({
         {pick(principle.body)}
       </p>
 
-      <ul className="mt-5 flex flex-wrap gap-2">
+      {/* Four or five chips, wrapping to two or three lines on a phone, under
+          each of four principles — the single largest block of vertical space
+          on the page that carries no sentence. The names are all in the toolkit
+          index further down, which is where a reader goes looking for them. */}
+      <ul className="mt-5 hidden flex-wrap gap-2 md:flex">
         {principle.tools.map((tool) => (
           <li key={tagKey(tool)} className="tag">
             {pickTag(tool)}

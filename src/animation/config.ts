@@ -149,10 +149,10 @@ export const animation = {
     /**
      * Where the glyph sits inside the canvas, as a fraction of its width.
      *
-     * The canvas itself always covers the whole hero. Offsetting the glyph
-     * here rather than by shrinking the canvas is what lets points scatter
-     * across the full screen on scroll, instead of hitting an invisible wall
-     * at the canvas edge.
+     * The canvas is never smaller than the hero, and on a phone is larger than
+     * it — see `bleed`. Offsetting the glyph here rather than by shrinking the
+     * canvas is what lets points scatter across the full screen on scroll,
+     * instead of hitting an invisible wall at the canvas edge.
      */
     center: { desktop: 0.74, mobile: 0.5 },
     /**
@@ -257,12 +257,18 @@ export const animation = {
       /**
        * Height of the soft bottom edge, as a fraction of the canvas.
        *
-       * It opens up only as the field scatters. The canvas ends where the hero
-       * ends, so points flying downward used to be guillotined against that
-       * line; this dissolves them into it instead. At rest the glyph never
-       * reaches down here, so there is nothing to fade and the falloff is off.
+       * It opens up only as the field scatters, and exists because a canvas
+       * that ends where the hero ends guillotines every point flying downward
+       * against that line. At rest the glyph never reaches down here, so there
+       * is nothing to fade and the falloff is off.
+       *
+       * Off on a phone, where the canvas no longer ends at the fold: it bleeds
+       * past the hero at both edges (see `bleed` below) and the CSS mask
+       * dissolves it out there, off screen. Keeping this on as well would dim
+       * the points over the bottom third of the *visible* screen, which is the
+       * band the bleed exists to fill.
        */
-      bottomFade: 0.38,
+      bottomFade: { desktop: 0.38, mobile: 0 },
       /**
        * How much a fully scattered point is dimmed, 0–1.
        *
@@ -273,6 +279,30 @@ export const animation = {
        */
       fade: 0.88,
     },
+
+    /**
+     * How far the canvas reaches past the hero, top and bottom, as a fraction
+     * of the hero's height. Documentation only — the box is CSS, and the value
+     * lives on the element in `Hero.tsx`, where the mask that dissolves these
+     * edges has to agree with it.
+     *
+     * Zero on a wide screen. There the field sits beside the type with room to
+     * spare, and the hero is the whole of the first screen anyway.
+     *
+     * On a phone it is the fix for a specific complaint: scrolling scatters the
+     * field, and the points were being cut off around the middle of the screen.
+     * The canvas ended at the hero, and by the time the scatter completed the
+     * hero had travelled far enough up that its bottom edge was mid-viewport —
+     * so the lower half of the screen had no canvas to draw into. Bleeding past
+     * the hero at both ends puts that edge off screen, and the points read as
+     * spreading across the whole display.
+     *
+     * Symmetric on purpose, and this is the one thing not to change casually:
+     * the draw loop centres the glyph on the canvas (`cy = height / 2`), so an
+     * uneven bleed would shift the resting glyph off the hero's centre and out
+     * from behind the copy.
+     */
+    bleed: { desktop: 0, mobile: 0.2 },
 
     /**
      * The entrance: the glyph assembling itself on load.

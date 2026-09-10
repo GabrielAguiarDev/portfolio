@@ -1,8 +1,8 @@
-import { ArrowRight } from "lucide-react"
 import type { CSSProperties } from "react"
 
 import { RevealText, gridDelay, useReveal } from "@/animation"
 import { COPY } from "@/content/copy"
+import { MOBILE } from "@/content/mobile"
 import { TOOLKIT, type ToolGroup } from "@/content/toolkit"
 import { useScrollEdges } from "@/hooks/useScrollEdges"
 import { tagKey, useLocale } from "@/i18n/useLocale"
@@ -39,12 +39,19 @@ const Group = ({ group, index }: { group: ToolGroup; index: number }) => {
   const { revealProps } = useReveal<HTMLDivElement>({ delay: gridDelay(index) })
   const row = useScrollEdges<HTMLDivElement>()
 
+  // Nine rows is a reasonable appendix to run an eye down and a long way to
+  // drag a thumb through on the way to the contact section. A phone gets the
+  // five groups the page argues for by name; see `content/mobile.ts` for why
+  // it is a named list rather than the first five.
+  const kept = MOBILE.toolkitGroups.includes(group.label.en)
+
   return (
     <div
       {...revealProps}
       className={cn(
         revealProps.className,
-        "grid gap-3 border-t border-border py-6 md:grid-cols-[10rem_1fr] md:gap-10 md:py-7",
+        "gap-3 border-t border-border py-6 md:grid md:grid-cols-[10rem_1fr] md:gap-10 md:py-7",
+        kept ? "grid" : "hidden",
       )}
     >
       <p className="eyebrow md:pt-1.5">{pick(group.label)}</p>
@@ -108,7 +115,6 @@ const Toolkit = () => {
   const { pick } = useLocale()
   const eyebrow = useReveal<HTMLParagraphElement>()
   const lead = useReveal<HTMLParagraphElement>({ delay: 0.14 })
-  const hint = useReveal<HTMLParagraphElement>({ delay: 0.2 })
 
   return (
     <section id="toolkit" className="section-anchor border-t border-border py-20 md:py-28">
@@ -138,21 +144,11 @@ const Toolkit = () => {
           </p>
         </div>
 
-        {/* One instruction for the whole index rather than a marker on each of
-            the nine rows. The fades carry which row has more and in which
-            direction; this only has to say that the rows move at all. */}
-        <p
-          {...hint.revealProps}
-          className={cn(
-            hint.revealProps.className,
-            "mt-14 flex items-center justify-end gap-2 md:mt-16 lg:hidden",
-          )}
-        >
-          <span className="eyebrow">{pick(COPY.toolkit.swipe)}</span>
-          <ArrowRight size={13} className="text-muted-foreground" aria-hidden="true" />
-        </p>
-
-        <div className="mt-4 lg:mt-16">
+        {/* `mt-14` and not `mt-4`: a "swipe to see more" line used to stand
+            between this and the lead above it, and it was carrying the gap.
+            The edge fades say the same thing better — a row that dissolves at
+            its right edge reads as continuing without being told to. */}
+        <div className="mt-14 md:mt-16">
           {TOOLKIT.map((group, index) => (
             <Group key={group.label.en} group={group} index={index} />
           ))}

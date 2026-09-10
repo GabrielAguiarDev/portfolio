@@ -3,6 +3,7 @@ import { useMemo } from "react"
 import { RevealText, gridDelay, useReveal } from "@/animation"
 import AgentGraph from "@/components/ai/AgentGraph"
 import { COPY } from "@/content/copy"
+import { MOBILE } from "@/content/mobile"
 import { tagKey, useLocale } from "@/i18n/useLocale"
 import { cn } from "@/lib/utils"
 
@@ -122,7 +123,22 @@ const Pillar = ({
   const { revealProps } = useReveal<HTMLLIElement>({ delay: gridDelay(index) })
 
   return (
-    <li {...revealProps} className={cn(revealProps.className, "border-t border-border pt-6")}>
+    <li
+      {...revealProps}
+      className={cn(
+        revealProps.className,
+        "border-t border-border pt-6",
+        // The diagram above is the claim and it stays on every screen; these
+        // are the detail behind it, at four sentences each. A phone gets the
+        // two that distinguish the work — see `content/mobile.ts`.
+        //
+        // `md:list-item` and not `md:block`: an <li> restored as a block is no
+        // longer a list item to a screen reader, so the list would announce two
+        // of four on a wide screen. Desktop has to be untouched, and that
+        // includes the parts of it nobody looks at.
+        index >= MOBILE.aiPillars && "hidden md:list-item",
+      )}
+    >
       <div className="flex items-baseline gap-4">
         <span className="font-mono text-[0.6875rem] text-muted-foreground">
           {String(index + 1).padStart(2, "0")}
@@ -134,7 +150,10 @@ const Pillar = ({
         {pick(pillar.body)}
       </p>
 
-      <ul className="mt-5 flex flex-wrap gap-2">
+      {/* As in Foundations: chips are the cheapest thing on the page to cut
+          and the most expensive to scroll past. The AI names are all in the
+          toolkit index, under its own heading. */}
+      <ul className="mt-5 hidden flex-wrap gap-2 md:flex">
         {pillar.tools.map((tool) => (
           <li key={tagKey(tool)} className="tag">
             {pickTag(tool)}

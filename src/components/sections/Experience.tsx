@@ -1,6 +1,7 @@
 import { RevealText, gridDelay, useReveal } from "@/animation"
 import { COPY } from "@/content/copy"
 import { ROLES, type Role } from "@/content/experience"
+import { MOBILE } from "@/content/mobile"
 import { useLocale } from "@/i18n/useLocale"
 import { cn } from "@/lib/utils"
 
@@ -64,12 +65,36 @@ const Entry = ({ role, index }: { role: Role; index: number }) => {
               "Key contributions" heading reads as a role that had none. */}
           {role.highlights.length ? (
             <>
-              <p className="eyebrow mt-8">{pick(COPY.experience.highlights)}</p>
-              <ul className="mt-4 space-y-4">
-                {role.highlights.map((item) => (
+              {/* Driven by `MOBILE.roleHighlights` rather than hardcoded here,
+                  because this is the one trim on the page that removes copy a
+                  phone can find nowhere else — so it is the one most likely to
+                  want tuning. See the note on it in `content/mobile.ts`.
+
+                  Hidden per element rather than behind one wrapper, so the
+                  desktop tree stays exactly what it was. */}
+              <p
+                className={cn(
+                  "eyebrow mt-8",
+                  !MOBILE.roleHighlights && "hidden md:block",
+                )}
+              >
+                {pick(COPY.experience.highlights)}
+              </p>
+              <ul
+                className={cn(
+                  "mt-4 space-y-4",
+                  !MOBILE.roleHighlights && "hidden md:block",
+                )}
+              >
+                {role.highlights.map((item, itemIndex) => (
                   <li
                     key={item.en}
-                    className="border-l border-primary/40 pl-5 text-pretty text-sm leading-relaxed text-foreground/85"
+                    className={cn(
+                      "border-l border-primary/40 pl-5 text-pretty text-sm leading-relaxed text-foreground/85",
+                      // `md:list-item` and not `md:block`: an <li> restored as
+                      // a block stops being a list item to a screen reader.
+                      itemIndex >= MOBILE.roleHighlights && "hidden md:list-item",
+                    )}
                   >
                     {pick(item)}
                   </li>
@@ -85,8 +110,18 @@ const Entry = ({ role, index }: { role: Role; index: number }) => {
         >
           <p className="eyebrow">{pick(COPY.experience.responsibilities)}</p>
           <ul className="mt-5 space-y-3.5">
-            {role.responsibilities.map((item) => (
-              <li key={item.en} className="flex gap-3.5">
+            {role.responsibilities.map((item, itemIndex) => (
+              <li
+                key={item.en}
+                className={cn(
+                  "flex gap-3.5",
+                  // Written most-important-first, so a phone can take the top
+                  // of each list and lose nothing that decides anything. Six
+                  // bullets across four roles is twenty-four lines of the same
+                  // shape — see `content/mobile.ts`.
+                  itemIndex >= MOBILE.roleResponsibilities && "hidden md:flex",
+                )}
+              >
                 <span
                   aria-hidden="true"
                   className="mt-[0.55rem] h-px w-4 shrink-0 bg-foreground/30"
@@ -99,7 +134,7 @@ const Entry = ({ role, index }: { role: Role; index: number }) => {
           </ul>
 
           {role.stack.length ? (
-            <ul className="mt-8 flex flex-wrap gap-2">
+            <ul className="mt-8 hidden flex-wrap gap-2 md:flex">
               {role.stack.map((tool) => (
                 <li key={tool} className="tag">
                   {tool}

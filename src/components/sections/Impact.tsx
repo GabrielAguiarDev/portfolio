@@ -199,7 +199,12 @@ const Impact = () => {
           {pick(COPY.impact.selection).replace("{sectors}", sectors)}
         </p>
 
-        <ul className="mt-14 grid gap-x-10 gap-y-8 border-t border-border pt-10 md:grid-cols-3">
+        {/* The qualitative half of the section. It restates, in three lines,
+            what Foundations and the AI section have each already argued at
+            length — which is exactly what a wide screen wants (the figures and
+            the claims read as one row) and exactly what a phone does not (they
+            arrive as a third repetition, stacked). */}
+        <ul className="mt-14 hidden gap-x-10 gap-y-8 border-t border-border pt-10 md:grid md:grid-cols-3">
           {claims.map((claim) => (
             <Claim key={claim.value.en} claim={claim} />
           ))}
