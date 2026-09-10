@@ -1,11 +1,28 @@
 import { ArrowDown, ArrowRight, Github, Linkedin } from "lucide-react"
+import { useCallback, useEffect, useState } from "react"
 
-import { RevealText, motionScrollTo, useReveal } from "@/animation"
+import { animation, RevealText, motionScrollTo, useReveal } from "@/animation"
 import PointField from "@/components/hero/PointField"
+import { pointFieldIntroPlays } from "@/components/hero/pointFieldIntro"
 import { COPY } from "@/content/copy"
 import { hasEmail, LINKS, PROFILE } from "@/content/profile"
 import { useLocale } from "@/i18n/useLocale"
 import { cn } from "@/lib/utils"
+
+/**
+ * The longest the copy is ever held for the point field's entrance, in ms.
+ *
+ * The field reports back the moment the glyph is there, and reports back
+ * immediately when there is no entrance to run, so this is only ever reached
+ * by a field that failed outright — a canvas context the browser refused, a
+ * chunk that never evaluated. The copy is the page's content and it is not
+ * allowed to depend on a piece of scenery, so it comes in on its own a beat
+ * after the entrance would have finished either way.
+ */
+const HOLD_CEILING_MS =
+  animation.pointField.intro.holdMs +
+  animation.pointField.intro.durationMs +
+  animation.pointField.intro.ceilingGraceMs
 
 /**
  * The hero.
@@ -17,13 +34,35 @@ import { cn } from "@/lib/utils"
  *
  * That object is the point field: it carries the whole visual weight, which is
  * why it is sized and positioned as a subject rather than as a backdrop.
+ *
+ * On a phone it also carries the opening. There the field cannot stand beside
+ * the type, so it is built in front of the visitor instead: the points arrive
+ * scrambled, gather into `</>`, and the copy waits and then fades up over the
+ * finished object. Desktop opens with everything already in place — see the
+ * note on `pointField.intro` in the animation config.
  */
 const Hero = () => {
   const { pick } = useLocale()
-  const eyebrow = useReveal<HTMLParagraphElement>({ delay: 0.05 })
-  const lead = useReveal<HTMLParagraphElement>({ delay: 0.5 })
-  const actions = useReveal<HTMLDivElement>({ delay: 0.6 })
-  const scroll = useReveal<HTMLDivElement>({ delay: 0.95 })
+
+  // Decided synchronously, on the first render, and never re-opened. Deciding
+  // it in an effect would paint the copy and then take it away again, which is
+  // the one thing worse than either state.
+  const [held, setHeld] = useState(
+    () => animation.enabled.reveal && pointFieldIntroPlays(),
+  )
+
+  const release = useCallback(() => setHeld(false), [])
+
+  useEffect(() => {
+    if (!held) return
+    const timer = window.setTimeout(release, HOLD_CEILING_MS)
+    return () => window.clearTimeout(timer)
+  }, [held, release])
+
+  const eyebrow = useReveal<HTMLParagraphElement>({ delay: 0.05, hold: held })
+  const lead = useReveal<HTMLParagraphElement>({ delay: 0.5, hold: held })
+  const actions = useReveal<HTMLDivElement>({ delay: 0.6, hold: held })
+  const scroll = useReveal<HTMLDivElement>({ delay: 0.95, hold: held })
 
   const contactHref = hasEmail ? LINKS.email : LINKS.linkedin
 
@@ -47,13 +86,26 @@ const Hero = () => {
         headline is the LCP element and nothing is allowed to compete with it.
       */}
       <PointField
+        onFormed={release}
         className={cn(
           // On a phone the type sits right on top of the glyph. It cannot be
           // masked into a ring the way a sphere could — punching out the middle
-          // would take the slash with it — so it just drops to a level where it
-          // reads as texture behind the copy, with its top and bottom edges
-          // dissolved so it never looks cropped by the fold.
-          "opacity-[0.28] [mask-image:linear-gradient(to_bottom,transparent,#000_22%,#000_78%,transparent)]",
+          // would take the slash with it — so it drops to a level where it
+          // reads behind the copy rather than through it, with its top and
+          // bottom edges dissolved so it never looks cropped by the fold.
+          //
+          // Not as far down as it once sat, though: the glyph is the thing the
+          // page opens with now, and a field faint enough to be mistaken for
+          // noise is not worth assembling in front of anyone. It is held at a
+          // level where the points read as points.
+          //
+          // While it is assembling it is nearly at full strength — for that
+          // beat it is the only thing on the screen — and steps back over the
+          // second the copy takes to arrive. The transition is the handover,
+          // not a flourish.
+          "[mask-image:linear-gradient(to_bottom,transparent,#000_22%,#000_78%,transparent)]",
+          "transition-opacity duration-1000 ease-out",
+          held ? "opacity-90" : "opacity-[0.45]",
           "-z-10 lg:opacity-100",
           // A plain left-hand fade, not a vignette: the glyph stays whole and
           // only the edge running under the type falls away. Held well left of
@@ -64,7 +116,11 @@ const Hero = () => {
         )}
       />
 
-      <div className="container relative w-full">
+      {/* While the copy is held it is `opacity: 0` but still laid out, and a
+          tap where the primary button is about to be would scroll to Work from
+          what looks like empty space. It is not there yet, so it does not take
+          taps yet either. */}
+      <div className={cn("container relative w-full", held && "pointer-events-none")}>
         <div className="max-w-[34rem] md:max-w-[42rem] lg:max-w-[46rem]">
           <p
             {...eyebrow.revealProps}
@@ -88,6 +144,7 @@ const Hero = () => {
               text={pick(COPY.hero.headline)}
               className="display-xl block max-w-[15ch] text-balance text-foreground"
               delay={0.08}
+              hold={held}
             />
           </h1>
 

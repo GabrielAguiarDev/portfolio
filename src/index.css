@@ -316,6 +316,41 @@
   }
 
   /*
+   * Fades a horizontally scrolling strip out at whichever edge still has
+   * content beyond it.
+   *
+   * The widths are set per element, from `useScrollEdges`, and both default to
+   * zero — which resolves to a gradient whose stops sit on top of each other
+   * at both ends, i.e. a mask that hides nothing. So a strip that fits, or one
+   * scrolled to its end, is left completely alone: the fade is only ever drawn
+   * where there is genuinely something more to see, which is what makes it
+   * readable as a signal rather than as decoration.
+   *
+   * A mask rather than an overlay gradient, for the same reason as
+   * `.portrait-fade` below: these strips sit on the page's own ground, and an
+   * overlay would have to guess that colour and would leave a visible block
+   * anywhere the guess was wrong.
+   */
+  .edge-fade {
+    --edge-fade-start: 0px;
+    --edge-fade-end: 0px;
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 var(--edge-fade-start),
+      #000 calc(100% - var(--edge-fade-end)),
+      transparent
+    );
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 var(--edge-fade-start),
+      #000 calc(100% - var(--edge-fade-end)),
+      transparent
+    );
+  }
+
+  /*
    * Dissolves the top and bottom of a portrait into the page.
    *
    * A mask, not an overlay gradient. An overlay paints a colour on top, which

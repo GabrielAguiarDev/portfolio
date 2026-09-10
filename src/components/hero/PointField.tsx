@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react"
 
 import { animation, MOBILE_BREAKPOINT, prefersReducedMotion } from "@/animation"
+import { pointFieldIntroPlays } from "@/components/hero/pointFieldIntro"
 import { cn } from "@/lib/utils"
 
 /**
@@ -168,8 +169,23 @@ function buildGlyph(count: number): { points: Point[]; extent: Extent } {
   return { points, extent }
 }
 
-const PointField = ({ className }: { className?: string }) => {
+type PointFieldProps = {
+  className?: string
+  /**
+   * Called once the glyph is there, so the hero can bring its copy in on top
+   * of it — either because the entrance has just built it, or straight away
+   * because there was no entrance to wait for.
+   */
+  onFormed?: () => void
+}
+
+const PointField = ({ className, onFormed }: PointFieldProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+
+  // The draw loop is set up once and outlives any number of renders, so it
+  // reads the callback through a ref rather than closing over the first one.
+  const onFormedRef = useRef(onFormed)
+  onFormedRef.current = onFormed
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -183,6 +199,10 @@ const PointField = ({ className }: { className?: string }) => {
     const reduced = prefersReducedMotion()
 
     const built = buildGlyph(isMobile ? config.count.mobile : config.count.desktop)
+    const dotSize = isMobile ? config.dotSize.mobile : config.dotSize.desktop
+    const disperseSpan = isMobile
+      ? config.disperse.span.mobile
+      : config.disperse.span.desktop
     const extent = built.extent
     let points = built.points
     let width = 0
@@ -206,9 +226,35 @@ const PointField = ({ className }: { className?: string }) => {
     // 0 while the hero is at rest, 1 once the field has fully scattered.
     // Derived from scroll position every frame rather than animated, so it
     // runs backwards on its own when the visitor scrolls back up.
-    let scatter = 0
+    let scrollScatter = 0
     let heroTop = 0
     let heroHeight = 1
+
+    // ── The entrance ──────────────────────────────────────────────────────
+    // The gather runs on wall-clock time, not on frames, so it takes the same
+    // 1.4s on a 120Hz phone as on a throttled one. `introElapsed` is
+    // accumulated per frame with a clamped delta rather than measured from a
+    // start stamp: the loop is paused whenever the hero is off screen or the
+    // tab is hidden, and a stamp would let that pause count as progress and
+    // snap the glyph together the instant the visitor came back.
+    const intro = config.intro
+    const playIntro = pointFieldIntroPlays()
+    // 0 at the scrambled opening frame, 1 once the glyph is whole. Pinned at 1
+    // when there is no entrance to play, which takes every branch below out of
+    // the draw loop for good.
+    let introProgress = playIntro ? 0 : 1
+    let introFade = playIntro ? 0 : 1
+    let introElapsed = 0
+    let lastTime = -1
+    let formed = !playIntro
+
+    // The hero takes the same decision one render earlier, and a restored
+    // scroll position is applied in a layout effect *between* the two — so the
+    // two can disagree, in the direction where the hero is holding copy for an
+    // entrance that is never going to run. Saying so here rather than staying
+    // silent closes that window to a single tick; the hero's own ceiling is
+    // then only ever needed for a field that failed outright.
+    if (formed) onFormedRef.current?.()
 
     // Alpha is quantised into buckets so the whole field draws in a handful of
     // fills instead of one state change per point. Two inks, ten steps each.
@@ -235,9 +281,9 @@ const PointField = ({ className }: { className?: string }) => {
     }
 
     const readScroll = () => {
-      const span = heroHeight * config.disperse.span
+      const span = heroHeight * disperseSpan
       const raw = (window.scrollY - heroTop) / (span || 1)
-      scatter = raw < 0 ? 0 : raw > 1 ? 1 : raw
+      scrollScatter = raw < 0 ? 0 : raw > 1 ? 1 : raw
     }
 
     const draw = () => {
@@ -260,6 +306,24 @@ const PointField = ({ className }: { className?: string }) => {
       )
 
       const spread = Math.max(width, height) * config.disperse.distance
+
+      // Scrolling away and the entrance are the same move in opposite
+      // directions, so they resolve to one number here. Whichever is asking
+      // for more scatter wins: scrolling *during* the gather takes the field
+      // straight back apart from wherever it had got to, with no jump and no
+      // second animation to cancel.
+      const introScatter = intro.from * (1 - intro.ease(introProgress))
+      const scatter = Math.max(scrollScatter, introScatter)
+      // The same displacement, dimmed very differently: scrolling away should
+      // leave nothing behind, where the gather's loose points ARE the picture.
+      // Blended by how much of the current scatter the entrance is responsible
+      // for, rather than switched at the crossover — a switch steps the
+      // brightness of the whole field in one frame, in the middle of the one
+      // interaction this shared value exists to keep seamless. With no
+      // entrance running the share is 0 and this is exactly `disperse.fade`.
+      const introShare = scatter > 0 ? introScatter / scatter : 0
+      const scatterFade =
+        config.disperse.fade + (intro.fade - config.disperse.fade) * introShare
 
       // The sway, plus the pointer's lean on top of it.
       const yaw = Math.sin(phase) * config.sway.swing + yawOffset
@@ -336,7 +400,8 @@ const PointField = ({ className }: { className?: string }) => {
 
         if (scatter > 0) {
           // Each point starts moving at its own moment, so the glyph comes
-          // apart in a cascade instead of every point leaving at once.
+          // apart in a cascade instead of every point leaving at once — and,
+          // run backwards by the entrance, arrives in one.
           const local = (scatter - point.ddelay) / (1 - point.ddelay)
 
           if (local > 0) {
@@ -344,14 +409,17 @@ const PointField = ({ className }: { className?: string }) => {
             const travel = eased * point.dmag * spread
             screenX += point.dx * travel
             screenY += point.dy * travel
-            alpha *= 1 - eased * 0.88
+            alpha *= 1 - eased * scatterFade
           }
         }
 
         // Dissolve into the canvas's bottom edge instead of being cut off by
-        // it. Scaled by `scatter`, so the resting glyph is untouched.
-        if (scatter > 0) {
-          const fadeHeight = height * config.disperse.bottomFade * scatter
+        // it. Scaled by the scroll-driven scatter alone, so the resting glyph
+        // is untouched — and so is the entrance, which is asking for the
+        // opposite: points arriving from beyond the fold should be visible on
+        // their way in, not held back until they clear an invisible line.
+        if (scrollScatter > 0) {
+          const fadeHeight = height * config.disperse.bottomFade * scrollScatter
           const fadeStart = height - fadeHeight
 
           if (fadeHeight > 0 && screenY > fadeStart) {
@@ -364,7 +432,7 @@ const PointField = ({ className }: { className?: string }) => {
         if (alpha < 0.012) continue
         if (screenX < -8 || screenX > width + 8 || screenY < -8 || screenY > height + 8) continue
 
-        const size = config.dotSize * (0.42 + depth * 0.95) * scale * 0.62
+        const size = dotSize * (0.42 + depth * 0.95) * scale * 0.62
         const bucket = Math.min(BUCKETS - 1, Math.max(0, Math.round(alpha * (BUCKETS - 1))))
 
         // The accent is spent only on the points the visitor is actually
@@ -375,7 +443,9 @@ const PointField = ({ className }: { className?: string }) => {
         path.arc(screenX, screenY, size, 0, Math.PI * 2)
       }
 
-      context.globalAlpha = 1
+      // The whole field's fade up out of nothing on load. 1 at every other
+      // moment in the page's life, so this is the resting state too.
+      context.globalAlpha = introFade
 
       for (let i = 0; i < BUCKETS; i += 1) {
         const a = ((i / (BUCKETS - 1)) * config.opacity).toFixed(3)
@@ -392,8 +462,27 @@ const PointField = ({ className }: { className?: string }) => {
     let running = false
     const swaySpeed = isMobile ? config.sway.speed.mobile : config.sway.speed.desktop
 
-    const tick = () => {
+    const tick = (now: number) => {
       phase += swaySpeed
+
+      // Both values are driven off the same clock, and either one can be the
+      // last to finish — `fadeInMs` is short today, but it is a config dial and
+      // a longer one must not leave the field permanently half-transparent.
+      if (introProgress < 1 || introFade < 1) {
+        introElapsed += lastTime < 0 ? 0 : Math.min(now - lastTime, intro.maxFrameMs)
+        lastTime = now
+
+        const gather = (introElapsed - intro.holdMs) / intro.durationMs
+        introProgress = gather < 0 ? 0 : gather > 1 ? 1 : gather
+        introFade = Math.min(1, introElapsed / intro.fadeInMs)
+
+        // The glyph is there. Hand the screen over to the copy, once.
+        if (!formed && introProgress >= intro.revealAt) {
+          formed = true
+          onFormedRef.current?.()
+        }
+      }
+
       pitchOffset += (targetPitch - pitchOffset) * config.tiltEase
       yawOffset += (targetYawOffset - yawOffset) * config.tiltEase
       draw()
@@ -403,6 +492,9 @@ const PointField = ({ className }: { className?: string }) => {
     const start = () => {
       if (running || reduced) return
       running = true
+      // Nothing has elapsed between a pause and its resume, as far as the
+      // gather is concerned. See the note on `introElapsed`.
+      lastTime = -1
       frame = requestAnimationFrame(tick)
     }
 

@@ -117,7 +117,7 @@ export const animation = {
    * to look impressive in a screenshot.
    */
   pointField: {
-    count: { desktop: 2000, mobile: 650 },
+    count: { desktop: 2000, mobile: 900 },
     /**
      * The object itself: `</>` built out of thick 3D bars.
      *
@@ -215,8 +215,15 @@ export const animation = {
     /** Spring pulling a pushed point back to where projection says it belongs. */
     springBack: 0.055,
     damping: 0.87,
-    /** Dot radius in CSS px, before depth scaling. */
-    dotSize: 1.45,
+    /**
+     * Dot radius in CSS px, before depth scaling.
+     *
+     * Bigger on a phone, and not only because the screen is smaller: there the
+     * field opens the page on its own, before there is any copy to read, so
+     * the points have to be legible as points rather than as a haze. There are
+     * also fewer than half as many of them, which buys back the fill.
+     */
+    dotSize: { desktop: 1.45, mobile: 2.3 },
     /** Opacity of the field as a whole. It is scenery, not content. */
     opacity: 0.82,
     /** Device pixel ratio is capped — past 2 the cost is real and invisible. */
@@ -230,8 +237,17 @@ export const animation = {
      * — drag the scrollbar back up and the glyph reassembles exactly.
      */
     disperse: {
-      /** Fraction of the hero's height over which the field fully scatters. */
-      span: 0.85,
+      /**
+       * Fraction of the hero's height over which the field fully scatters.
+       *
+       * Much shorter on a phone. On a wide screen the field is off to the side
+       * of the type and a long, slow scatter reads as the object being left
+       * behind as you go. On a phone it is directly behind the words: it has
+       * to be out of the way by the time the second screen is being read, so
+       * the whole scatter is spent in the first flick of the thumb rather than
+       * over most of the hero's height.
+       */
+      span: { desktop: 0.85, mobile: 0.26 },
       /** Farthest a point travels, as a fraction of the canvas's longer side. */
       distance: 0.95,
       /** Largest per-point head start, as a fraction of total progress. */
@@ -247,6 +263,103 @@ export const animation = {
        * reaches down here, so there is nothing to fade and the falloff is off.
        */
       bottomFade: 0.38,
+      /**
+       * How much a fully scattered point is dimmed, 0–1.
+       *
+       * Near 1 the field is gone by the time it has travelled, which is what
+       * scrolling away wants: the glyph should not still be legible as dust
+       * over the next section. The entrance below deliberately uses a much
+       * softer value — see `intro.fade`.
+       */
+      fade: 0.88,
+    },
+
+    /**
+     * The entrance: the glyph assembling itself on load.
+     *
+     * On a phone there is no room to stand the field beside the type, so it
+     * sits behind it and has to earn its place another way — by being built in
+     * front of the visitor. The points open scrambled, gather into `</>`, and
+     * only once the object is there does the copy fade up on top of it.
+     *
+     * It is the disperse above played backwards: the same per-point directions,
+     * the same per-point stagger, one shared value in the draw loop. So the
+     * object comes together exactly the way scrolling takes it apart, and
+     * scrolling *during* the gather simply takes over mid-flight.
+     */
+    intro: {
+      /**
+       * Per breakpoint, resolved against `MOBILE_BREAKPOINT` — the same line
+       * the field uses to pick its point count, its centre and its sway
+       * speed, so the entrance is on wherever the field considers itself to
+       * be in its phone configuration, and never half in one and half in the
+       * other.
+       *
+       * Desktop opens formed on purpose: there the field is the counterweight
+       * to the headline rather than the thing behind it, and the headline is
+       * the LCP element — it does not wait for scenery.
+       */
+      play: { desktop: false, mobile: true },
+      /**
+       * How close to the top of the page the visitor has to have arrived, in
+       * px, for there to be an entrance at all. Not 0: browsers restore a
+       * scroll offset a pixel or two off, and a hero that is 2px scrolled is
+       * still a hero being arrived at.
+       */
+      topThresholdPx: 4,
+      /**
+       * The scatter value the gather starts from, and the dial for how wide
+       * the opening scramble reads.
+       *
+       * Deliberately not 1: at full scatter every point is flung the better
+       * part of a screen away, and an opening frame whose points are mostly
+       * outside the canvas reads as an empty screen, not a scrambled one.
+       */
+      from: 0.55,
+      /** A beat of scrambled stillness before the gather starts, in ms. */
+      holdMs: 200,
+      /** How long the gather itself takes, in ms. */
+      durationMs: 1400,
+      /** The field's own fade up from nothing, in ms. No hard pop at t=0. */
+      fadeInMs: 420,
+      /**
+       * Longest frame the gather's clock will credit, in ms.
+       *
+       * Anything above this is a stall, a throttled tab or a resumed loop
+       * rather than motion anybody watched, and counting it in full turns the
+       * gather into a jump cut. ~4 frames at 60Hz.
+       */
+      maxFrameMs: 64,
+      /**
+       * How much the scatter dims a point during the gather, 0–1. Far softer
+       * than `disperse.fade`, because here the loose points ARE the picture.
+       */
+      fade: 0.45,
+      /**
+       * Fraction of the gather after which the hero releases its copy.
+       *
+       * Read against `ease` below, not against the clock: by 0.7 the points
+       * have covered ~96% of their travel, so this is "once the glyph is
+       * there", with the last of the settling happening under the first word.
+       */
+      revealAt: 0.7,
+      /**
+       * Grace on top of the whole entrance, in ms, after which the hero
+       * releases its copy whatever the field is doing. The field is supposed
+       * to say when — this is only what happens if it never gets the chance.
+       * See `HOLD_CEILING_MS` in Hero.tsx.
+       */
+      ceilingGraceMs: 600,
+      /**
+       * Soft start, soft stop.
+       *
+       * The travel itself is already quadratic in the scatter value, which
+       * supplies the deceleration — so this only has to take the edge off the
+       * first frame. Anything sharper (a cubic ease-out, say) compounds with
+       * that quadratic and the field snaps together in a third of its
+       * duration, leaving a second of imperceptible creep.
+       */
+      ease: (t: number) => t * t * (3 - 2 * t),
     },
   },
 

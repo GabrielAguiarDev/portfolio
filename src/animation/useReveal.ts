@@ -6,6 +6,18 @@ import { prefersReducedMotion } from "./runtime"
 type RevealOptions = {
   /** Extra delay in seconds, e.g. the stagger index of a grid cell. */
   delay?: number
+  /**
+   * Keep the element hidden even once it is in view, until this goes false.
+   *
+   * For content that has to wait for something other than the viewport — the
+   * hero's copy waiting for the point field to assemble itself. It is a hold,
+   * not a delay: the reveal still needs the element to be in view afterwards,
+   * and the `delay` above still applies on top, so a held group keeps its own
+   * internal cascade once it is let go.
+   *
+   * Reduced motion ignores it entirely: there is no entrance to wait for.
+   */
+  hold?: boolean
 }
 
 /**
@@ -18,6 +30,7 @@ type RevealOptions = {
  */
 export function useReveal<T extends HTMLElement = HTMLDivElement>({
   delay = 0,
+  hold = false,
 }: RevealOptions = {}) {
   const ref = useRef<T>(null)
   const [revealed, setRevealed] = useState(
@@ -25,7 +38,7 @@ export function useReveal<T extends HTMLElement = HTMLDivElement>({
   )
 
   useEffect(() => {
-    if (revealed) return
+    if (revealed || hold) return
 
     const element = ref.current
     if (!element) return
@@ -50,7 +63,7 @@ export function useReveal<T extends HTMLElement = HTMLDivElement>({
 
     observer.observe(element)
     return () => observer.disconnect()
-  }, [revealed])
+  }, [revealed, hold])
 
   const style: CSSProperties | undefined =
     delay > 0 ? { transitionDelay: `${delay}s` } : undefined
