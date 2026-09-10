@@ -50,8 +50,8 @@ export const ROLES: Role[] = [
     kind: "employment",
     period: null, // TODO: add the period for this role
     summary: {
-      pt: "Responsável pela arquitetura e pelo ciclo completo dos aplicativos — do desenho da estrutura à publicação nas lojas e à manutenção depois disso.",
-      en: "Responsible for the architecture and the apps' full cycle — from designing the structure through to store release and the maintenance after it.",
+      pt: "Responsável pela arquitetura e pelo ciclo completo dos aplicativos: do desenho da estrutura à publicação nas lojas e à manutenção depois disso.",
+      en: "Responsible for the architecture and the full cycle of the apps: from designing the structure through to store release and the maintenance after it.",
     },
     responsibilities: [
       {
