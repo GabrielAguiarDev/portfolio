@@ -69,7 +69,16 @@ const Hero = () => {
   return (
     <section
       id="hero"
-      className="relative flex min-h-[100svh] items-center overflow-hidden pb-28 pt-[calc(var(--nav-h)+3.5rem)] md:pb-32 lg:pb-24"
+      // `overflow-x-clip` and not `overflow-hidden`: the point field's canvas
+      // deliberately reaches above and below this section on a phone, and
+      // `hidden` would cut it back to the section's own box. Only the sideways
+      // axis needs clipping here — that is the bloom below, at 120vw — and
+      // `clip` is not a scrolling value, so it is the one overflow keyword that
+      // can be paired with `visible` on the other axis without turning the hero
+      // into a scroll container. `html`/`body` also carry `overflow-x: hidden`
+      // as a backstop, so a browser too old for `clip` still cannot be pushed
+      // sideways; it would only fail to clip locally.
+      className="relative flex min-h-[100svh] items-center overflow-y-visible overflow-x-clip pb-28 pt-[calc(var(--nav-h)+3.5rem)] md:pb-32 lg:pb-24"
     >
       {/* A single, very soft bloom at the top of the page. The only light
           source in the whole layout. */}
@@ -103,7 +112,47 @@ const Hero = () => {
           // beat it is the only thing on the screen — and steps back over the
           // second the copy takes to arrive. The transition is the handover,
           // not a flourish.
-          "[mask-image:linear-gradient(to_bottom,transparent,#000_22%,#000_78%,transparent)]",
+          //
+          // ── The bleed, on a phone ─────────────────────────────────────────
+          //
+          // The canvas is taller than the hero here: a fifth of the hero's
+          // height past it at the top, and the same at the bottom. No layout
+          // moves — it is absolutely positioned and the section clips sideways
+          // only.
+          //
+          // It exists because scrolling scatters the field. The canvas used to
+          // end where the hero ends, so by the time the hero had travelled far
+          // enough up for the scatter to finish, its bottom edge sat around the
+          // middle of the screen — and the points stopped dead on that line,
+          // with nothing on screen to explain it. The bleed puts both edges out
+          // of sight, and the field reads as spreading across the whole display.
+          //
+          // Symmetric, and it has to stay symmetric: the draw loop centres the
+          // glyph on the canvas, so an uneven bleed would carry the resting
+          // glyph off the hero's centre and out from behind the copy. See
+          // `pointField.bleed`.
+          // `h-[140%]` and not a matching `-bottom-[20%]`: a <canvas> is a
+          // replaced element, so `height: auto` on it resolves from its
+          // intrinsic 300x150 aspect ratio and the `bottom` offset is dropped
+          // as over-constrained — which sized it to 197px instead of the
+          // hero's 1193px. The height has to be stated, and 140% is the same
+          // arithmetic said the other way: 100% of the hero plus the 20% bleed
+          // at each end.
+          "-top-[20%] h-[140%]",
+          // The stops below are that bleed's arithmetic. A canvas at 140% of
+          // the hero puts the hero's own top edge at 14.3% of it and its bottom
+          // at 85.7%. So: opaque by 20%, which is a navbar's height into the
+          // hero, where the field would otherwise show through the bar; and
+          // still opaque at 88%, just past the fold, so the points are at full
+          // strength across every pixel anybody can see. Both fades run inside
+          // the bleed, off screen.
+          "[mask-image:linear-gradient(to_bottom,transparent,#000_20%,#000_88%,transparent)]",
+          // From `md` up, exactly what it was before any of this: the canvas is
+          // the hero's own box, with the mask dissolving the two edges inside
+          // it. `md` and not `lg` because that is where the draw loop stops
+          // treating itself as mobile, and the two must not disagree.
+          "md:top-0 md:h-full",
+          "md:[mask-image:linear-gradient(to_bottom,transparent,#000_22%,#000_78%,transparent)]",
           "transition-opacity duration-1000 ease-out",
           held ? "opacity-90" : "opacity-[0.45]",
           "-z-10 lg:opacity-100",

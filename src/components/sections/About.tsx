@@ -1,5 +1,6 @@
 import { animation, RevealText, useParallax, useReveal } from "@/animation"
 import { COPY } from "@/content/copy"
+import { MOBILE } from "@/content/mobile"
 import { PROFILE } from "@/content/profile"
 import { useLocale } from "@/i18n/useLocale"
 import { cn } from "@/lib/utils"
@@ -97,6 +98,11 @@ const About = () => {
                       index === 0
                         ? "text-base text-foreground/90 md:text-lg"
                         : "text-sm text-muted-foreground md:text-base",
+                      // Four paragraphs in Portuguese and five in English, all
+                      // of them beside a tall portrait on a wide screen and all
+                      // of them under it on a phone. The first two are the ones
+                      // that answer the question; see `content/mobile.ts`.
+                      index >= MOBILE.aboutParagraphs && "hidden md:block",
                     )}
                   >
                     {paragraph}
