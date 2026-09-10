@@ -1,5 +1,14 @@
-import { useCallback, useEffect, useRef, useState, type MouseEvent } from "react"
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type MouseEvent,
+  type ReactNode,
+} from "react"
 import { ArrowRight, X } from "lucide-react"
+import { Link, useLocation } from "react-router-dom"
 
 import { motionScrollTo, setSmoothScrollPaused, animation } from "@/animation"
 import { COPY, NAV } from "@/content/copy"
@@ -7,17 +16,84 @@ import { hasEmail, LINKS } from "@/content/profile"
 import { useLocale } from "@/i18n/useLocale"
 import { cn } from "@/lib/utils"
 
+/**
+ * A nav item.
+ *
+ * On the home page it is a fragment anchor whose default is cancelled so the
+ * smooth scroll can own the movement. Anywhere else that same handler was a
+ * trap: it cancelled the click, rewrote the URL to `/work/yago#work`, then
+ * looked for a `#work` element that does not exist on that page — a dead link
+ * that corrupted the address bar on the way. Off the home page the item has to
+ * be a real navigation, so it becomes a router Link to `/#id`, and
+ * `useHashScroll` resolves the fragment once the home page has mounted.
+ *
+ * Declared at module scope rather than inside `Nav`: a component defined in a
+ * render body is a new component *type* on every render, so React would tear
+ * down and rebuild every item each time the bar re-rendered — which it does on
+ * every scroll frame — restarting the mobile menu's staggered entrance and
+ * dropping keyboard focus mid-interaction.
+ */
+const SectionLink = ({
+  id,
+  onHome,
+  active,
+  onNavigate,
+  className,
+  style,
+  children,
+}: {
+  id: string
+  onHome: boolean
+  active: boolean
+  onNavigate: (event: MouseEvent<HTMLAnchorElement>, id: string) => void
+  className?: string
+  style?: CSSProperties
+  children: ReactNode
+}) =>
+  onHome ? (
+    <a
+      href={`#${id}`}
+      onClick={(event) => onNavigate(event, id)}
+      aria-current={active ? "location" : undefined}
+      className={className}
+      style={style}
+    >
+      {children}
+    </a>
+  ) : (
+    <Link to={`/#${id}`} className={className} style={style}>
+      {children}
+    </Link>
+  )
+
 /** Scroll position, in px, past which the bar earns its background. */
 const SOLID_AT = 24
 
 const Nav = () => {
   const { pick, locale, setLocale } = useLocale()
-  const [solid, setSolid] = useState(false)
+  const { pathname } = useLocation()
+  // Off the home page the bar is solid from the first frame. Initialising to
+  // false and correcting in an effect meant every case page opened with a
+  // half-second background fade, through `transition-colors duration-500`.
+  const [solid, setSolid] = useState(
+    () => window.location.pathname !== "/" || window.scrollY > SOLID_AT,
+  )
   const [active, setActive] = useState<string | null>(null)
   const [open, setOpen] = useState(false)
   const pending = useRef<string | null>(null)
 
+  // Every nav item points at a section of the home page. On a case-study route
+  // none of those sections is in the DOM, so the bar has to navigate rather
+  // than scroll — and the scroll-spy has nothing to measure.
+  const onHome = pathname === "/"
+
   useEffect(() => {
+    if (!onHome) {
+      setSolid(true)
+      setActive(null)
+      return
+    }
+
     let frame = 0
 
     const measure = () => {
@@ -45,7 +121,7 @@ const Nav = () => {
       window.removeEventListener("scroll", onScroll)
       if (frame) cancelAnimationFrame(frame)
     }
-  }, [])
+  }, [onHome])
 
   // The overlay locks scrolling while it fades out, so a section chosen from
   // the menu is parked here and scrolled to once the overlay is gone.
@@ -81,7 +157,13 @@ const Nav = () => {
 
       // Keep the fragment in the address bar so the section stays shareable,
       // without letting the browser jump there and fight the smooth scroll.
-      window.history.replaceState(null, "", `#${id}`)
+      //
+      // The existing state has to be carried through: React Router keeps its
+      // entry key and index in `history.state`, and passing `null` wipes them.
+      // That was invisible while this was a one-route site; now it desynchronises
+      // the history stack, and the per-entry scroll positions keyed on that key
+      // start restoring the wrong offsets.
+      window.history.replaceState(window.history.state, "", `#${id}`)
 
       if (open) {
         pending.current = id
@@ -105,21 +187,33 @@ const Nav = () => {
         )}
       >
         <div className="container flex h-full items-center justify-between gap-6">
-          <button
-            type="button"
-            onClick={() => motionScrollTo(0)}
-            className="font-display text-[1.0625rem] font-semibold tracking-[-0.03em] text-foreground transition-opacity hover:opacity-70"
-          >
-            Gabriel<span className="text-primary">.</span>
-          </button>
+          {/* On the home page the mark scrolls to the top; anywhere else the
+              top of the page is not what it means, so it goes home. */}
+          {onHome ? (
+            <button
+              type="button"
+              onClick={() => motionScrollTo(0)}
+              className="font-display text-[1.0625rem] font-semibold tracking-[-0.03em] text-foreground transition-opacity hover:opacity-70"
+            >
+              Gabriel<span className="text-primary">.</span>
+            </button>
+          ) : (
+            <Link
+              to="/"
+              className="font-display text-[1.0625rem] font-semibold tracking-[-0.03em] text-foreground transition-opacity hover:opacity-70"
+            >
+              Gabriel<span className="text-primary">.</span>
+            </Link>
+          )}
 
           <nav className="hidden items-center gap-8 md:flex" aria-label={pick(COPY.a11y.sections)}>
             {NAV.map((item) => (
-              <a
+              <SectionLink
                 key={item.id}
-                href={`#${item.id}`}
-                onClick={(event) => goTo(event, item.id)}
-                aria-current={active === item.id ? "location" : undefined}
+                id={item.id}
+                onHome={onHome}
+                active={active === item.id}
+                onNavigate={goTo}
                 className={cn(
                   "relative text-[0.8125rem] font-medium tracking-tight transition-colors duration-300",
                   active === item.id
@@ -135,7 +229,7 @@ const Nav = () => {
                     active === item.id ? "opacity-100" : "opacity-0",
                   )}
                 />
-              </a>
+              </SectionLink>
             ))}
           </nav>
 
@@ -214,10 +308,12 @@ const Nav = () => {
 
         <nav className="container flex flex-1 flex-col justify-center gap-1 pb-24">
           {NAV.map((item, index) => (
-            <a
+            <SectionLink
               key={item.id}
-              href={`#${item.id}`}
-              onClick={(event) => goTo(event, item.id)}
+              id={item.id}
+              onHome={onHome}
+              active={active === item.id}
+              onNavigate={goTo}
               className="flex items-baseline gap-4 py-2 text-left"
               style={{
                 transitionDelay: `${index * 40}ms`,
@@ -230,7 +326,7 @@ const Nav = () => {
                 0{index + 1}
               </span>
               <span className="display-md text-foreground">{pick(item.label)}</span>
-            </a>
+            </SectionLink>
           ))}
 
           <div className="mt-10 flex items-center gap-3">

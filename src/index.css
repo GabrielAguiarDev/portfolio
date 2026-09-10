@@ -216,6 +216,18 @@
     @apply scale-x-100;
   }
 
+  /*
+   * A project cell in the work grid.
+   *
+   * The whole cell is the link, so the underline that marks a link on this site
+   * has to be drawn from the cell rather than from the word it sits under —
+   * `.rule-link:hover` would only fire on the name itself.
+   */
+  .work-cell:hover .rule-link::after,
+  .work-cell:focus-visible .rule-link::after {
+    @apply scale-x-100;
+  }
+
   /* A tool or platform name. Typographic, never a logo chip. */
   .tag {
     @apply inline-flex items-center rounded-full border border-border px-3 py-1
@@ -427,7 +439,6 @@
   .rule-link::after {
     transition: none !important;
   }
-
   /*
    * The travelling pulses are the whole point of the graph's motion, so with
    * motion switched off they are removed rather than frozen — a stalled dash

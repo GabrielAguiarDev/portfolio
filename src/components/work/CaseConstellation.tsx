@@ -65,7 +65,7 @@ const Devices = ({ project }: { project: Project }) => {
             <div ref={device.ref} className={cn("w-full", device.width)}>
               <PhoneFrame
                 lit={index === 1}
-                screenshot={project.screenshots?.[index]}
+                screenshot={project.figures?.[index]?.src}
                 alt={project.name}
               >
                 {device.screen}
@@ -86,7 +86,7 @@ const CaseConstellation = ({ project, index }: { project: Project; index: number
   const devices = useReveal<HTMLDivElement>({ delay: 0.08 })
 
   return (
-    <article id={project.id} className="section-anchor container py-20 md:py-28 lg:py-32">
+    <article className="container pb-20 pt-10 md:pb-28 md:pt-12 lg:pb-32 lg:pt-14">
       <div className="grid gap-10 lg:grid-cols-12">
         <CaseTitle project={project} index={index} className="lg:col-span-6" />
         <CaseBeats

@@ -406,7 +406,7 @@ export const animation = {
    * and the browser's own scrolling takes over.
    */
   lenis: {
-    lerp: 0.15,
+    lerp: 0.3,
     wheelMultiplier: 1,
     touchMultiplier: 1.6,
     syncTouch: false,

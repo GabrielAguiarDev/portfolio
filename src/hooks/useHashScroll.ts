@@ -1,6 +1,8 @@
 import { useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 
 import { sectionScrollTop } from "@/animation"
+import { findProject } from "@/content/work"
 
 /**
  * Honours a section fragment in the URL on first load.
@@ -22,6 +24,8 @@ import { sectionScrollTop } from "@/animation"
  * heading it was pointing at.
  */
 export function useHashScroll() {
+  const navigate = useNavigate()
+
   useEffect(() => {
     // decodeURIComponent throws a URIError on a malformed escape such as
     // `/#%`, which would otherwise take down the whole effect on mount.
@@ -32,6 +36,18 @@ export function useHashScroll() {
       id = window.location.hash.slice(1)
     }
     if (!id) return
+
+    // Every case study used to be a section of this page, so `/#yago` and
+    // `/#porto-seguro-shopping` were real, shareable deep links. They now live
+    // at their own URLs, and a link someone already sent has to keep working —
+    // so a fragment naming a project is treated as a request for that project.
+    // `replace`, because the fragment URL should not sit in the history stack
+    // waiting for Back to bounce the visitor through it again.
+    const project = findProject(id)
+    if (project) {
+      navigate(`/work/${project.id}`, { replace: true })
+      return
+    }
 
     let cancelled = false
 
@@ -64,5 +80,8 @@ export function useHashScroll() {
       cancelled = true
       cancelAnimationFrame(frame)
     }
-  }, [])
+    // `navigate` is stable for the life of the router, so this still runs once
+    // per mount — which is the whole point: it honours the fragment the page
+    // was opened with, not every fragment it acquires later.
+  }, [navigate])
 }

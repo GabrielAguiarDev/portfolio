@@ -14,7 +14,12 @@ export const SCREEN_WIDTH = 320
 export const SCREEN_HEIGHT = 692
 
 type PhoneFrameProps = {
-  children: ReactNode
+  /**
+   * The interface drawn in code. Optional, because a project can arrive with
+   * real captures before anyone has drawn a screen for it — in that case
+   * `screenshot` is the whole content and there is nothing to fall back to.
+   */
+  children?: ReactNode
   /** Screenshot path. When set it replaces the coded screen entirely. */
   screenshot?: string
   alt?: string

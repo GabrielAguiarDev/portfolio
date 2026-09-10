@@ -203,9 +203,9 @@ export const YagoBooking = () => {
         <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-[#98A2B3]">
           {pick(booking.place)}
         </p>
-        <h1 className="mt-[6px] text-[24px] font-semibold leading-[1.1] tracking-[-0.03em] text-[#101828]">
+        <p className="mt-[6px] text-[24px] font-semibold leading-[1.1] tracking-[-0.03em] text-[#101828]">
           {pick(booking.back)}
-        </h1>
+        </p>
       </div>
 
       <div className="mt-[22px] px-[22px]">
