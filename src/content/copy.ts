@@ -93,8 +93,8 @@ export const COPY = {
       en: "Products that are out there.",
     },
     lead: {
-      pt: "Produtos reais, com usuários reais — mobile, web e um ecossistema inteiro. Cada um pediu um tipo diferente de decisão de arquitetura. Abra qualquer um para ver como foi resolvido.",
-      en: "Real products with real users — mobile, web, and one full platform. Each demanded a different kind of architectural decision. Open any of them to see how it was solved.",
+      pt: "Aplicativos, plataformas web e um ecossistema completo, todos no ar e com usuários reais. Cada projeto exigiu um tipo diferente de decisão de arquitetura; abra um deles para ver como resolvi.",
+      en: "Mobile apps, web platforms and one full ecosystem, all live and with real users. Each project called for a different kind of architectural decision; open one to see how I solved it.",
     },
     live: { pt: "Em produção", en: "Live" },
     building: { pt: "Em desenvolvimento", en: "In development" },
@@ -153,8 +153,8 @@ export const COPY = {
       en: "Architecture comes before the screen.",
     },
     lead: {
-      pt: "As telas mudam. O que decide se um produto continua barato de evoluir são as escolhas feitas antes de existir qualquer tela — e o método usado para chegar nelas.",
-      en: "Screens change. What decides whether a product stays cheap to evolve are the choices made before any screen exists — and the method used to reach them.",
+      pt: "As telas mudam. O que decide se um produto continua barato de evoluir são as escolhas feitas antes de existir qualquer tela, e o método usado para chegar nelas.",
+      en: "Screens change. What keeps a product cheap to evolve are the choices made before any screen exists, and the method used to reach them.",
     },
 
     /**
@@ -207,8 +207,8 @@ export const COPY = {
           en: "One base, several surfaces",
         },
         body: {
-          pt: "App de loja, painel no navegador, integração que ninguém vê — problemas diferentes, mesmas decisões por baixo: navegação, estado, cache e contrato de API. É por isso que eu não me apresento por plataforma.",
-          en: "A store app, a browser dashboard, an integration nobody sees — different problems, the same decisions underneath: navigation, state, caching and the API contract. Which is why I don't introduce myself by platform.",
+          pt: "Um app de loja, um painel no navegador e uma integração que ninguém vê resolvem problemas diferentes, mas repetem as mesmas decisões por baixo: navegação, estado, cache e contrato de API. É por isso que eu não me apresento por plataforma.",
+          en: "A store app, a browser dashboard and an integration nobody sees solve different problems, but they repeat the same decisions underneath: navigation, state, caching and the API contract. That is why I don't introduce myself by platform.",
         },
         tools: ["React Native", "Expo", "React", "Next.js", "Node.js"],
       },
@@ -218,8 +218,8 @@ export const COPY = {
           en: "Shipping is part of building",
         },
         body: {
-          pt: "Build, versionamento e distribuição resolvidos no mesmo esforço que o código. Um produto que só sobe com passo manual não está pronto — está dependente de alguém lembrar.",
-          en: "Builds, versioning and distribution settled in the same effort as the code. A product that only ships with a manual step isn't finished — it's dependent on somebody remembering.",
+          pt: "Build, versionamento e distribuição resolvidos junto com o código. Um produto que só sobe com passo manual não está pronto: está dependendo de alguém lembrar.",
+          en: "Builds, versioning and distribution settled alongside the code. A product that only ships with a manual step isn't finished: it depends on someone remembering.",
         },
         tools: ["GitHub Actions", "Fastlane", "App Store", "Google Play"],
       },
@@ -260,8 +260,8 @@ export const COPY = {
       en: "Working with AI is architecture too.",
     },
     lead: {
-      pt: "Um modelo não é mágica: é um componente com contrato, custo e superfície de ataque. Uso IA todos os dias para construir software — e trato as decisões em volta dela com o mesmo cuidado que trato qualquer outra parte do sistema.",
-      en: "A model isn't magic: it's a component with a contract, a cost and an attack surface. I use AI every day to build software — and I treat the decisions around it with the same care as any other part of the system.",
+      pt: "Um modelo não é mágica: é um componente com contrato, custo e superfície de ataque. Uso IA todos os dias para construir software, e trato as decisões em volta dela com o mesmo cuidado que dou a qualquer outra parte do sistema.",
+      en: "A model isn't magic: it's a component with a contract, a cost and an attack surface. I use AI every day to build software, and I treat the decisions around it with the same care I give any other part of the system.",
     },
 
     /** Labels for the orchestration diagram. */
@@ -291,8 +291,8 @@ export const COPY = {
       {
         title: { pt: "Modelo e contexto", en: "Model and context" },
         body: {
-          pt: "O LLM é só a peça; o resultado vem do contexto que chega até ele. Prompt especificado como um contrato — entrada, formato, limite — e contexto recuperado do projeto em vez de adivinhado. É aí que a resposta deixa de ser genérica.",
-          en: "The LLM is just the part; the result comes from the context that reaches it. A prompt specified like a contract — input, format, boundaries — and context retrieved from the project instead of guessed. That's where the answer stops being generic.",
+          pt: "O LLM é só a peça; o resultado vem do contexto que chega até ele. Escrevo o prompt como um contrato, com entrada, formato e limite definidos, e busco o contexto no próprio projeto em vez de deixar o modelo adivinhar. É aí que a resposta deixa de ser genérica.",
+          en: "The LLM is just the part; the result comes from the context that reaches it. I write the prompt like a contract, with the input, format and boundaries spelled out, and pull context from the project itself instead of letting the model guess. That is where the answer stops being generic.",
         },
         tools: [
           "LLMs",
@@ -319,8 +319,8 @@ export const COPY = {
       {
         title: { pt: "Proteções e limites", en: "Guardrails" },
         body: {
-          pt: "Todo texto que entra num modelo é entrada não confiável — inclusive o que voltou de uma ferramenta. Prompt injection, segredo vazando dentro do contexto e agente com mais permissão do que precisa são falhas de projeto, e é no projeto que se resolvem.",
-          en: "Every piece of text entering a model is untrusted input — including what came back from a tool. Prompt injection, secrets leaking into context and an agent holding more permission than it needs are design failures, and design is where they get solved.",
+          pt: "Todo texto que entra num modelo é entrada não confiável, inclusive o que voltou de uma ferramenta. Prompt injection, segredo vazando no contexto e agente com mais permissão do que precisa são falhas de projeto, e é no projeto que se resolvem.",
+          en: "Every piece of text that enters a model is untrusted input, including whatever came back from a tool. Prompt injection, secrets leaking into context and an agent holding more permission than it needs are design failures, and design is where they get solved.",
         },
         tools: [
           // Left in English on purpose: "prompt injection" is the term the
@@ -334,8 +334,8 @@ export const COPY = {
       {
         title: { pt: "Custo e arquitetura de IA", en: "Cost and AI architecture" },
         body: {
-          pt: "Token é infraestrutura: tem preço, latência e teto. Escolher o modelo pela tarefa, cachear o que repete, medir o que se gasta — e saber reconhecer quando a resposta certa é não usar IA naquele ponto.",
-          en: "Tokens are infrastructure: they have a price, a latency and a ceiling. Pick the model for the task, cache what repeats, measure what you spend — and recognise when the right answer is not to use AI at that point at all.",
+          pt: "Token é infraestrutura: tem preço, latência e teto. Escolho o modelo pela tarefa, cacheio o que repete e meço o que se gasta. Às vezes a resposta certa é não usar IA naquele ponto.",
+          en: "Tokens are infrastructure: they have a price, a latency and a ceiling. I pick the model for the task, cache what repeats and measure what it costs. Sometimes the right answer is not to use AI at that point.",
         },
         tools: [
           { pt: "Arquitetura de IA", en: "AI architecture" },
@@ -467,8 +467,8 @@ export const COPY = {
     eyebrow: { pt: "Experiência", en: "Experience" },
     title: { pt: "Onde eu construí isso.", en: "Where I built it." },
     lead: {
-      pt: "Arquitetura e ciclo completo dos produtos que construí — do primeiro desenho à manutenção depois de estarem no ar, dentro de uma agência e para clientes diretos.",
-      en: "Architecture and the full cycle of the products I built — from the first sketch to the maintenance after they were live, inside an agency and for direct clients.",
+      pt: "Arquitetura e ciclo completo dos produtos que construí: do primeiro desenho até a manutenção depois de estarem no ar, dentro de uma agência e para clientes diretos.",
+      en: "Architecture and the full cycle of the products I built: from the first sketch to the maintenance after they went live, inside an agency and for direct clients.",
     },
     responsibilities: { pt: "Responsabilidades", en: "Responsibilities" },
     highlights: { pt: "Principais contribuições", en: "Key contributions" },
@@ -480,8 +480,8 @@ export const COPY = {
     eyebrow: { pt: "Sobre", en: "About" },
     title: { pt: "Como eu trabalho.", en: "How I work." },
     body: {
-      pt: "Comecei pelo mobile e é onde tenho mais estrada, mas parei de me apresentar por plataforma faz tempo. O que muda de um app de loja para um painel no navegador é a superfície; o que decide se o produto sobrevive é a estrutura por baixo — camadas, estado, contrato de API, quem pode o quê.\n\nIA entrou no meu dia a dia como ferramenta de engenharia, não como autocomplete — e por isso ganhou uma seção própria aqui na página. O resumo é que ela encurta muito o caminho até a solução, mas só se você souber reconhecer a solução certa quando ela aparece: a parte difícil continua sendo decidir, não digitar.\n\nSegurança eu trato no desenho. Não é minha especialidade, é uma responsabilidade: já lidei com o suficiente do que dá errado — token, sessão, permissão, dado confiando em quem não devia — para saber que isso não se resolve numa revisão no fim.\n\nGosto de código que a próxima pessoa entende sem precisar me perguntar nada.",
-      en: "I started in mobile and that's where I have the most road behind me, but I stopped introducing myself by platform a while ago. What changes between a store app and a browser dashboard is the surface; what decides whether the product survives is the structure underneath — layers, state, the API contract, who is allowed what.\n\nAI came into my day-to-day as an engineering tool rather than an autocomplete — which is why it has a section of its own on this page. The short version is that it shortens the path to a solution enormously, but only if you can recognise the right one when it shows up: the hard part is still deciding, not typing.\n\nSecurity I handle in the design. It isn't my specialism, it's a responsibility: I've dealt with enough of what goes wrong — tokens, sessions, permissions, data trusting something it shouldn't — to know it doesn't get solved in a review at the end.\n\nI like code the next person can read without having to ask me anything.",
+      pt: "Sou Software Engineer. Em quatro anos trabalhei em produtos que sustentam operação e receita de verdade: aplicativos nas lojas, plataformas web com milhares de usuários e integrações de que a empresa inteira depende.\n\nBoa parte do que resolvi chegou com prazo curto e com dinheiro rodando: campanha no ar, fluxo de pagamento travado, release que precisava subir naquele dia. Nesses casos eu diagnostico rápido, mas sem remendo, porque a gambiarra de hoje é o incidente do mês que vem.\n\nFora da urgência, meu foco é arquitetura. Camadas, estado, contrato de API e escala decididos antes da primeira tela, com MVVM e Clean Architecture, mais o ciclo de entrega automatizado até a App Store e a Google Play. Qualidade, para mim, é o pacote inteiro: do que o usuário vê e sente até o código que roda por baixo.\n\nSegurança faz parte disso. Token, sessão, permissão e o que nunca deveria sair do servidor são decisões de arquitetura, e sair barato depende de tomá-las no começo, não numa revisão no fim.",
+      en: "I'm a software engineer. Over four years I have worked on products that hold up real operations and real revenue: apps in the stores, web platforms with thousands of users, and integrations the whole company depends on. I started in mobile, with React Native and TypeScript, but I stopped introducing myself by platform a while ago.\n\nMuch of what I have solved arrived on a short deadline with money running: a campaign live, a payment flow stuck, a release that had to ship that day. In those situations I diagnose fast without patching, because today's workaround is next month's incident.\n\nOutside the urgent work, my focus is architecture. Layers, state, the API contract and scale settled before the first screen, with MVVM and Clean Architecture, plus a delivery pipeline that reaches the App Store and Google Play on its own. Quality, to me, is the whole package: from what the user sees and feels to the code running underneath.\n\nSecurity is part of that. Tokens, sessions, permissions and what should never leave the server are architectural decisions, and keeping them cheap means taking them early rather than in a review at the end.\n\nI like code the next person can read without having to ask me anything.",
     },
   },
 
