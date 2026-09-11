@@ -1,6 +1,7 @@
 import { useEffect } from "react"
 
 import { SITE_URL } from "@/content/profile"
+import { useLocale } from "@/i18n/useLocale"
 
 /**
  * Per-route document metadata.
@@ -29,6 +30,17 @@ export type DocumentMeta = {
   path: string
   /** Keep this page out of search results. */
   noindex?: boolean
+  /**
+   * Structured data describing *this* route, added and removed with it.
+   *
+   * The site-level graph in index.html is static and describes the person and
+   * the site. A case study is a different thing — a product, with an author and
+   * a place in a breadcrumb — and saying so needs a second block that comes and
+   * goes with the route. Injected rather than pre-rendered because Google runs
+   * JavaScript; the crawlers that do not (the social ones) never read JSON-LD
+   * anyway, so nothing is lost by it arriving late.
+   */
+  jsonLd?: Record<string, unknown>
 }
 
 /** Reads a tag's current content so it can be restored on unmount. */
@@ -66,7 +78,15 @@ const property = (name: string) => () => {
   return element
 }
 
-export function useDocumentMeta({ title, description, path, noindex = false }: DocumentMeta) {
+export function useDocumentMeta({
+  title,
+  description,
+  path,
+  noindex = false,
+  jsonLd,
+}: DocumentMeta) {
+  const { locale } = useLocale()
+
   useEffect(() => {
     const previousTitle = document.title
     document.title = title
@@ -94,15 +114,51 @@ export function useDocumentMeta({ title, description, path, noindex = false }: D
         ? [upsert('meta[property="og:description"]', property("og:description"), description)]
         : []),
       upsert('meta[property="og:url"]', property("og:url"), url),
+      /*
+        The locale the page is actually showing.
+
+        index.html has to hardcode one, and hardcoding is all it can do — so it
+        names the language its own tags are written in and this corrects it the
+        moment a language is settled. Without this a Portuguese reader shared a
+        link whose card said `en_US` and whose description was Portuguese.
+      */
+      upsert(
+        'meta[property="og:locale"]',
+        property("og:locale"),
+        locale === "pt" ? "pt_BR" : "en_US",
+      ),
+      upsert(
+        'meta[property="og:locale:alternate"]',
+        property("og:locale:alternate"),
+        locale === "pt" ? "en_US" : "pt_BR",
+      ),
     ]
 
     if (noindex) {
       restores.push(upsert('meta[name="robots"]', meta("robots"), "noindex, nofollow"))
     }
 
+    /*
+      Structured data for a page that is asking not to be indexed is wasted at
+      best. At worst it is the shape of structured-data spam: a rich
+      description of something the same document tells Google to ignore.
+    */
+    let script: HTMLScriptElement | undefined
+
+    if (jsonLd && !noindex) {
+      script = document.createElement("script")
+      script.type = "application/ld+json"
+      // Marked so it is obvious in devtools which block is the route's and
+      // which is the site's.
+      script.dataset.route = path
+      script.textContent = JSON.stringify(jsonLd)
+      document.head.appendChild(script)
+    }
+
     return () => {
       document.title = previousTitle
       for (const restore of restores) restore()
+      script?.remove()
     }
-  }, [title, description, path, noindex])
+  }, [title, description, path, noindex, jsonLd, locale])
 }

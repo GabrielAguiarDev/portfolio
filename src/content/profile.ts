@@ -15,11 +15,17 @@ import type { Localized } from "@/i18n/useLocale"
 /**
  * The canonical origin, without a trailing slash.
  *
- * Read by `useDocumentMeta` to build a per-route canonical URL. It has to
- * match the domain the site is actually served from — a
- * canonical pointing at a host that redirects is worse than none at all.
+ * Read by `useDocumentMeta` to build a per-route canonical URL, and it has to
+ * match the host the site is actually served from — a canonical pointing at a
+ * host that redirects is worse than none at all.
+ *
+ * `www`, not the apex, and that is measured rather than assumed: the apex
+ * answers 307 to this host, so a canonical on the apex would have told Google
+ * that every page's true address is a redirect. Whatever this value is,
+ * public/sitemap.xml and the Sitemap line in public/robots.txt have to agree
+ * with it — three files, one host, no exceptions.
  */
-export const SITE_URL = "https://gabrielaguiar.dev"
+export const SITE_URL = "https://www.gabrielaguiar.dev"
 
 /** Set to your public contact address, then delete the TODO note. */
 export const EMAIL = "TODO@example.com" // TODO: replace with the address you want public

@@ -13,4 +13,4 @@ Allow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://gabrielaguiar.dev/sitemap.xml
+Sitemap: https://www.gabrielaguiar.dev/sitemap.xml

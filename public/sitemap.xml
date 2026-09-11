@@ -3,20 +3,24 @@
   Every URL that is fit to be indexed: the home page, plus the case studies
   that are actually written.
 
-  Draft case studies are deliberately absent. They render placeholder copy and
-  WorkDetail.tsx puts `noindex` on them, and a URL that is both submitted in a
-  sitemap and marked noindex is not a neutral mistake — Search Console reports
-  it as an error and it costs trust in the rest of the file. So the rule is:
-  this list mirrors PUBLISHED_PROJECTS in src/content/work.ts. Remove a
-  `draft: true` there and add the URL here, in the same commit. There is a
-  dev-only reminder in that file saying so.
+  This list mirrors PUBLISHED_PROJECTS in src/content/work.ts. Publish a
+  project there — remove its `draft: true` — and add the URL here in the same
+  commit; a draft carries `noindex` from WorkDetail.tsx, and a URL that is both
+  submitted in a sitemap and marked noindex is not a neutral mistake. Search
+  Console reports it as an error and it costs trust in the rest of the file.
+
+  The host is www and must match SITE_URL in src/content/profile.ts and the
+  Sitemap line in robots.txt. The apex answers 307 to this host, so a sitemap
+  on the apex would be a list of redirects.
 
   No <lastmod>: a date nobody maintains is worse than no date, because Google
   discounts every date in the file once it catches one that is wrong.
 -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://gabrielaguiar.dev/</loc><priority>1.0</priority></url>
-  <url><loc>https://gabrielaguiar.dev/work/yago</loc><priority>0.8</priority></url>
-  <url><loc>https://gabrielaguiar.dev/work/y-studio</loc><priority>0.8</priority></url>
-  <url><loc>https://gabrielaguiar.dev/work/aguiar-one</loc><priority>0.8</priority></url>
+  <url><loc>https://www.gabrielaguiar.dev/</loc><priority>1.0</priority></url>
+  <url><loc>https://www.gabrielaguiar.dev/work/yago</loc><priority>0.8</priority></url>
+  <url><loc>https://www.gabrielaguiar.dev/work/y-studio</loc><priority>0.8</priority></url>
+  <url><loc>https://www.gabrielaguiar.dev/work/porto-seguro-shopping</loc><priority>0.8</priority></url>
+  <url><loc>https://www.gabrielaguiar.dev/work/aguiar-one</loc><priority>0.8</priority></url>
+  <url><loc>https://www.gabrielaguiar.dev/work/vez</loc><priority>0.8</priority></url>
 </urlset>
