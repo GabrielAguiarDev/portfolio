@@ -201,7 +201,7 @@ export const ROLES: Role[] = [
         en: "Modules switched on per customer, so a small shop does not pay for a large one's complexity.",
       },
     ],
-    stack: [], // TODO: the frameworks and services this one actually runs on
+    stack: ["React Native", "Expo", "Next.js", "TypeScript", "Supabase", "Turborepo", "pnpm"],
   },
   {
     id: "freelance-2",
