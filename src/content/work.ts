@@ -546,7 +546,7 @@ export const PROJECTS: Project[] = [
         },
       },
     ],
-    stack: [], // TODO: the frameworks and services this one actually runs on
+    stack: ["React Native", "Expo", "Next.js", "TypeScript", "Supabase", "Turborepo", "pnpm"],
     surfaces: [
       {
         kind: "web",
