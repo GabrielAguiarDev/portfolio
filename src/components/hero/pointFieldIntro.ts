@@ -12,12 +12,37 @@ import { animation, MOBILE_BREAKPOINT, prefersReducedMotion } from "@/animation"
  * See the note on `pointField.intro` in the animation config.
  */
 export function pointFieldIntroPlays(): boolean {
+  return introRuns("play")
+}
+
+/**
+ * Whether the hero holds its copy back until the field reports the glyph is
+ * there.
+ *
+ * A strictly narrower question than the one above — the entrance can only be
+ * waited for where it actually runs — and the reason it is asked separately is
+ * that a wide screen now plays the entrance without delaying the headline for
+ * it. See `intro.holdCopy` in the animation config.
+ */
+export function pointFieldIntroHoldsCopy(): boolean {
+  return introRuns("holdCopy")
+}
+
+/**
+ * The conditions both questions share, plus the one per-breakpoint dial that
+ * tells them apart.
+ */
+function introRuns(dial: "play" | "holdCopy"): boolean {
   if (typeof window === "undefined" || !window.matchMedia) return false
   if (!animation.enabled.pointField || prefersReducedMotion()) return false
 
   const intro = animation.pointField.intro
   const isMobile = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`).matches
-  if (!intro.play[isMobile ? "mobile" : "desktop"]) return false
+  const breakpoint = isMobile ? "mobile" : "desktop"
+
+  // Nothing to wait for where there is no entrance, whatever `holdCopy` says.
+  if (!intro.play[breakpoint]) return false
+  if (!intro[dial][breakpoint]) return false
 
   // A page opened into a background tab runs no frames at all: the draw loop
   // is paused until the tab is looked at. The entrance would then start from

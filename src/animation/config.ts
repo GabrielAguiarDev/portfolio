@@ -307,10 +307,12 @@ export const animation = {
     /**
      * The entrance: the glyph assembling itself on load.
      *
-     * On a phone there is no room to stand the field beside the type, so it
-     * sits behind it and has to earn its place another way — by being built in
-     * front of the visitor. The points open scrambled, gather into `</>`, and
-     * only once the object is there does the copy fade up on top of it.
+     * The points open scrambled and gather into `</>`. On a phone there is no
+     * room to stand the field beside the type, so it sits behind it and has to
+     * earn its place another way — by being built in front of the visitor, and
+     * only once the object is there does the copy fade up on top of it. On a
+     * wide screen the object is built the same way, but beside the copy rather
+     * than under it, so the two arrive together — see `holdCopy`.
      *
      * It is the disperse above played backwards: the same per-point directions,
      * the same per-point stagger, one shared value in the draw loop. So the
@@ -325,11 +327,29 @@ export const animation = {
        * be in its phone configuration, and never half in one and half in the
        * other.
        *
-       * Desktop opens formed on purpose: there the field is the counterweight
-       * to the headline rather than the thing behind it, and the headline is
-       * the LCP element — it does not wait for scenery.
+       * Everywhere, now: the glyph assembling itself is the page's opening
+       * gesture, and there is no reason a wide screen should be the one place
+       * it is skipped. What desktop does not do is *wait* for it — see
+       * `holdCopy` directly below.
        */
-      play: { desktop: false, mobile: true },
+      play: { desktop: true, mobile: true },
+      /**
+       * Whether the hero holds its copy back until the glyph is there.
+       *
+       * Only on a phone. There the field is directly behind the type, so copy
+       * arriving mid-gather would be read through a cloud of loose points, and
+       * the entrance is the only thing on the screen worth watching anyway.
+       *
+       * On a wide screen the field stands to the right of the type instead of
+       * under it: nothing overlaps, and the headline is the LCP element — it
+       * does not wait for scenery. So the gather runs beside the copy's own
+       * reveal and the two land together.
+       *
+       * Read separately from `play` on purpose. They were one flag, and that
+       * made "assemble the glyph here too" and "delay the headline here too"
+       * impossible to ask for apart.
+       */
+      holdCopy: { desktop: false, mobile: true },
       /**
        * How close to the top of the page the visitor has to have arrived, in
        * px, for there to be an entrance at all. Not 0: browsers restore a

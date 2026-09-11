@@ -139,7 +139,15 @@ export const PROFILE = {
     pt: "Brasil — remoto",
     en: "Brazil — remote",
   } satisfies Localized,
-  photo: "/profile.png",
+  /**
+   * JPEG and not PNG. The source was a 1.6MB lossless PNG of a photograph —
+   * the format's worst case, and by a wide margin the heaviest thing the site
+   * ever downloaded. It has no transparency (the soft edge is a CSS mask, not
+   * an alpha channel), so there was nothing PNG was buying. Re-encoded at the
+   * same 1254x1254 and quality 90 it is 245kB: indistinguishable at 1:1, and
+   * the portrait is rendered downscaled and grayscale on top of that.
+   */
+  photo: "/profile.jpg",
 }
 
 export const LINKS = {
