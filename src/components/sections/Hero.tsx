@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from "react"
 
 import { animation, RevealText, motionScrollTo, useReveal } from "@/animation"
 import PointField from "@/components/hero/PointField"
-import { pointFieldIntroPlays } from "@/components/hero/pointFieldIntro"
+import { pointFieldIntroHoldsCopy } from "@/components/hero/pointFieldIntro"
 import { COPY } from "@/content/copy"
 import { hasEmail, LINKS, PROFILE } from "@/content/profile"
 import { useLocale } from "@/i18n/useLocale"
@@ -35,11 +35,13 @@ const HOLD_CEILING_MS =
  * That object is the point field: it carries the whole visual weight, which is
  * why it is sized and positioned as a subject rather than as a backdrop.
  *
- * On a phone it also carries the opening. There the field cannot stand beside
- * the type, so it is built in front of the visitor instead: the points arrive
- * scrambled, gather into `</>`, and the copy waits and then fades up over the
- * finished object. Desktop opens with everything already in place — see the
- * note on `pointField.intro` in the animation config.
+ * It also carries the opening, everywhere: the points arrive scrambled and
+ * gather into `</>`. What differs is whether the copy waits for them. On a
+ * phone the field is directly behind the type, so it does — the copy fades up
+ * over the finished object. On a wide screen the field stands beside the type
+ * and nothing overlaps, so the gather runs alongside the copy's own reveal and
+ * the headline never waits for scenery. See `pointField.intro` in the
+ * animation config.
  */
 const Hero = () => {
   const { pick } = useLocale()
@@ -48,7 +50,7 @@ const Hero = () => {
   // it in an effect would paint the copy and then take it away again, which is
   // the one thing worse than either state.
   const [held, setHeld] = useState(
-    () => animation.enabled.reveal && pointFieldIntroPlays(),
+    () => animation.enabled.reveal && pointFieldIntroHoldsCopy(),
   )
 
   const release = useCallback(() => setHeld(false), [])

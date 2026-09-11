@@ -743,7 +743,10 @@ if (import.meta.env.DEV) {
     console.warn(
       `[portfolio] Draft case studies in src/content/work.ts: ${drafts.join(", ")}. ` +
         `They render placeholder copy, are hidden from the index in a production ` +
-        `build and carry noindex, until you fill them in and remove \`draft: true\`.`,
+        `build and carry noindex, until you fill them in and remove \`draft: true\`. ` +
+        `When you do, add the URL to public/sitemap.xml in the same commit — that ` +
+        `file lists only what is indexable, and a noindex page submitted in a ` +
+        `sitemap is reported as an error against the whole file.`,
     )
   }
 

@@ -13,13 +13,195 @@
         />
         <meta name="author" content="Gabriel Aguiar" />
         <link rel="canonical" href="https://gabrielaguiar.dev/" />
+        <!-- Stated rather than left to the browser's implicit /favicon.ico
+             probe: the implicit request is a guess that costs a 404 round trip
+             wherever the file is not exactly there, and crawlers read the tag. -->
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
 
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <!--
+            ── Type, served from this origin ─────────────────────────────────
+
+            This used to be a <link rel="stylesheet"> to fonts.googleapis.com.
+            That is a render-blocking request to a third party which cannot
+            even begin until DNS and TLS to a second host are done, and it
+            then names files on a *third* host (fonts.gstatic.com) that only
+            start downloading once that CSS has come back and parsed. Two
+            preconnects were paying to soften a round trip that did not have
+            to exist. Per-site cache partitioning killed the old argument for
+            using Google's CDN — a visitor's browser cannot reuse the copy it
+            fetched for someone else's site, so the bytes were being paid for
+            here anyway, just more slowly and from further away.
+
+            Self-hosted, the files sit behind the connection that is already
+            open for the document, and the immutable cache header in
+            vercel.json holds them for a year.
+
+            The @font-face rules below are Google's own, copied verbatim from
+            the CSS that link returned — same faces, same font-display: swap,
+            same unicode-ranges — with only the URLs pointed at /fonts. That
+            is deliberate and the rules must stay verbatim:
+
+            - Inter and Inter Tight are VARIABLE fonts. All three of Inter's
+              declared weights resolve to one file, and so do Inter Tight's.
+              The per-weight blocks look redundant and are not: they are what
+              pins each family to exactly the weights the design asked for.
+              Collapsing them into one `font-weight: 100 900` block would let
+              the browser render real weights it currently synthesises, which
+              would change how the page looks.
+            - Only the `latin` and `latin-ext` subsets are kept. Cyrillic,
+              Greek and Vietnamese were never downloaded — a subset is fetched
+              only when a character in its range is painted, and this site is
+              Portuguese and English. `latin` covers every accent either one
+              uses (its range opens at U+0000-00FF).
+
+            Inlined rather than linked so it costs no request at all. Two
+            preloads go ahead of it: body copy is Inter and every heading is
+            Inter Tight, so both are certain to be needed, and preloading
+            starts them during HTML parse instead of after the CSS is read.
+        -->
         <link
-            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@500;600;700&family=Instrument+Serif:ital@0;1&display=swap"
-            rel="stylesheet"
+            rel="preload"
+            href="/fonts/inter-latin.woff2"
+            as="font"
+            type="font/woff2"
+            crossorigin
         />
+        <link
+            rel="preload"
+            href="/fonts/inter-tight-latin.woff2"
+            as="font"
+            type="font/woff2"
+            crossorigin
+        />
+        <style>
+            /* latin-ext */
+            @font-face {
+                font-family: 'Instrument Serif';
+                font-style: italic;
+                font-weight: 400;
+                font-display: swap;
+                src: url(/fonts/instrument-serif-latin-ext.woff2) format('woff2');
+                unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+            }
+            /* latin */
+            @font-face {
+                font-family: 'Instrument Serif';
+                font-style: italic;
+                font-weight: 400;
+                font-display: swap;
+                src: url(/fonts/instrument-serif-latin.woff2) format('woff2');
+                unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+            }
+            /* latin-ext */
+            @font-face {
+                font-family: 'Inter';
+                font-style: normal;
+                font-weight: 400;
+                font-display: swap;
+                src: url(/fonts/inter-latin-ext.woff2) format('woff2');
+                unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+            }
+            /* latin */
+            @font-face {
+                font-family: 'Inter';
+                font-style: normal;
+                font-weight: 400;
+                font-display: swap;
+                src: url(/fonts/inter-latin.woff2) format('woff2');
+                unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+            }
+            /* latin-ext */
+            @font-face {
+                font-family: 'Inter';
+                font-style: normal;
+                font-weight: 500;
+                font-display: swap;
+                src: url(/fonts/inter-latin-ext.woff2) format('woff2');
+                unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+            }
+            /* latin */
+            @font-face {
+                font-family: 'Inter';
+                font-style: normal;
+                font-weight: 500;
+                font-display: swap;
+                src: url(/fonts/inter-latin.woff2) format('woff2');
+                unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+            }
+            /* latin-ext */
+            @font-face {
+                font-family: 'Inter';
+                font-style: normal;
+                font-weight: 600;
+                font-display: swap;
+                src: url(/fonts/inter-latin-ext.woff2) format('woff2');
+                unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+            }
+            /* latin */
+            @font-face {
+                font-family: 'Inter';
+                font-style: normal;
+                font-weight: 600;
+                font-display: swap;
+                src: url(/fonts/inter-latin.woff2) format('woff2');
+                unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+            }
+            /* latin-ext */
+            @font-face {
+                font-family: 'Inter Tight';
+                font-style: normal;
+                font-weight: 500;
+                font-display: swap;
+                src: url(/fonts/inter-tight-latin-ext.woff2) format('woff2');
+                unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+            }
+            /* latin */
+            @font-face {
+                font-family: 'Inter Tight';
+                font-style: normal;
+                font-weight: 500;
+                font-display: swap;
+                src: url(/fonts/inter-tight-latin.woff2) format('woff2');
+                unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+            }
+            /* latin-ext */
+            @font-face {
+                font-family: 'Inter Tight';
+                font-style: normal;
+                font-weight: 600;
+                font-display: swap;
+                src: url(/fonts/inter-tight-latin-ext.woff2) format('woff2');
+                unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+            }
+            /* latin */
+            @font-face {
+                font-family: 'Inter Tight';
+                font-style: normal;
+                font-weight: 600;
+                font-display: swap;
+                src: url(/fonts/inter-tight-latin.woff2) format('woff2');
+                unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+            }
+            /* latin-ext */
+            @font-face {
+                font-family: 'Inter Tight';
+                font-style: normal;
+                font-weight: 700;
+                font-display: swap;
+                src: url(/fonts/inter-tight-latin-ext.woff2) format('woff2');
+                unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+            }
+            /* latin */
+            @font-face {
+                font-family: 'Inter Tight';
+                font-style: normal;
+                font-weight: 700;
+                font-display: swap;
+                src: url(/fonts/inter-tight-latin.woff2) format('woff2');
+                unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+            }
+        </style>
 
         <meta property="og:title" content="Gabriel Aguiar — Software Engineer" />
         <meta
@@ -28,6 +210,7 @@
         />
         <meta property="og:url" content="https://gabrielaguiar.dev/" />
         <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="Gabriel Aguiar" />
         <meta property="og:locale" content="pt_BR" />
         <meta property="og:locale:alternate" content="en_US" />
         <!--
