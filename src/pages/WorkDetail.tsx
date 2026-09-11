@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useEffect, useMemo } from "react"
 import { useParams } from "react-router-dom"
 
 import { refreshScrollTriggers } from "@/animation"
@@ -9,7 +9,8 @@ import CaseStage, { CaseField } from "@/components/work/CaseStage"
 import CaseSurfaces from "@/components/work/CaseSurfaces"
 import { STAGES } from "@/components/work/stages"
 import { COPY } from "@/content/copy"
-import { PROJECTS, findProject, type Project } from "@/content/work"
+import { SITE_URL } from "@/content/profile"
+import { PROJECTS, findProject, platformsOf, type Project } from "@/content/work"
 import { useLocale } from "@/i18n/useLocale"
 import { useDocumentMeta } from "@/hooks/useDocumentMeta"
 
@@ -30,6 +31,77 @@ import NotFound from "./NotFound"
  * captures rather than drawings.
  */
 
+/**
+ * What kind of application each product is, in schema.org's vocabulary.
+ *
+ * Named per project rather than derived from `sector`, because the sector
+ * describes the customer's industry and this describes the software. Absent a
+ * good match the key is simply left out and the type falls back to the generic
+ * one — an inaccurate category is worse than none, since it is the field a
+ * search engine uses to decide what the thing *is*.
+ */
+const APPLICATION_CATEGORY: Record<string, string> = {
+  yago: "TravelApplication",
+  "y-studio": "BusinessApplication",
+  "porto-seguro-shopping": "ShoppingApplication",
+  "aguiar-one": "BusinessApplication",
+  vez: "BusinessApplication",
+}
+
+/**
+ * Structured data for one case study.
+ *
+ * `SoftwareApplication` and not `CreativeWork`: these are real products running
+ * in production, and the generic type would describe them as documents. The
+ * breadcrumb exists because a case study is two levels deep and the path is not
+ * inferable from a flat URL.
+ *
+ * Every value comes from the project record, so it cannot drift from what the
+ * page says. Nothing is invented — no `aggregateRating`, no `offers`, no
+ * `downloadUrl`, none of which this portfolio has any basis to claim.
+ */
+function caseSchema(project: Project, description: string, locale: string) {
+  const url = `${SITE_URL}/work/${project.id}`
+  const person = `${SITE_URL}/#person`
+  const category = APPLICATION_CATEGORY[project.id]
+
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "@id": `${url}#app`,
+        name: project.name,
+        url,
+        ...(description ? { description } : {}),
+        ...(category ? { applicationCategory: category } : {}),
+        operatingSystem: platformsOf(project).join(", "),
+        author: { "@id": person },
+        creator: { "@id": person },
+        inLanguage: locale === "pt" ? "pt-BR" : "en",
+      },
+      {
+        "@type": "WebPage",
+        "@id": `${url}#webpage`,
+        url,
+        name: `${project.name} — Gabriel Aguiar`,
+        isPartOf: { "@id": `${SITE_URL}/#website` },
+        about: { "@id": `${url}#app` },
+        breadcrumb: { "@id": `${url}#breadcrumb` },
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": `${url}#breadcrumb`,
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: locale === "pt" ? "Início" : "Home", item: `${SITE_URL}/` },
+          { "@type": "ListItem", position: 2, name: locale === "pt" ? "Projetos" : "Work", item: `${SITE_URL}/#work` },
+          { "@type": "ListItem", position: 3, name: project.name },
+        ],
+      },
+    ],
+  }
+}
+
 /** The banner a case study carries while it is structure rather than content. */
 const DraftNotice = () => {
   const { pick } = useLocale()
@@ -48,13 +120,23 @@ const DraftNotice = () => {
 
 const WorkDetail = () => {
   const { id } = useParams()
-  const { pick } = useLocale()
+  const { pick, locale } = useLocale()
   const project = findProject(id)
 
   // Every hook has to run before the 404 branch, so the metadata falls back to
   // values that are correct for a missing project rather than being skipped.
   const title = project ? `${project.name} — Gabriel Aguiar` : "Gabriel Aguiar"
   const description = project && !project.draft ? pick(project.summary) : ""
+
+  /*
+    Memoised because it is an effect dependency in `useDocumentMeta`. Rebuilt
+    fresh on every render it would have a new identity every time, and the hook
+    would tear the script tag out of the head and put it back on each one.
+  */
+  const jsonLd = useMemo(
+    () => (project && !project.draft ? caseSchema(project, description, locale) : undefined),
+    [project, description, locale],
+  )
 
   useDocumentMeta({
     title,
@@ -67,6 +149,7 @@ const WorkDetail = () => {
     // A placeholder page indexed by Google is worse than no page: it is a real
     // URL, on a real domain, saying nothing. Drafts stay out until written.
     noindex: !project || Boolean(project.draft),
+    jsonLd,
   })
 
   // The case study arrives in a lazy chunk, so the document's height changes

@@ -12,7 +12,7 @@
             content="Gabriel Aguiar builds complete software products — architecture, implementation and delivery. Treats AI as engineering (prompt engineering, RAG, MCP, orchestrated subagents, guardrails and cost control) and security as a design decision."
         />
         <meta name="author" content="Gabriel Aguiar" />
-        <link rel="canonical" href="https://gabrielaguiar.dev/" />
+        <link rel="canonical" href="https://www.gabrielaguiar.dev/" />
         <!-- Stated rather than left to the browser's implicit /favicon.ico
              probe: the implicit request is a guess that costs a 404 round trip
              wherever the file is not exactly there, and crawlers read the tag. -->
@@ -208,48 +208,108 @@
             property="og:description"
             content="I build the whole product, not just the screen. Architecture, product and delivery — with AI treated as engineering and security treated as a design decision."
         />
-        <meta property="og:url" content="https://gabrielaguiar.dev/" />
+        <meta property="og:url" content="https://www.gabrielaguiar.dev/" />
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="Gabriel Aguiar" />
-        <meta property="og:locale" content="pt_BR" />
-        <meta property="og:locale:alternate" content="en_US" />
         <!--
-            summary_large_image needs an image; without one the card renders
-            empty. There is no share image in /public yet, so the card is the
-            small variant until one exists — an accurate small card beats a
-            broken large one.
-            TODO: add /public/og.png (1200x630) and switch this back to
-            summary_large_image, adding <meta property="og:image">.
+            The language *these tags* are in, not the one the app prefers.
+            Title, description and og:description in this file are English, and
+            the app's own fallback is English (src/i18n/config.ts), so a crawler
+            that cannot run JavaScript is reading English. Declaring pt_BR here
+            described a page nobody was served. `useDocumentMeta` rewrites this
+            from the active locale once the app boots.
+        -->
+        <meta property="og:locale" content="en_US" />
+        <meta property="og:locale:alternate" content="pt_BR" />
+        <!--
+            `summary`, with the portrait, rather than `summary_large_image`.
+            The small card is square and the portrait already is — so this is
+            the one image in /public that fits the format without being
+            cropped into something unintended. Every shared link used to render
+            with no image at all.
+            TODO: a purpose-made /public/og.png at 1200x630 would allow
+            `summary_large_image`, which is the larger and better card. Swap
+            both tags together when one exists.
         -->
         <meta name="twitter:card" content="summary" />
+        <meta property="og:image" content="https://www.gabrielaguiar.dev/profile.jpg" />
+        <meta property="og:image:width" content="1254" />
+        <meta property="og:image:height" content="1254" />
+        <meta property="og:image:alt" content="Gabriel Aguiar" />
 
+        <!--
+            One graph, not three loose objects.
+
+            The nodes carry `@id` and refer to each other, which is what lets a
+            search engine know the WebSite is published by the same person the
+            page is about — three unconnected blocks would state three facts and
+            imply no relationship between them.
+
+            Kept static here rather than built at runtime: it never changes, and
+            a crawler that does not execute JavaScript still reads it.
+
+            Deliberately absent: `WebSite.potentialAction` / SearchAction. There
+            is no search on this site, declaring one that does not exist is a
+            structured lie, and Google retired the sitelinks searchbox anyway.
+        -->
         <script type="application/ld+json">
             {
                 "@context": "https://schema.org",
-                "@type": "Person",
-                "name": "Gabriel Aguiar",
-                "jobTitle": "Software Engineer",
-                "knowsAbout": [
-                    "Software architecture",
-                    "React Native",
-                    "React",
-                    "Next.js",
-                    "TypeScript",
-                    "Mobile application development",
-                    "Web application development",
-                    "AI-assisted software development",
-                    "Large language models",
-                    "Prompt engineering",
-                    "AI agent orchestration",
-                    "Model Context Protocol",
-                    "Retrieval-augmented generation",
-                    "AI security",
-                    "Prompt injection",
-                    "Application security"
-                ],
-                "sameAs": [
-                    "https://github.com/GabrielAguiarDev",
-                    "https://www.linkedin.com/in/gabriel-aguiar-dev/"
+                "@graph": [
+                    {
+                        "@type": "Person",
+                        "@id": "https://www.gabrielaguiar.dev/#person",
+                        "name": "Gabriel Aguiar",
+                        "givenName": "Gabriel",
+                        "familyName": "Aguiar",
+                        "url": "https://www.gabrielaguiar.dev/",
+                        "image": "https://www.gabrielaguiar.dev/profile.jpg",
+                        "jobTitle": "Software Engineer",
+                        "description": "Software engineer building complete products — architecture, implementation and delivery.",
+                        "address": {
+                            "@type": "PostalAddress",
+                            "addressCountry": "BR"
+                        },
+                        "knowsLanguage": ["pt-BR", "en"],
+                        "knowsAbout": [
+                            "Software architecture",
+                            "React Native",
+                            "React",
+                            "Next.js",
+                            "TypeScript",
+                            "Mobile application development",
+                            "Web application development",
+                            "AI-assisted software development",
+                            "Large language models",
+                            "Prompt engineering",
+                            "AI agent orchestration",
+                            "Model Context Protocol",
+                            "Retrieval-augmented generation",
+                            "AI security",
+                            "Prompt injection",
+                            "Application security"
+                        ],
+                        "sameAs": [
+                            "https://github.com/GabrielAguiarDev",
+                            "https://www.linkedin.com/in/gabriel-aguiar-dev/"
+                        ]
+                    },
+                    {
+                        "@type": "WebSite",
+                        "@id": "https://www.gabrielaguiar.dev/#website",
+                        "url": "https://www.gabrielaguiar.dev/",
+                        "name": "Gabriel Aguiar — Software Engineer",
+                        "inLanguage": ["pt-BR", "en"],
+                        "publisher": { "@id": "https://www.gabrielaguiar.dev/#person" }
+                    },
+                    {
+                        "@type": "ProfilePage",
+                        "@id": "https://www.gabrielaguiar.dev/#webpage",
+                        "url": "https://www.gabrielaguiar.dev/",
+                        "isPartOf": { "@id": "https://www.gabrielaguiar.dev/#website" },
+                        "about": { "@id": "https://www.gabrielaguiar.dev/#person" },
+                        "mainEntity": { "@id": "https://www.gabrielaguiar.dev/#person" }
+                    }
                 ]
             }
         </script>
