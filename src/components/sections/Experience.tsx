@@ -34,7 +34,7 @@ const KindLabel = ({ kind }: { kind: Role["kind"] }) => {
 }
 
 const Entry = ({ role, index }: { role: Role; index: number }) => {
-  const { pick } = useLocale()
+  const { pick, pickTag } = useLocale()
   const header = useReveal<HTMLDivElement>({ delay: gridDelay(index) })
   const detail = useReveal<HTMLDivElement>({ delay: gridDelay(index) + 0.08 })
 
@@ -44,7 +44,7 @@ const Entry = ({ role, index }: { role: Role; index: number }) => {
         <div {...header.revealProps} className={cn(header.revealProps.className, "lg:col-span-5")}>
           <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
             <span className="text-[0.8125rem] font-medium tracking-tight text-foreground">
-              {role.company}
+              {pickTag(role.company)}
             </span>
             {role.period ? (
               <>

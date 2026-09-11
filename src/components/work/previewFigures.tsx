@@ -1,9 +1,24 @@
-import { useEffect, useRef, useState, type ReactNode } from "react"
+import type { ReactNode } from "react"
 
+import Miniature from "@/components/device/Miniature"
 import PhoneFrame from "@/components/device/PhoneFrame"
+import {
+  AGUIAR_CANVAS,
+  AGUIAR_WIDTH,
+  AguiarApp,
+  AguiarPortal,
+} from "@/components/screens/AguiarOne"
 import { ShoppingHome } from "@/components/screens/Shopping"
-import { BrowserFrame, StudioDashboard } from "@/components/screens/Studio"
-import { YagoBooking } from "@/components/screens/Yago"
+import {
+  BrowserFrame,
+  DESKTOP_WIDTH,
+  StudioBooking,
+  STUDIO_CANVAS,
+  StudioCommerce,
+  StudioYago,
+} from "@/components/screens/Studio"
+import { VEZ_CANVAS, VEZ_WIDTH, VezClient, VezPortal } from "@/components/screens/Vez"
+import { YagoHome } from "@/components/screens/Yago"
 import type { Project } from "@/content/work"
 import { useLocale } from "@/i18n/useLocale"
 
@@ -13,105 +28,111 @@ import PreviewSkeleton from "./PreviewSkeleton"
  * The interfaces the hover preview shows, and the only place they are named.
  *
  * This module is loaded lazily, on the first hover over the work index. That
- * matters: it pulls in the phone frame, the browser frame and three products'
+ * matters: it pulls in the phone frame, the browser frame and four products'
  * screens — the same weight that was deliberately split out of the home page
  * when the case studies moved to their own routes. Paying for it when someone
  * reaches for a project is fine; paying for it on every first paint is not.
  *
  * Each project names its own preview rather than deriving one from `platforms`,
- * because the right screen to lead with is an editorial choice: Yago opens on
- * its one transactional moment, Y-Studio on the module rail that is the whole
- * argument of the product, Shopping on the storefront.
+ * because the right figure is an editorial choice — and at card size it is a
+ * different choice than at full size.
  */
-
-/** Logical width the Y-Studio dashboard is authored against. */
-const DESKTOP_WIDTH = 820
 
 /**
- * Renders a desktop layout at its authoring width and scales the result down.
+ * The shape a monitor actually has.
  *
- * Letting the dashboard reflow into a 260px box instead would be worse than
- * small — its module rail is behind a `sm:` breakpoint that reads the
- * *viewport*, not this container, so at preview size it would keep a 152px rail
- * inside 260px and read as broken rather than as miniature.
- *
- * This mitigates that rather than solving it: the screens are still authored
- * against viewport breakpoints, so a mouse-driven browser window under 640px
- * wide loses the rail here too. That window is narrow enough that the preview
- * is the least of it, and the alternative is container queries through every
- * screen in the project.
+ * A dashboard authored whole is two and a half screens tall, and a browser
+ * frame drawn around all of it is a frame no monitor has ever been — in a
+ * preview card it reads as a long ribbon rather than as a computer. Cropping to
+ * 16:10 shows what a laptop shows: the top of the page, with the rest running
+ * past the bottom edge the way it does in the product.
  */
-const Miniature = ({ width, children }: { width: number; children: ReactNode }) => {
-  const box = useRef<HTMLDivElement>(null)
-  const content = useRef<HTMLDivElement>(null)
-  const [scale, setScale] = useState(0)
-  const [height, setHeight] = useState(0)
+const MONITOR = 16 / 10
 
-  useEffect(() => {
-    const outer = box.current
-    const inner = content.current
-    if (!outer || !inner) return
+/**
+ * A desktop console with the app that belongs to it resting on its corner.
+ *
+ * Three of these products are a system rather than an app: an operations panel
+ * the staff work in, and a phone the customer holds. Showing one surface makes
+ * a system look like an app, and showing two side by side makes them look like
+ * two products. Overlapped, the phone reads as belonging to the window behind
+ * it — which is the relationship the case study spends six paragraphs arguing.
+ *
+ * The phone hangs off the lower-right because that is the quietest region of
+ * every one of these dashboards: the rail, the page title and the KPI row all
+ * live top-left, and none of them are worth covering.
+ */
+const PortalWithApp = ({
+  url,
+  width,
+  background,
+  portal,
+  app,
+}: {
+  url: string
+  width: number
+  background: string
+  portal: ReactNode
+  app: ReactNode
+}) => (
+  <div className="relative w-full pb-[1.25rem] pr-[0.75rem]">
+    <BrowserFrame url={url} className="shadow-[0_18px_40px_-24px_rgba(0,0,0,0.85)]">
+      <Miniature width={width} ratio={MONITOR} background={background}>
+        {portal}
+      </Miniature>
+    </BrowserFrame>
 
-    const measure = () => {
-      const factor = outer.getBoundingClientRect().width / width
-      setScale(factor)
-      // The box takes its height from what is actually inside it. A fixed
-      // aspect ratio would be unrelated to the content: too tall and the
-      // browser window sits above a band of dead chrome, too short and the
-      // dashboard is cropped — and which one it is would change silently every
-      // time the screen it wraps grew a row.
-      setHeight(inner.offsetHeight * factor)
-    }
-
-    if (typeof ResizeObserver === "undefined") {
-      measure()
-      return
-    }
-
-    const observer = new ResizeObserver(measure)
-    observer.observe(outer)
-    observer.observe(inner)
-    return () => observer.disconnect()
-  }, [width])
-
-  return (
-    <div ref={box} className="w-full overflow-hidden" style={{ height: height || undefined }}>
-      <div
-        ref={content}
-        style={{
-          width,
-          transform: `scale(${scale})`,
-          transformOrigin: "top left",
-          visibility: scale ? "visible" : "hidden",
-        }}
-      >
-        {children}
-      </div>
+    <div className="absolute -bottom-[0.25rem] right-0 w-[4.25rem]">
+      <PhoneFrame lit={false}>{app}</PhoneFrame>
     </div>
-  )
-}
+  </div>
+)
 
 const FIGURES: Record<string, ReactNode> = {
   yago: (
-    <div className="mx-auto w-[7.5rem]">
-      <PhoneFrame lit={false}>
-        <YagoBooking />
-      </PhoneFrame>
-    </div>
+    <PortalWithApp
+      url="app.y-studio.com/yago"
+      width={DESKTOP_WIDTH}
+      background={STUDIO_CANVAS}
+      portal={<StudioYago />}
+      app={<YagoHome />}
+    />
   ),
+  // Y-Studio is the one product here with no phone in it at all, so it gets the
+  // window on its own — at the same monitor proportion as the others.
   "y-studio": (
     <BrowserFrame url="app.y-studio.com/booking">
-      <Miniature width={DESKTOP_WIDTH}>
-        <StudioDashboard />
+      <Miniature width={DESKTOP_WIDTH} ratio={MONITOR} background={STUDIO_CANVAS}>
+        <StudioBooking />
       </Miniature>
     </BrowserFrame>
   ),
   "porto-seguro-shopping": (
-    <div className="mx-auto w-[7.5rem]">
-      <PhoneFrame lit={false}>
-        <ShoppingHome />
-      </PhoneFrame>
-    </div>
+    <PortalWithApp
+      url="app.y-studio.com/commerce"
+      width={DESKTOP_WIDTH}
+      background={STUDIO_CANVAS}
+      portal={<StudioCommerce />}
+      app={<ShoppingHome />}
+    />
+  ),
+  "aguiar-one": (
+    <PortalWithApp
+      url="app.aguiarone.com.br/dashboard"
+      width={AGUIAR_WIDTH}
+      background={AGUIAR_CANVAS}
+      portal={<AguiarPortal />}
+      app={<AguiarApp />}
+    />
+  ),
+  vez: (
+    <PortalWithApp
+      url="app.vez.com.br"
+      width={VEZ_WIDTH}
+      background={VEZ_CANVAS}
+      portal={<VezPortal />}
+      app={<VezClient />}
+    />
   ),
 }
 

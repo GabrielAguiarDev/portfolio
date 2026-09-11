@@ -8,6 +8,12 @@ import { cn } from "@/lib/utils"
  * Everything is sized in raw pixels against the 320×692 logical screen that
  * `PhoneFrame` scales — so these numbers are deliberately absolute, not
  * responsive. They are the phone's own coordinate space.
+ *
+ * The reference captures the screens are rebuilt from are 430pt wide, so
+ * measurements taken off them are multiplied by 320/430 ≈ 0.744 to land here.
+ * Where that would put a label under ~8.5px it is rounded up instead: these
+ * screens are also rendered at a third of phone size inside a case study, and
+ * type that disappears there is worse than type a point too large.
  */
 
 export const StatusBar = ({ tone = "dark" }: { tone?: "dark" | "light" }) => (
@@ -59,44 +65,6 @@ export const HomeIndicator = ({ tone = "dark" }: { tone?: "dark" | "light" }) =>
   </div>
 )
 
-export type TabItem = {
-  icon: ReactNode
-  label: string
-}
-
-export const TabBar = ({
-  items,
-  active = 0,
-  accent,
-  tone = "dark",
-}: {
-  items: TabItem[]
-  active?: number
-  accent: string
-  tone?: "dark" | "light"
-}) => (
-  <nav
-    aria-hidden="true"
-    className={cn(
-      "mt-auto flex shrink-0 items-start justify-around border-t px-[10px] pt-[11px]",
-      tone === "dark" ? "border-black/[0.07]" : "border-white/10",
-    )}
-  >
-    {items.map((item, index) => (
-      <div
-        key={item.label}
-        className="flex w-[64px] flex-col items-center gap-[5px]"
-        style={{
-          color: index === active ? accent : tone === "dark" ? "#9CA0A8" : "#7C818C",
-        }}
-      >
-        {item.icon}
-        <span className="text-[9.5px] font-medium tracking-tight">{item.label}</span>
-      </div>
-    ))}
-  </nav>
-)
-
 /** The root of every coded screen: fixed logical size, column layout. */
 export const Screen = ({
   children,
@@ -113,4 +81,51 @@ export const Screen = ({
   >
     {children}
   </div>
+)
+
+/**
+ * The soft bottom edge on a screen whose content runs past it.
+ *
+ * Several of these screens legitimately have more content than 692px — the
+ * guest app's module grid is eleven tiles in a viewport that fits nine, and the
+ * storefront's best-seller list runs on for pages. Trimming a list to whatever
+ * fits would misrepresent the product; leaving the last row chopped through the
+ * middle of a word reads as a rendering bug rather than as a scroll.
+ *
+ * So the overflow is faded out instead. The gradient is the screen's own
+ * background colour, which is why it is a parameter rather than a constant.
+ */
+export const ScrollFade = ({
+  children,
+  to = "#FFFFFF",
+  className,
+}: {
+  children: ReactNode
+  to?: string
+  className?: string
+}) => (
+  <div className={cn("relative min-h-0 flex-1 overflow-hidden", className)}>
+    {children}
+    <div
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-x-0 bottom-0 h-[30px]"
+      style={{ background: `linear-gradient(to top, ${to} 22%, transparent)` }}
+    />
+  </div>
+)
+
+/**
+ * The line every screen in the family signs off with.
+ *
+ * It is in the real product on every route, and it is the one piece of chrome
+ * that identifies who built the thing — which is the whole point of the
+ * portfolio it now sits inside.
+ */
+export const BuiltBy = ({ tone = "#8A8A8A" }: { tone?: string }) => (
+  <p
+    className="shrink-0 pb-[4px] pt-[7px] text-center text-[8.5px] tracking-[0.01em]"
+    style={{ color: tone }}
+  >
+    Desenvolvido por Yaayoo Fusion Thinking
+  </p>
 )

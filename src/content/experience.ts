@@ -1,4 +1,4 @@
-import type { Localized } from "@/i18n/useLocale"
+import type { Localized, Tag } from "@/i18n/useLocale"
 
 /**
  * Professional experience.
@@ -27,7 +27,17 @@ export type RoleKind = "employment" | "freelance"
 export type Role = {
   id: string
   title: Localized
-  company: string
+  /**
+   * Who the work was for.
+   *
+   * A `Tag` rather than a plain string, the same way toolkit chips are: an
+   * employer is a proper noun that reads identically in every language, while a
+   * commissioned engagement with no public client name needs a phrase, and a
+   * phrase has to be translated. It must not be the word "freelance" — the page
+   * already labels the relationship, and repeating it here produces
+   * "Freelance · Freelancer" and tells the reader nothing twice.
+   */
+  company: Tag
   kind: RoleKind
   /** TODO: fill in, e.g. { pt: "2023 — hoje", en: "2023 — present" }. */
   period: Localized | null
@@ -38,9 +48,6 @@ export type Role = {
   highlights: Localized[]
   stack: string[]
 }
-
-/** The placeholder every unwritten field carries. Visible on purpose. */
-const TBD: Localized = { pt: "— a preencher —", en: "— to be written —" }
 
 export const ROLES: Role[] = [
   {
@@ -134,56 +141,127 @@ export const ROLES: Role[] = [
      They were one entry — "Projetos Web Freelancer" — which flattened two
      separate deliveries, for two different people, into a single line. Split so
      each can carry its own client, period, scope and stack, which is also what
-     lets them pair one-to-one with the two draft case studies in work.ts:
-     `freelance-1` with `draft-project-1`, `freelance-2` with `draft-project-2`.
+     lets them pair one-to-one with the two commissioned case studies in
+     work.ts: `freelance-1` with `aguiar-one`, `freelance-2` with `vez`.
 
-     `company` is left unfilled rather than guessed. Put the client's name in it,
-     or a neutral stand-in where the engagement is under NDA.
+     Neither names its product here, on purpose. An experience entry answers
+     "what is this person able to do on their own"; the case study answers "what
+     did it turn out to be". Naming the app in both makes the second one
+     redundant and turns a claim about capability into a second product pitch.
+
+     `company` carries the sector rather than a client name — factual, and it
+     keeps the two apart on the page. Swap in the real names if the engagements
+     are not private.
      ─────────────────────────────────────────────────────────────────────── */
   {
     id: "freelance-1",
-    title: { pt: "Desenvolvedor Web — Freelancer", en: "Web Developer — Freelance" },
-    company: "—", // TODO: the client's name, or a neutral stand-in if it is under NDA
+    title: { pt: "Desenvolvedor Full-stack — Freelancer", en: "Full-stack Developer — Freelance" },
+    // The sector rather than a name: true, useful, and it distinguishes the two
+    // engagements. Swap in the client if the work is not private.
+    company: { pt: "Varejo local", en: "Local retail" },
     kind: "freelance",
     period: null, // TODO
     summary: {
-      pt: "Aplicação web sob demanda, do briefing à entrega — interface, integração e deploy.",
-      en: "A web application on demand, from brief to delivery — interface, integration and deployment.",
+      pt: "Plataforma de gestão para varejo local, entregue sozinho do levantamento com o cliente até a operação: o portal onde a loja trabalha, o console que administra a plataforma acima dela, o app e o banco.",
+      en: "A management platform for local retail, delivered alone from the client conversation through to running it: the portal the shop works in, the console that administers the platform above it, the app and the database.",
     },
     responsibilities: [
       {
-        pt: "Do briefing à entrega, incluindo a interface e o deploy.",
-        en: "From brief to delivery, interface and deployment included.",
+        pt: "Levantamento com o cliente e definição de escopo antes de escrever código.",
+        en: "Discovery with the client and scoping the work before writing any code.",
       },
-      TBD, // TODO: what you actually owned on this one
+      {
+        pt: "Escolha de arquitetura e de stack, com a manutenção de uma pessoa só em vista.",
+        en: "Choosing the architecture and the stack, with one-person maintenance in mind.",
+      },
+      {
+        pt: "Modelagem do banco e das regras de negócio — venda, custo, caixa e estoque.",
+        en: "Modelling the database and the business rules — sales, costs, cash drawer and stock.",
+      },
+      {
+        pt: "Três superfícies: o portal do lojista, o console de administração e o app.",
+        en: "Three surfaces: the shop's portal, the administration console and the app.",
+      },
+      {
+        pt: "Deploy, ambiente e o que vem depois de entregar.",
+        en: "Deployment, environment, and everything that comes after delivery.",
+      },
     ],
-    highlights: [],
-    stack: [], // TODO
+    highlights: [
+      {
+        pt: "Produto inteiro sem equipe: arquitetura, modelo de dados, interface e deploy foram decisões minhas, sem ninguém a quem delegar.",
+        en: "A whole product with no team: architecture, data model, interface and deployment were my decisions, with nobody to delegate to.",
+      },
+      {
+        pt: "Desenhado como plataforma multi-loja desde a primeira versão — o console que administra os clientes não foi remendo posterior.",
+        en: "Built as a multi-tenant platform from the first version — the console that administers the customers was not bolted on later.",
+      },
+      {
+        pt: "Módulos ligáveis por cliente, para que uma loja pequena não pague a complexidade de uma grande.",
+        en: "Modules switched on per customer, so a small shop does not pay for a large one's complexity.",
+      },
+    ],
+    stack: [], // TODO: the frameworks and services this one actually runs on
   },
   {
     id: "freelance-2",
-    title: { pt: "Desenvolvedor Web — Freelancer", en: "Web Developer — Freelance" },
-    company: "—", // TODO: the client's name, or a neutral stand-in if it is under NDA
+    title: { pt: "Desenvolvedor Full-stack — Freelancer", en: "Full-stack Developer — Freelance" },
+    company: { pt: "Serviços locais", en: "Local services" },
     kind: "freelance",
     period: null, // TODO
     summary: {
-      pt: "Aplicação entregue de ponta a ponta — arquitetura, interface, integração e publicação.",
-      en: "An application delivered end to end — architecture, interface, integration and release.",
+      pt: "Marketplace de agendamentos de uma cidade inteira, entregue sozinho: cinco superfícies, busca conversacional por IA, pagamento integrado com split e cobrança por mensalidade ou por comissão.",
+      en: "A city-wide booking marketplace, delivered alone: five surfaces, conversational AI search, integrated payment with split, and billing by subscription or by commission.",
     },
     responsibilities: [
       {
-        pt: "Arquitetura e implementação da aplicação, do primeiro desenho ao ar.",
-        en: "The application's architecture and implementation, from first sketch to live.",
+        pt: "Levantamento com o cliente, escopo e o modelo de monetização do produto.",
+        en: "Discovery with the client, scope, and the product's monetisation model.",
       },
-      TBD, // TODO: what else you owned here — infrastructure, data, deployment
+      {
+        pt: "Arquitetura e escolha de stack, com o domínio compartilhado entre app e web num monorepo.",
+        en: "Architecture and stack choice, with the domain shared between app and web in a monorepo.",
+      },
+      {
+        pt: "Banco de dados, autenticação e as regras de disponibilidade e fila de espera.",
+        en: "Database, authentication, and the availability and waiting-queue rules.",
+      },
+      {
+        pt: "Cinco superfícies: dois aplicativos, dois portais web e a landing page.",
+        en: "Five surfaces: two apps, two web portals and the landing page.",
+      },
+      {
+        pt: "Pagamento integrado com split entre plataforma e estabelecimento, e a cobrança recorrente.",
+        en: "Integrated payment with a split between platform and business, and the recurring billing.",
+      },
+      {
+        pt: "Busca conversacional por IA sobre o catálogo de serviços e disponibilidade.",
+        en: "Conversational AI search across the service catalogue and availability.",
+      },
+      {
+        pt: "Deploy e operação.",
+        en: "Deployment and running it.",
+      },
     ],
     highlights: [
       {
         pt: "Escopo definido e entregue sem equipe: uma decisão técnica por vez, todas minhas.",
         en: "Scope defined and delivered without a team: one technical decision at a time, all of them mine.",
       },
+      {
+        pt: "Cinco superfícies partindo de um monorepo, com as regras de negócio compartilhadas entre mobile e web em vez de duplicadas.",
+        en: "Five surfaces out of one monorepo, with the business rules shared between mobile and web rather than duplicated.",
+      },
+      {
+        pt: "Fila de espera digital: o produto resolve o problema de quem tem horário *agora*, não só o de marcar para a semana que vem.",
+        en: "A digital waiting queue: the product answers who is free *now*, not only how to book for next week.",
+      },
+      {
+        pt: "Duas formas de cobrar — mensalidade e comissão por agendamento — convivendo no mesmo modelo de dados.",
+        en: "Two ways of being paid — subscription and commission per booking — living in one data model.",
+      },
     ],
-    stack: [], // TODO
+    stack: ["React Native", "Expo", "Next.js", "TypeScript", "Supabase", "Turborepo", "pnpm"],
   },
 ]
 
@@ -193,7 +271,9 @@ export const ROLES: Role[] = [
  */
 if (import.meta.env.DEV) {
   const unfilled = ROLES.filter(
-    (role) => role.company === "—" || role.stack.length === 0,
+    (role) =>
+      (typeof role.company === "string" && role.company === "—") ||
+      role.stack.length === 0,
   ).map((role) => role.id)
 
   if (unfilled.length) {
