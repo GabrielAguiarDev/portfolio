@@ -17,7 +17,7 @@ import type { Localized } from "@/i18n/useLocale"
  * in /public/screens and set `src` to swap in the real thing.
  */
 
-export type Layout = "showcase" | "immersive" | "constellation" | "gallery"
+export type Layout = "stage" | "gallery"
 
 export type Beat = {
   label: Localized
@@ -254,7 +254,7 @@ export const PROJECTS: Project[] = [
     status: "live",
     brand: { from: "#35A8A7", to: "#3758AD", ink: "#F2FBFB" },
     logo: "/yago.png",
-    layout: "showcase",
+    layout: "stage",
   },
   {
     id: "y-studio",
@@ -302,50 +302,110 @@ export const PROJECTS: Project[] = [
       },
     ],
     stack: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Node.js"],
-    // TODO: the ecosystem has further modules beyond these four. Add them as
-    // their own surfaces, and check the wording of each `purpose` below.
+    /*
+      The nine modules the platform actually ships, in the order its own module
+      picker lists them — taken from `src/types/modules.ts` in the Y-Studio
+      codebase rather than from memory. This used to say four, and the missing
+      five were not minor: Commerce, Storage and CX are what make the claim
+      "one system, modules each hotel switches on" true rather than marketing.
+
+      Each `purpose` is drawn from that module's own routes, so it describes
+      what the module does rather than what its name suggests.
+
+      Two of the nine are also case studies of their own in this portfolio, and
+      that is the most structurally interesting thing about the platform rather
+      than a filing accident: `commerce` is the back office behind Porto Seguro
+      Shopping, and `yago` the one behind the Yago apps. Neither serves a hotel
+      — they serve a shopping centre's retailers and a resort's guests. A module
+      here is a product the platform can carry, not a feature of one hotel.
+    */
     surfaces: [
       {
         kind: "web",
         name: { pt: "Booking", en: "Booking" },
         purpose: {
-          pt: "Reservas, disponibilidade e tarifas.",
-          en: "Reservations, availability and rates.",
-        },
-        audience: { pt: "Operação do hotel", en: "Hotel operations" },
-      },
-      {
-        kind: "web",
-        name: { pt: "CRM", en: "CRM" },
-        purpose: {
-          pt: "Base de hóspedes e o relacionamento com ela.",
-          en: "The guest base, and the relationship with it.",
+          pt: "Reservas, tarifário, promoções, parceiros e faturamento.",
+          en: "Reservations, rate plans, promotions, partners and billing.",
         },
         audience: { pt: "Comercial e recepção", en: "Sales and front desk" },
       },
       {
         kind: "web",
-        name: { pt: "CMS", en: "CMS" },
+        name: { pt: "CRM", en: "CRM" },
         purpose: {
-          pt: "Conteúdo que o site publica, editado pelo próprio hotel.",
-          en: "The content the website publishes, edited by the hotel itself.",
+          pt: "Base de leads e campanhas por e-mail, SMS, RCS e WhatsApp.",
+          en: "The lead base, and campaigns by email, SMS, RCS and WhatsApp.",
         },
         audience: { pt: "Marketing do hotel", en: "Hotel marketing" },
       },
       {
         kind: "web",
-        name: { pt: "Site de vendas", en: "Sales website" },
+        name: { pt: "CMS", en: "CMS" },
         purpose: {
-          pt: "Onde a venda entra. Controlado pelos módulos acima, não por um site à parte.",
-          en: "Where the sale comes in. Driven by the modules above, not by a separate site.",
+          pt: "O site inteiro editado pelo hotel — páginas, imagens, cores e SEO.",
+          en: "The whole website, edited by the hotel — pages, images, colours and SEO.",
         },
-        audience: { pt: "Hóspedes", en: "Guests" },
+        audience: { pt: "Marketing do hotel", en: "Hotel marketing" },
+      },
+      {
+        kind: "web",
+        name: { pt: "CX", en: "CX" },
+        purpose: {
+          pt: "Pesquisas de satisfação, indicadores e nuvem de palavras por setor.",
+          en: "Satisfaction surveys, indicators and a word cloud per department.",
+        },
+        audience: { pt: "Qualidade", en: "Quality" },
+      },
+      {
+        kind: "web",
+        name: { pt: "Chat", en: "Chat" },
+        purpose: {
+          pt: "Atendimento, fluxo de conversa e treino do robô.",
+          en: "Live support, conversation flow and training the bot.",
+        },
+        audience: { pt: "Atendimento", en: "Support" },
+      },
+      {
+        kind: "web",
+        name: { pt: "Commerce", en: "Commerce" },
+        purpose: {
+          pt: "A operação por trás do app do marketplace: catálogo, estoque, pedidos, entregadores e cupons.",
+          en: "The operation behind the marketplace app: catalogue, stock, orders, couriers and coupons.",
+        },
+        audience: { pt: "Lojistas do shopping", en: "Shopping centre retailers" },
+      },
+      {
+        kind: "web",
+        name: { pt: "Media", en: "Media" },
+        purpose: {
+          pt: "Agendamento de publicações no Facebook e Instagram.",
+          en: "Scheduling posts to Facebook and Instagram.",
+        },
+        audience: { pt: "Marketing do hotel", en: "Hotel marketing" },
+      },
+      {
+        kind: "web",
+        name: { pt: "Storage", en: "Storage" },
+        purpose: {
+          pt: "Inventário, contagem, requisições e processos de almoxarifado.",
+          en: "Inventory, stock counts, requisitions and stockroom processes.",
+        },
+        audience: { pt: "Suprimentos", en: "Supply" },
+      },
+      {
+        kind: "web",
+        name: { pt: "Yago", en: "Yago" },
+        purpose: {
+          pt: "A operação por trás do app do hóspede: gastronomia, experiências, lazer, solicitações.",
+          en: "The operation behind the guest app: dining, experiences, leisure, requests.",
+        },
+        audience: { pt: "Operação do resort", en: "Resort operations" },
       },
     ],
     status: "live",
     brand: { from: "#5F33B4", to: "#8B5CF6", ink: "#F5F1FF" },
     logo: "/y-studio.png",
-    layout: "immersive",
+    layout: "stage",
   },
   {
     id: "porto-seguro-shopping",
@@ -417,7 +477,7 @@ export const PROJECTS: Project[] = [
     status: "live",
     brand: { from: "#1C1917", to: "#44403C", ink: "#F2EFE9" },
     logo: "/porto-seguro-shopping.webp",
-    layout: "constellation",
+    layout: "stage",
   },
 
   /* ───────────────────────────────────────────────────────────────────────────
@@ -437,19 +497,56 @@ export const PROJECTS: Project[] = [
     id: "aguiar-one",
     name: "Aguiar One",
     sector: { pt: "Varejo", en: "Retail" },
-    kind: TBD, // TODO: one line on what the product is
-    headline: TBD, // TODO: the case study's headline
-    summary: TBD, // TODO: two or three sentences — the problem, and what it solves
-    role: TBD, // TODO: what exactly you did
+    /*
+      The three fields below are the product's own words, off its marketing
+      page — not copy written for this portfolio. Worth keeping that way: the
+      way a product introduces itself is evidence, and a case study that
+      paraphrases it into something smoother is quietly claiming a different
+      product than the one that shipped.
+    */
+    kind: {
+      pt: "Gestão de vendas e caixa para o varejo local",
+      en: "Sales and cash management for local retail",
+    },
+    headline: {
+      pt: "Registre a venda, veja o lucro, feche o caixa.",
+      en: "Log the sale, see the profit, close the drawer.",
+    },
+    summary: {
+      pt: "Vendas, custos, estoque e caixa no mesmo lugar. Cada loja liga só os módulos que usa e vê o resultado do dia sem abrir planilha — e acima delas há um console que administra a plataforma inteira.",
+      en: "Sales, costs, stock and the cash drawer in one place. Each shop switches on only the modules it uses and sees the day's result without opening a spreadsheet — and above them sits a console that runs the whole platform.",
+    },
+    role: {
+      pt: "Produto inteiro, sozinho — da conversa com o cliente à arquitetura, portal, admin, app e banco",
+      en: "The whole product, alone — from the client conversation through architecture, portal, admin, app and database",
+    },
     // TODO: the client's name. Pairs with the `freelance-1` role in experience.ts
     context: { company: "Freelance", kind: "freelance" },
     year: null, // TODO
     beats: [
-      { label: { pt: "O problema", en: "The problem" }, value: TBD },
-      { label: { pt: "O que construí", en: "What I built" }, value: TBD },
-      { label: { pt: "Minha responsabilidade", en: "What I owned" }, value: TBD },
+      {
+        label: { pt: "O problema", en: "The problem" },
+        value: {
+          pt: "Loja pequena fechando o dia na planilha, sem saber o lucro real.",
+          en: "A small shop closing its day in a spreadsheet, with no idea of its real profit.",
+        },
+      },
+      {
+        label: { pt: "O que construí", en: "What I built" },
+        value: {
+          pt: "Vendas, caixa, produtos, estoque, custos e relatórios como módulos, e o console que administra as lojas.",
+          en: "Sales, cash drawer, products, stock, costs and reports as modules, and the console that administers the shops.",
+        },
+      },
+      {
+        label: { pt: "Minha responsabilidade", en: "What I owned" },
+        value: {
+          pt: "Tudo. Levantamento com o cliente, arquitetura, escolha de stack, as três superfícies e o banco.",
+          en: "All of it. Discovery with the client, architecture, stack choice, all three surfaces and the database.",
+        },
+      },
     ],
-    stack: [], // TODO
+    stack: [], // TODO: the frameworks and services this one actually runs on
     surfaces: [
       {
         kind: "web",
@@ -480,71 +577,120 @@ export const PROJECTS: Project[] = [
       },
     ],
     status: "live",
-    brand: { from: "#3F3F46", to: "#71717A", ink: "#FAFAFA" }, // TODO: the real brand colours
-    layout: "gallery",
-    figures: [], // TODO: add captures once you have them
-    draft: true,
+    // Off the product itself: the teal every action in the shop's portal uses,
+    // and the navy the platform console switches to.
+    brand: { from: "#3E7E9C", to: "#1B3A4B", ink: "#F2F7F9" },
+    /*
+      Promoted out of `gallery` because the interfaces are now drawn in code.
+      `immersive` is the right shape for it: two browser windows, no phone —
+      and here the second window is not another module but another *altitude*,
+      the console that runs the shops. The shop-owner app in `surfaces` has no
+      capture in /docs/projetos and is deliberately not invented.
+    */
+    layout: "stage",
+    figures: [], // Set a `src` here to swap a real capture over the coded screen.
   },
   {
     id: "vez",
     name: "VEZ",
     sector: { pt: "Serviços", en: "Services" },
-    kind: TBD, // TODO: one line on what the product is
-    headline: TBD, // TODO: the case study's headline
-    summary: TBD, // TODO: two or three sentences — the problem, and what it solves
-    role: TBD, // TODO: what exactly you did
+    kind: {
+      pt: "Marketplace de agendamentos de serviços",
+      en: "A booking marketplace for local services",
+    },
+    headline: {
+      pt: "Quem tem horário livre agora, na sua cidade.",
+      en: "Who has a slot free right now, in your city.",
+    },
+    summary: {
+      pt: "Barbearias, salões, clínicas e petshops de uma cidade em um app só. O cliente acha o serviço, vê quem tem horário e agenda — ou entra numa fila de espera digital; o estabelecimento controla agenda, equipe, regras e financeiro pelo app e pelo portal. Busca por IA, pagamento integrado com split e cobrança por mensalidade ou por comissão.",
+      en: "A city's barbers, salons, clinics and pet shops in one app. Customers find the service, see who has a slot and book — or join a digital waiting queue; the business runs its diary, team, rules and finances from the app and the portal. AI-driven search, integrated payment with split, and billing by subscription or by commission.",
+    },
+    role: {
+      pt: "Produto inteiro, sozinho — do levantamento com o cliente à arquitetura, stack, cinco superfícies e banco",
+      en: "The whole product, alone — from discovery through architecture, stack, five surfaces and the database",
+    },
     // TODO: the client's name. Pairs with the `freelance-2` role in experience.ts
     context: { company: "Freelance", kind: "freelance" },
     year: null, // TODO
     beats: [
-      { label: { pt: "O problema", en: "The problem" }, value: TBD },
-      { label: { pt: "O que construí", en: "What I built" }, value: TBD },
-      { label: { pt: "Minha responsabilidade", en: "What I owned" }, value: TBD },
+      {
+        label: { pt: "O problema", en: "The problem" },
+        value: {
+          pt: "Agendar serviço na cidade é ligar para cada loja para descobrir quem tem horário.",
+          en: "Booking a local service means ringing every shop to find out who has a slot.",
+        },
+      },
+      {
+        label: { pt: "O que construí", en: "What I built" },
+        value: {
+          pt: "Busca por disponibilidade, fila de espera digital, agenda e financeiro do estabelecimento, e o console da plataforma.",
+          en: "Availability search, a digital waiting queue, the shop's diary and finances, and the platform console.",
+        },
+      },
+      {
+        label: { pt: "Minha responsabilidade", en: "What I owned" },
+        value: {
+          pt: "Tudo. Arquitetura, escolha de stack, as cinco superfícies, o banco e o modelo de monetização.",
+          en: "All of it. Architecture, stack choice, all five surfaces, the database and the monetisation model.",
+        },
+      },
     ],
-    stack: [], // TODO
+    stack: ["React Native", "Expo", "Next.js", "TypeScript", "Supabase", "Turborepo", "pnpm"],
     surfaces: [
       {
-        kind: "web",
-        name: { pt: "Agendamentos", en: "Scheduling" },
-        purpose: {
-          pt: "A agenda de serviços de cada loja, barbearia, clínica e afins.",
-          en: "The service calendar of each shop: barbers, clinics and the like.",
-        },
-        audience: { pt: "Lojas", en: "Shops" },
-      },
-      {
-        kind: "web",
-        name: { pt: "Gestão da plataforma", en: "Platform management" },
-        purpose: {
-          pt: "Administração das lojas dentro da plataforma.",
-          en: "Administering the shops inside the platform.",
-        },
-        audience: { pt: "Dono da plataforma", en: "Platform owner" },
-      },
-      {
         kind: "mobile",
-        name: { pt: "App da loja", en: "Shop app" },
+        platforms: ["iOS", "Android"],
+        name: { pt: "App do cliente", en: "Customer app" },
         purpose: {
-          pt: "Informações e operações da loja pelo celular.",
-          en: "The shop's information and operations from a phone.",
-        },
-        audience: { pt: "Lojas", en: "Shops" },
-      },
-      {
-        kind: "mobile",
-        name: { pt: "App do público", en: "Public app" },
-        purpose: {
-          pt: "Encontrar a loja e marcar o horário.",
-          en: "Finding the shop and booking the slot.",
+          pt: "Achar o serviço, ver quem tem horário e agendar ou entrar na fila.",
+          en: "Find the service, see who is free, and book or join the queue.",
         },
         audience: { pt: "Quem agenda", en: "People booking" },
       },
+      {
+        kind: "mobile",
+        platforms: ["iOS", "Android"],
+        name: { pt: "App do estabelecimento", en: "Business app" },
+        purpose: {
+          pt: "O dia como ele acontece: fila, atendimento em curso e as decisões pendentes.",
+          en: "The day as it happens: the queue, who is in the chair, and the decisions pending.",
+        },
+        audience: { pt: "Quem atende", en: "People serving" },
+      },
+      {
+        kind: "web",
+        name: { pt: "Portal do estabelecimento", en: "Business portal" },
+        purpose: {
+          pt: "Agenda, equipe, serviços, regras de horário e financeiro.",
+          en: "Diary, team, services, scheduling rules and finances.",
+        },
+        audience: { pt: "Dono do estabelecimento", en: "Business owner" },
+      },
+      {
+        kind: "web",
+        name: { pt: "Portal administrativo", en: "Admin console" },
+        purpose: {
+          pt: "Aprovações, cidades, cotas de mensalidade, suporte e financeiro da plataforma.",
+          en: "Approvals, cities, subscription quotas, support and the platform's finances.",
+        },
+        audience: { pt: "Operação da plataforma", en: "Platform operations" },
+      },
+      {
+        kind: "web",
+        name: { pt: "Landing page", en: "Landing page" },
+        purpose: {
+          pt: "Onde o estabelecimento descobre a plataforma e entra nela.",
+          en: "Where a business finds the platform and signs up.",
+        },
+        audience: { pt: "Estabelecimentos", en: "Businesses" },
+      },
     ],
     status: "building",
-    brand: { from: "#3F3F46", to: "#71717A", ink: "#FAFAFA" }, // TODO: the real brand colours
-    layout: "gallery",
-    figures: [], // TODO: add captures once you have them
-    draft: true,
+    // The coral every action in the product uses, and nothing else does.
+    brand: { from: "#EE6C4C", to: "#B8412A", ink: "#FFF4F0" },
+    layout: "stage",
+    figures: [], // Set a `src` here to swap a real capture over the coded screen.
   },
 ]
 

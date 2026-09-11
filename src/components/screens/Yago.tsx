@@ -1,333 +1,635 @@
-import { Calendar, Heart, Home, UtensilsCrossed, Bell, ChevronRight, Star } from "lucide-react"
+import type { ReactNode } from "react"
+import type { LucideIcon } from "lucide-react"
+import {
+  Award,
+  Brush,
+  CalendarDays,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  CircleHelp,
+  CircleUserRound,
+  ConciergeBell,
+  Guitar,
+  Leaf,
+  Lightbulb,
+  Menu,
+  Plus,
+  Sailboat,
+  ShoppingBag,
+  SquarePen,
+  Sprout,
+  UtensilsCrossed,
+} from "lucide-react"
 
 import { useLocale, type Localized } from "@/i18n/useLocale"
 
-import { HomeIndicator, Screen, StatusBar, TabBar } from "./chrome"
+import { BuiltBy, HomeIndicator, Screen, ScrollFade, StatusBar } from "./chrome"
+import { Fragment } from "./fragments"
 
 /**
- * Yago's interface, drawn from the feature set the product actually ships:
- * the day's schedule, restaurant reservations, favourites and timed
- * notifications. Nothing here claims to be a screenshot — it is the same
- * information architecture, rendered as live DOM.
+ * Yago, rebuilt from the product's own screens.
+ *
+ * Two apps, not one — which is the fact the case study is actually about. The
+ * guest holds the blue app: a grid of everything the resort has switched on,
+ * and their own reservations inside it. The staff hold the magenta one: the
+ * tickets those guests open, and the state each one is in. Same platform,
+ * opposite ends of the same request.
+ *
+ * The structure, chrome and colour are the product's. Every name, unit number,
+ * date and dish is invented — the captures in /docs/projetos are reference
+ * material, not content.
  */
 
 const TEAL = "#35A8A7"
 const BLUE = "#3758AD"
+const INK = "#3F3F3F"
+const MUTED = "#7A7A7A"
+const LINE = "#E8E8E8"
 
-const copy = {
-  greeting: { pt: "Boa tarde,", en: "Good afternoon," } satisfies Localized,
-  stay: { pt: "Sua estadia · dia 3 de 6", en: "Your stay · day 3 of 6" } satisfies Localized,
-  now: { pt: "Acontecendo agora", en: "Happening now" } satisfies Localized,
-  nowTitle: { pt: "Sunset Jazz", en: "Sunset Jazz" } satisfies Localized,
-  nowPlace: { pt: "Deck do Mirante · até 20h", en: "Lookout Deck · until 8pm" } satisfies Localized,
-  today: { pt: "Programação de hoje", en: "Today's schedule" } satisfies Localized,
-  all: { pt: "Ver tudo", en: "See all" } satisfies Localized,
-  dine: { pt: "Restaurantes", en: "Dining" } satisfies Localized,
-  events: { pt: "Eventos", en: "Events" } satisfies Localized,
-  saved: { pt: "Favoritos", en: "Saved" } satisfies Localized,
-  tabs: {
-    home: { pt: "Início", en: "Home" } satisfies Localized,
-    agenda: { pt: "Agenda", en: "Agenda" } satisfies Localized,
-    booking: { pt: "Reservas", en: "Booking" } satisfies Localized,
-    saved: { pt: "Salvos", en: "Saved" } satisfies Localized,
-  },
-  schedule: [
-    {
-      time: "16:00",
-      title: { pt: "Aula de mergulho", en: "Diving lesson" } satisfies Localized,
-      place: { pt: "Píer sul", en: "South pier" } satisfies Localized,
-    },
-    {
-      time: "18:30",
-      title: { pt: "Jantar · Vila Mare", en: "Dinner · Vila Mare" } satisfies Localized,
-      place: { pt: "Mesa para 2 · confirmada", en: "Table for 2 · confirmed" } satisfies Localized,
-      booked: true,
-    },
-    {
-      time: "21:00",
-      title: { pt: "Cinema ao ar livre", en: "Open-air cinema" } satisfies Localized,
-      place: { pt: "Jardim central", en: "Central garden" } satisfies Localized,
-    },
+const STAFF_PLUM = "#370035"
+const STAFF = "#AD37A8"
+
+/** Confirmed, resolved. */
+const GREEN_BG = "#CCF5CE"
+const GREEN_INK = "#2F8F3A"
+/** Open, waiting on somebody. */
+const AMBER_BG = "#FFE9CC"
+const AMBER_INK = "#E86D00"
+/** Being handled right now. */
+const CYAN_BG = "#B3E3FF"
+const CYAN_INK = "#0093E6"
+
+/**
+ * The header every screen in both apps wears: a safe-area band in the darker
+ * tone, then the bar carrying who is logged in.
+ *
+ * `unit` is the room in the guest app and the department in the staff app —
+ * the same slot, which is why one component covers both.
+ */
+const AppHeader = ({
+  band,
+  bar,
+  name,
+  unit,
+  bell = false,
+}: {
+  band: string
+  bar: string
+  name: string
+  unit: string
+  bell?: boolean
+}) => (
+  <div className="shrink-0" style={{ background: band }}>
+    <StatusBar tone="light" />
+    <div className="flex h-[66px] items-center gap-[10px] px-[20px]" style={{ background: bar }}>
+      <CircleUserRound size={27} strokeWidth={1.6} className="shrink-0 text-white" />
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-[13.5px] font-bold leading-tight tracking-[-0.01em] text-white">
+          {name}
+        </p>
+        <p className="mt-[1px] truncate text-[10px] leading-tight text-white/85">{unit}</p>
+      </div>
+      {bell ? (
+        <div className="relative shrink-0" aria-hidden="true">
+          {/* Drawn rather than lucide's outline bell: the product's is a solid
+              glyph with the unread badge notched into its top-right. */}
+          <svg width="15" height="17" viewBox="0 0 15 17" fill="none">
+            <path
+              d="M7.5 1.2c-2.3 0-4 1.8-4 4v2.6c0 1-.3 2-.9 2.8l-.5.7h10.8l-.5-.7c-.6-.8-.9-1.8-.9-2.8V5.2c0-2.2-1.7-4-4-4Z"
+              fill="white"
+            />
+            <path d="M5.7 13.4a1.9 1.9 0 0 0 3.6 0H5.7Z" fill="white" />
+          </svg>
+          <span className="absolute -right-[2px] top-[1px] h-[6px] w-[6px] rounded-full bg-[#E01B1B]" />
+        </div>
+      ) : null}
+      <Menu size={19} strokeWidth={2.6} className="shrink-0 text-white" />
+    </div>
+  </div>
+)
+
+/** The screen title row: back arrow, centred title, module glyph. */
+const ScreenTitle = ({
+  title,
+  tone,
+  icon: Icon,
+}: {
+  title: string
+  tone: string
+  icon?: LucideIcon
+}) => (
+  <div className="flex h-[40px] shrink-0 items-center px-[20px]">
+    <ChevronLeft size={20} strokeWidth={2.6} style={{ color: tone }} />
+    <p
+      className="flex-1 text-center text-[15.5px] font-semibold tracking-[-0.01em]"
+      style={{ color: tone }}
+    >
+      {title}
+    </p>
+    <div className="flex w-[20px] justify-end">
+      {Icon ? <Icon size={17} strokeWidth={2.2} style={{ color: tone }} /> : null}
+    </div>
+  </div>
+)
+
+/**
+ * The segmented control both apps put above a list.
+ *
+ * The next option is always half off the right edge with a chevron after it.
+ * That is the product's own behaviour and the reason the row is worth
+ * reproducing exactly: it says the list is filtered, and that there is more
+ * filter than fits.
+ */
+const Segments = ({
+  options,
+  tone,
+  icons,
+}: {
+  options: string[]
+  tone: string
+  icons?: [LucideIcon, LucideIcon]
+}) => (
+  <div className="flex shrink-0 items-center gap-[9px] px-[20px]">
+    {options.map((option, index) => {
+      const active = index === 0
+      const Icon = icons?.[index]
+      return (
+        <div
+          key={option}
+          className="flex h-[36px] flex-1 items-center justify-center gap-[7px] rounded-[7px] border"
+          style={{
+            background: active ? tone : "#FFFFFF",
+            borderColor: active ? tone : "#E3E3E3",
+            color: active ? "#FFFFFF" : "#4A4A4A",
+          }}
+        >
+          {Icon ? <Icon size={13} strokeWidth={2.2} /> : null}
+          <span className="text-[11.5px] font-semibold tracking-[-0.01em]">{option}</span>
+        </div>
+      )
+    })}
+    <ChevronRight size={15} strokeWidth={2.6} className="shrink-0" style={{ color: tone }} />
+  </div>
+)
+
+/** A state pill. Every status in either app is one of these. */
+const Badge = ({ label, bg, ink }: { label: string; bg: string; ink: string }) => (
+  <span
+    className="shrink-0 rounded-full px-[7px] py-[2.5px] text-[8.5px] font-bold leading-[1.35]"
+    style={{ background: bg, color: ink }}
+  >
+    {label}
+  </span>
+)
+
+/**
+ * The banner at the top of a module.
+ *
+ * In the product this is a photograph of the place, with the module's name
+ * burned over it. There is no photograph to ship here, so it is a warm field
+ * with the same overlay — which keeps the composition and the type hierarchy
+ * of the real screen without pretending to be a picture of anything.
+ */
+const HeroBanner = ({ from, to, children }: { from: string; to: string; children: ReactNode }) => (
+  <div
+    className="relative h-[112px] shrink-0 overflow-hidden rounded-[8px]"
+    style={{ background: `linear-gradient(118deg, ${from} 0%, ${to} 100%)` }}
+  >
+    <div className="absolute inset-0 bg-[radial-gradient(120%_90%_at_78%_18%,rgba(255,255,255,0.22),transparent_62%)]" />
+    <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_28%,rgba(0,0,0,0.42)_100%)]" />
+    {children}
+  </div>
+)
+
+/* ─────────────────────────────  GUEST APP  ───────────────────────────────── */
+
+const guest = {
+  name: "Marina Duarte",
+  unit: { pt: "Apartamento 512", en: "Apartment 512" } satisfies Localized,
+  brand: "TERRAZZA",
+  brandKind: { pt: "GASTRONOMIA", en: "GASTRONOMIA" } satisfies Localized,
+  brandBody: {
+    pt: "RESERVE SUA MESA e viva uma noite de sabores autorais à beira-mar.",
+    en: "BOOK YOUR TABLE and spend an evening of signature flavours by the sea.",
+  } satisfies Localized,
+  help: { pt: "Como posso te ajudar?", en: "How can I help you?" } satisfies Localized,
+  modules: [
+    { icon: ConciergeBell, label: { pt: "Solicitações", en: "Requests" } satisfies Localized },
+    { icon: UtensilsCrossed, label: { pt: "Gastronomia", en: "Dining" } satisfies Localized },
+    { icon: Sailboat, label: { pt: "Experiências", en: "Experiences" } satisfies Localized },
+    { icon: Guitar, label: { pt: "Eventos", en: "Events" } satisfies Localized },
+    { icon: CalendarDays, label: { pt: "Lazer", en: "Leisure" } satisfies Localized },
+    { icon: ShoppingBag, label: { pt: "Boutique", en: "Boutique" } satisfies Localized },
+    { icon: Leaf, label: { pt: "SPA", en: "Spa" } satisfies Localized },
+    { icon: Sprout, label: { pt: "ESG", en: "ESG" } satisfies Localized },
+    { icon: Lightbulb, label: { pt: "Dicas", en: "Tips" } satisfies Localized },
+    { icon: CircleHelp, label: { pt: "Quiz", en: "Quiz" } satisfies Localized },
+    { icon: Award, label: { pt: "Avaliações", en: "Reviews" } satisfies Localized },
   ],
 }
 
+/**
+ * The guest app's home: everything the resort has switched on, as a grid.
+ *
+ * The fourth row is cropped by the screen's own bottom edge rather than
+ * dropped. That is what the product does, and it is the honest way to show
+ * eleven modules in a viewport that fits nine — trimming the list to what fits
+ * would misrepresent how much of the resort the app actually carries.
+ */
 export const YagoHome = () => {
   const { pick } = useLocale()
 
   return (
-    <Screen className="bg-[#F6F7F9]">
-      <div
-        className="shrink-0 pb-[26px]"
-        style={{ background: `linear-gradient(160deg, ${TEAL} 0%, ${BLUE} 100%)` }}
-      >
-        <StatusBar tone="light" />
+    <Screen className="bg-white">
+      <AppHeader band={TEAL} bar={BLUE} name={guest.name} unit={pick(guest.unit)} bell />
 
-        <div className="flex items-center justify-between px-[22px] pt-[10px]">
-          <div>
-            <p className="text-[13px] font-medium text-white/70">{pick(copy.greeting)}</p>
-            <p className="mt-[2px] text-[23px] font-semibold tracking-[-0.02em] text-white">
-              Gabriel
+      <div className="shrink-0 px-[20px] pt-[15px]">
+        <HeroBanner from="#3A1D0B" to="#8A4A18">
+          <div className="absolute inset-x-[14px] bottom-[12px]">
+            <p className="text-[15px] font-extrabold leading-none tracking-[0.02em] text-white">
+              {guest.brand}
+            </p>
+            <p className="mt-[1px] text-[15px] font-light leading-none tracking-[0.02em] text-white/85">
+              {pick(guest.brandKind)}
+            </p>
+            <p className="mt-[6px] max-w-[210px] text-[9px] font-medium leading-[1.35] text-white/90">
+              {pick(guest.brandBody)}
             </p>
           </div>
-          <div className="relative flex h-[38px] w-[38px] items-center justify-center rounded-full bg-white/15">
-            <Bell size={17} className="text-white" strokeWidth={2} />
-            <span className="absolute right-[9px] top-[9px] h-[7px] w-[7px] rounded-full border-[1.5px] border-[#2C6BA8] bg-[#FF7A45]" />
-          </div>
-        </div>
+        </HeroBanner>
+      </div>
 
-        <p className="mt-[14px] px-[22px] text-[11px] font-medium uppercase tracking-[0.14em] text-white/55">
-          {pick(copy.stay)}
+      <div className="flex shrink-0 items-center justify-center gap-[11px] px-[20px] pt-[14px]">
+        {/* The concierge avatar. An illustrated face in the product; here the
+            same silhouette, so the row keeps its shape without inventing a
+            person's likeness. */}
+        <div
+          className="relative h-[44px] w-[44px] shrink-0 overflow-hidden rounded-full"
+          style={{ background: `linear-gradient(150deg, ${TEAL}, ${BLUE})` }}
+          aria-hidden="true"
+        >
+          <span className="absolute left-1/2 top-[9px] h-[13px] w-[13px] -translate-x-1/2 rounded-full bg-white/85" />
+          <span className="absolute left-1/2 top-[25px] h-[20px] w-[26px] -translate-x-1/2 rounded-t-full bg-white/85" />
+        </div>
+        <p
+          className="text-[14px] font-bold tracking-[-0.01em]"
+          style={{ color: BLUE }}
+        >
+          {pick(guest.help)}
         </p>
       </div>
 
-      {/* The sheet lifts over the header — the app's signature move. */}
-      <div className="-mt-[16px] flex-1 overflow-hidden rounded-t-[22px] bg-[#F6F7F9] px-[18px] pt-[18px]">
-        <div className="overflow-hidden rounded-[16px] bg-white shadow-[0_2px_14px_rgba(16,24,40,0.07)]">
-          <div
-            className="relative h-[92px]"
-            style={{ background: `linear-gradient(120deg, ${BLUE}, ${TEAL})` }}
-          >
-            <div className="absolute inset-0 bg-[radial-gradient(120%_100%_at_10%_0%,rgba(255,255,255,0.35),transparent_60%)]" />
-            <span className="absolute left-[12px] top-[12px] rounded-full bg-black/25 px-[9px] py-[4px] text-[9px] font-semibold uppercase tracking-[0.12em] text-white">
-              {pick(copy.now)}
-            </span>
-          </div>
-          <div className="flex items-center justify-between p-[14px]">
-            <div>
-              <p className="text-[15px] font-semibold tracking-[-0.01em] text-[#101828]">
-                {pick(copy.nowTitle)}
-              </p>
-              <p className="mt-[2px] text-[11.5px] text-[#667085]">{pick(copy.nowPlace)}</p>
-            </div>
-            <Heart size={18} className="text-[#FF5A5F]" fill="#FF5A5F" />
-          </div>
-        </div>
-
-        <div className="mt-[16px] flex gap-[9px]">
-          {[
-            { icon: UtensilsCrossed, label: pick(copy.dine) },
-            { icon: Calendar, label: pick(copy.events) },
-            { icon: Star, label: pick(copy.saved) },
-          ].map(({ icon: Icon, label }) => (
-            <div
-              key={label}
-              className="flex flex-1 flex-col items-center gap-[7px] rounded-[13px] bg-white py-[13px]"
-            >
-              <Icon size={17} style={{ color: TEAL }} strokeWidth={2} />
-              <span className="text-[10px] font-medium text-[#475467]">{label}</span>
+      <ScrollFade className="px-[20px] pt-[16px]">
+        <div className="grid grid-cols-3 gap-x-[11px] gap-y-[11px]">
+          {guest.modules.map(({ icon: Icon, label }) => (
+            <div key={label.en} className="flex flex-col items-center">
+              <div className="flex h-[70px] w-full items-center justify-center rounded-[6px] border border-[#E6E6E6] bg-white shadow-[0_1px_2px_rgba(16,24,40,0.04)]">
+                <Icon size={26} strokeWidth={1.9} style={{ color: BLUE }} />
+              </div>
+              <span
+                className="mt-[6px] text-center text-[10px] font-medium leading-tight"
+                style={{ color: INK }}
+              >
+                {pick(label)}
+              </span>
             </div>
           ))}
         </div>
+      </ScrollFade>
 
-        <div className="mt-[20px] flex items-center justify-between">
-          <p className="text-[13.5px] font-semibold tracking-[-0.01em] text-[#101828]">
-            {pick(copy.today)}
-          </p>
-          <span className="flex items-center gap-[1px] text-[11px] font-medium" style={{ color: TEAL }}>
-            {pick(copy.all)}
-            <ChevronRight size={13} />
-          </span>
-        </div>
-
-        <div className="mt-[10px] space-y-[8px]">
-          {copy.schedule.map((item) => (
-            <div
-              key={item.time}
-              className="flex items-center gap-[12px] rounded-[13px] bg-white p-[12px]"
-            >
-              <div className="w-[38px] shrink-0 text-[12px] font-semibold text-[#101828]">
-                {item.time}
-              </div>
-              <div className="h-[26px] w-px shrink-0 bg-[#EAECF0]" />
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-[12.5px] font-medium text-[#101828]">
-                  {pick(item.title)}
-                </p>
-                <p className="mt-[1px] truncate text-[10.5px] text-[#667085]">{pick(item.place)}</p>
-              </div>
-              {item.booked ? (
-                <span
-                  className="shrink-0 rounded-full px-[7px] py-[3px] text-[8.5px] font-bold uppercase tracking-[0.08em] text-white"
-                  style={{ background: TEAL }}
-                >
-                  OK
-                </span>
-              ) : null}
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <TabBar
-        accent={TEAL}
-        items={[
-          { icon: <Home size={19} strokeWidth={2} />, label: pick(copy.tabs.home) },
-          { icon: <Calendar size={19} strokeWidth={2} />, label: pick(copy.tabs.agenda) },
-          { icon: <UtensilsCrossed size={19} strokeWidth={2} />, label: pick(copy.tabs.booking) },
-          { icon: <Heart size={19} strokeWidth={2} />, label: pick(copy.tabs.saved) },
-        ]}
-      />
+      <BuiltBy />
       <HomeIndicator />
     </Screen>
   )
 }
 
-/**
- * The reservation flow — the app's one genuinely transactional screen, and the
- * reason the coded mockup is worth the effort: it shows a real interaction
- * model (date strip → slot grid → party size → confirm), not a pretty surface.
- */
-const booking = {
-  back: { pt: "Reservar mesa", en: "Book a table" } satisfies Localized,
-  place: { pt: "Vila Mare · Frutos do mar", en: "Vila Mare · Seafood" } satisfies Localized,
-  when: { pt: "Quando", en: "When" } satisfies Localized,
-  time: { pt: "Horário", en: "Time" } satisfies Localized,
-  people: { pt: "Pessoas", en: "Party size" } satisfies Localized,
-  confirm: { pt: "Confirmar reserva", en: "Confirm reservation" } satisfies Localized,
-  free: { pt: "livre", en: "free" } satisfies Localized,
-  days: {
-    pt: ["SEG", "TER", "QUA", "QUI", "SEX"],
-    en: ["MON", "TUE", "WED", "THU", "FRI"],
+/* ── Guest: the reservation ────────────────────────────────────────────────── */
+
+const reservation = {
+  title: { pt: "Minhas reservas", en: "My reservations" } satisfies Localized,
+  segments: {
+    pt: ["Gastronomia", "Experiências"],
+    en: ["Dining", "Experiences"],
   },
+  venue: "Terrazza Gastronomia",
+  status: { pt: "Confirmado", en: "Confirmed" } satisfies Localized,
+  when: {
+    pt: "QUI, 18 de Setembro de 2025 às 20:00h",
+    en: "THU, 18 September 2025 at 8:00pm",
+  } satisfies Localized,
+  holder: "Marina Duarte",
+  companion: "Helena Prado",
+  cancel: { pt: "Cancelar reserva", en: "Cancel reservation" } satisfies Localized,
+  courses: [
+    {
+      label: { pt: "ENTRADA", en: "STARTER" } satisfies Localized,
+      value: { pt: "CARPACCIO DE POLVO", en: "OCTOPUS CARPACCIO" } satisfies Localized,
+    },
+    {
+      label: { pt: "PRINCIPAL", en: "MAIN" } satisfies Localized,
+      value: { pt: "RISOTO DE CAMARÃO", en: "PRAWN RISOTTO" } satisfies Localized,
+    },
+    {
+      label: { pt: "SOBREMESA", en: "DESSERT" } satisfies Localized,
+      value: { pt: "PETIT GÂTEAU DE CUPUAÇU", en: "CUPUAÇU PETIT GÂTEAU" } satisfies Localized,
+    },
+    {
+      label: { pt: "OBSERVAÇÃO", en: "NOTE" } satisfies Localized,
+      value: { pt: "SEM PIMENTA", en: "NO CHILLI" } satisfies Localized,
+    },
+  ],
 }
 
-export const YagoBooking = () => {
+/**
+ * The reservation itself — the app's one transactional screen, and the reason
+ * this is the phone the case study leads with.
+ *
+ * Worth noticing in the real product and kept here: the order is stored per
+ * *person*, not per table. The blue bar names whose choices the grey block
+ * below belongs to, and the second card is the other cover, still empty.
+ */
+export const YagoReservation = () => {
   const { pick, locale } = useLocale()
-  const slots = ["18:00", "18:30", "19:00", "19:30", "20:00", "20:30"]
 
   return (
     <Screen className="bg-white">
-      <StatusBar />
+      <AppHeader band={TEAL} bar={BLUE} name={guest.name} unit={pick(guest.unit)} bell />
 
-      <div className="px-[22px] pt-[6px]">
-        <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-[#98A2B3]">
-          {pick(booking.place)}
-        </p>
-        <p className="mt-[6px] text-[24px] font-semibold leading-[1.1] tracking-[-0.03em] text-[#101828]">
-          {pick(booking.back)}
-        </p>
+      <div className="pt-[6px]">
+        <ScreenTitle title={pick(reservation.title)} tone={BLUE} />
       </div>
 
-      <div className="mt-[22px] px-[22px]">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.13em] text-[#98A2B3]">
-          {pick(booking.when)}
-        </p>
-        <div className="mt-[10px] flex gap-[7px]">
-          {booking.days[locale].map((day, index) => {
-            const selected = index === 2
-            return (
-              <div
-                key={day}
-                className="flex flex-1 flex-col items-center gap-[3px] rounded-[12px] py-[10px]"
-                style={{
-                  background: selected ? BLUE : "#F2F4F7",
-                  color: selected ? "#FFFFFF" : "#475467",
-                }}
-              >
-                <span className="text-[8.5px] font-semibold tracking-[0.08em] opacity-70">
-                  {day}
-                </span>
-                <span className="text-[15px] font-semibold tracking-[-0.02em]">{14 + index}</span>
-              </div>
-            )
-          })}
+      <div className="pt-[6px]">
+        <Segments
+          options={reservation.segments[locale]}
+          tone={BLUE}
+          icons={[UtensilsCrossed, Sailboat]}
+        />
+      </div>
+
+      <div className="mt-[16px] h-px shrink-0" style={{ background: LINE }} />
+
+      <div className="min-h-0 flex-1 overflow-hidden px-[20px] pt-[16px]">
+        <div className="flex items-center gap-[9px]">
+          <p className="text-[13px] font-bold tracking-[-0.01em]" style={{ color: BLUE }}>
+            {reservation.venue}
+          </p>
+          <Badge label={pick(reservation.status)} bg={GREEN_BG} ink={GREEN_INK} />
         </div>
-      </div>
 
-      <div className="mt-[22px] px-[22px]">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.13em] text-[#98A2B3]">
-          {pick(booking.time)}
-        </p>
-        <div className="mt-[10px] grid grid-cols-3 gap-[7px]">
-          {slots.map((slot, index) => {
-            const selected = slot === "19:00"
-            const full = index === 1
-            return (
-              <div
-                key={slot}
-                className="flex items-center justify-center rounded-[11px] border py-[11px] text-[13px] font-medium tracking-[-0.01em]"
-                style={{
-                  borderColor: selected ? TEAL : "#EAECF0",
-                  background: selected ? `${TEAL}14` : "#FFFFFF",
-                  color: full ? "#D0D5DD" : selected ? TEAL : "#344054",
-                  textDecoration: full ? "line-through" : "none",
-                }}
-              >
-                {slot}
-              </div>
-            )
-          })}
+        <div className="mt-[8px] flex items-center gap-[6px]">
+          <CalendarDays size={11} strokeWidth={2.4} style={{ color: BLUE }} />
+          <span className="text-[10px] font-medium" style={{ color: INK }}>
+            {pick(reservation.when)}
+          </span>
         </div>
-      </div>
 
-      <div className="mt-[22px] px-[22px]">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.13em] text-[#98A2B3]">
-          {pick(booking.people)}
-        </p>
-        <div className="mt-[10px] flex items-center justify-between rounded-[13px] bg-[#F9FAFB] px-[16px] py-[13px]">
-          <span className="text-[14px] font-medium text-[#101828]">2</span>
-          <div className="flex gap-[8px]">
-            {["–", "+"].map((sign) => (
-              <div
-                key={sign}
-                className="flex h-[28px] w-[28px] items-center justify-center rounded-full bg-white text-[15px] font-medium text-[#475467] shadow-[0_1px_3px_rgba(16,24,40,0.08)]"
-              >
-                {sign}
+        <div className="mt-[13px] overflow-hidden rounded-[7px]">
+          <div className="flex items-stretch">
+            <div
+              className="flex min-w-0 flex-1 items-center gap-[8px] px-[11px] py-[10px]"
+              style={{ background: BLUE }}
+            >
+              <CircleUserRound size={17} strokeWidth={1.8} className="shrink-0 text-white" />
+              <span className="truncate text-[11.5px] font-bold text-white">
+                {reservation.holder}
+              </span>
+            </div>
+            <div
+              className="flex w-[38px] shrink-0 items-center justify-center"
+              style={{ background: TEAL }}
+            >
+              <SquarePen size={15} strokeWidth={2.2} className="text-white" />
+            </div>
+          </div>
+
+          <div className="space-y-[9px] bg-[#EFEFEF] px-[11px] py-[12px]">
+            {reservation.courses.map((course) => (
+              <div key={course.label.en}>
+                <p
+                  className="text-[8.5px] font-bold tracking-[0.04em]"
+                  style={{ color: TEAL }}
+                >
+                  {pick(course.label)}
+                </p>
+                <p className="mt-[2px] text-[10px] font-medium" style={{ color: "#4A4A4A" }}>
+                  {pick(course.value)}
+                </p>
               </div>
             ))}
           </div>
         </div>
-      </div>
 
-      <div className="mt-auto px-[22px] pb-[10px]">
-        <div
-          className="flex items-center justify-center rounded-[14px] py-[15px] text-[14px] font-semibold tracking-[-0.01em] text-white"
-          style={{ background: `linear-gradient(120deg, ${TEAL}, ${BLUE})` }}
-        >
-          {pick(booking.confirm)}
+        <div className="mt-[11px] flex items-center gap-[8px] rounded-[7px] border border-[#E0E0E0] px-[11px] py-[10px]">
+          <CircleUserRound size={17} strokeWidth={1.8} className="shrink-0" style={{ color: BLUE }} />
+          <span className="truncate text-[11.5px] font-medium" style={{ color: INK }}>
+            {reservation.companion}
+          </span>
+        </div>
+
+        <div className="mt-[13px] flex h-[38px] items-center justify-center rounded-[7px] bg-[#FF4C4C]">
+          <span className="text-[12px] font-semibold text-white">{pick(reservation.cancel)}</span>
         </div>
       </div>
+
+      <BuiltBy />
       <HomeIndicator />
     </Screen>
   )
 }
 
-/**
- * A push notification, floating free of any phone.
- *
- * Yago's "smart notifications" are the feature hardest to show inside a screen,
- * because their whole point is arriving when the app is closed. So this one
- * renders on its own, over the composition.
- */
-export const YagoNotification = () => {
-  const { pick } = useLocale()
+/* ─────────────────────────────  STAFF APP  ───────────────────────────────── */
 
-  const notification = {
-    app: { pt: "YAGO", en: "YAGO" } satisfies Localized,
-    when: { pt: "agora", en: "now" } satisfies Localized,
-    title: { pt: "Sua mesa é daqui a 30 min", en: "Your table is in 30 min" } satisfies Localized,
-    body: {
-      pt: "Vila Mare · 19:00 · mesa para 2",
-      en: "Vila Mare · 7:00pm · table for 2",
-    } satisfies Localized,
-  }
+const staff = {
+  name: "Rafael Menezes",
+  unit: { pt: "Governança", en: "Housekeeping" } satisfies Localized,
+  banner: { pt: "GOVERNANÇA", en: "HOUSEKEEPING" } satisfies Localized,
+  title: { pt: "Chamados", en: "Tickets" } satisfies Localized,
+  segments: {
+    pt: ["Todos", "Em aberto"],
+    en: ["All", "Open"],
+  },
+  tickets: [
+    {
+      unit: "UH 512",
+      state: { pt: "Em aberto", en: "Open" } satisfies Localized,
+      bg: AMBER_BG,
+      ink: AMBER_INK,
+      when: {
+        pt: "QUI, 18 de Setembro de 2025 às 07:40h",
+        en: "THU, 18 September 2025 at 7:40am",
+      } satisfies Localized,
+      guest: "MARINA DUARTE PRADO",
+    },
+    {
+      unit: "UH 236",
+      state: {
+        pt: "Atendido em 17/09 às 15:20h",
+        en: "Resolved 17/09 at 3:20pm",
+      } satisfies Localized,
+      bg: GREEN_BG,
+      ink: GREEN_INK,
+      when: {
+        pt: "QUA, 17 de Setembro de 2025 às 09:05h",
+        en: "WED, 17 September 2025 at 9:05am",
+      } satisfies Localized,
+      guest: "BRUNO TAVARES LIMA",
+    },
+    {
+      unit: "UH 118",
+      state: { pt: "Em atendimento", en: "In progress" } satisfies Localized,
+      bg: CYAN_BG,
+      ink: CYAN_INK,
+      when: {
+        pt: "QUI, 18 de Setembro de 2025 às 08:12h",
+        en: "THU, 18 September 2025 at 8:12am",
+      } satisfies Localized,
+      guest: "CAMILA FONSECA REIS",
+    },
+  ],
+  datePlaceholder: "00/00/0000",
+}
+
+/**
+ * The staff app: the same request, from the side that has to resolve it.
+ *
+ * Deliberately the second phone in the composition. A guest app on its own is
+ * an app; a guest app with the operational half behind it is a system, and the
+ * whole argument of this portfolio is that the system is the durable part.
+ */
+export const YagoStaffTickets = () => {
+  const { pick, locale } = useLocale()
 
   return (
-    <div className="w-full rounded-[18px] border border-white/12 bg-white/[0.07] p-[14px] backdrop-blur-xl">
-      <div className="flex items-center gap-[8px]">
-        <div
-          className="flex h-[18px] w-[18px] items-center justify-center rounded-[5px]"
-          style={{ background: `linear-gradient(135deg, ${TEAL}, ${BLUE})` }}
-        />
-        <span className="text-[9.5px] font-semibold uppercase tracking-[0.16em] text-white/60">
-          {pick(notification.app)}
-        </span>
-        <span className="ml-auto text-[9.5px] text-white/40">{pick(notification.when)}</span>
+    <Screen className="bg-white">
+      <AppHeader band={STAFF_PLUM} bar={STAFF} name={staff.name} unit={pick(staff.unit)} />
+
+      <div className="shrink-0 px-[20px] pt-[15px]">
+        <HeroBanner from="#241B14" to="#8A6B4C">
+          <p className="absolute inset-x-0 top-1/2 -translate-y-1/2 text-center text-[17px] font-extrabold tracking-[0.02em] text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.5)]">
+            {pick(staff.banner)}
+          </p>
+        </HeroBanner>
       </div>
-      <p className="mt-[9px] text-[13px] font-semibold leading-tight tracking-[-0.01em] text-white">
-        {pick(notification.title)}
+
+      <p
+        className="shrink-0 pt-[16px] text-center text-[19px] font-bold tracking-[-0.01em]"
+        style={{ color: STAFF }}
+      >
+        {pick(staff.title)}
       </p>
-      <p className="mt-[3px] text-[11.5px] text-white/55">{pick(notification.body)}</p>
-    </div>
+
+      <div className="flex shrink-0 gap-[10px] px-[20px] pt-[14px]">
+        {[0, 1].map((index) => (
+          <div
+            key={index}
+            className="flex h-[36px] flex-1 items-center gap-[7px] rounded-[7px] border px-[10px]"
+            style={{ borderColor: `${STAFF}55` }}
+          >
+            <CalendarDays size={13} strokeWidth={2.2} style={{ color: STAFF }} />
+            <span className="flex-1 text-[10.5px]" style={{ color: MUTED }}>
+              {staff.datePlaceholder}
+            </span>
+            <ChevronDown size={13} strokeWidth={2.6} style={{ color: INK }} />
+          </div>
+        ))}
+      </div>
+
+      <div className="pt-[14px]">
+        <Segments options={staff.segments[locale]} tone={STAFF} />
+      </div>
+
+      <div className="mt-[14px] h-px shrink-0" style={{ background: LINE }} />
+
+      <div className="min-h-0 flex-1 overflow-hidden px-[20px]">
+        {staff.tickets.map((ticket) => (
+          <div
+            key={ticket.unit}
+            className="flex items-start gap-[10px] border-b py-[13px]"
+            style={{ borderColor: "#F0F0F0" }}
+          >
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-[8px]">
+                <p className="text-[12.5px] font-bold tracking-[-0.01em]" style={{ color: STAFF }}>
+                  {ticket.unit}
+                </p>
+                <Badge label={pick(ticket.state)} bg={ticket.bg} ink={ticket.ink} />
+              </div>
+
+              <div className="mt-[7px] flex items-center gap-[6px]">
+                <CalendarDays size={11} strokeWidth={2.4} style={{ color: STAFF }} />
+                <span className="text-[9.5px] font-medium" style={{ color: INK }}>
+                  {pick(ticket.when)}
+                </span>
+              </div>
+
+              <div className="mt-[5px] flex items-center gap-[6px]">
+                <CircleUserRound size={11} strokeWidth={2.2} style={{ color: STAFF }} />
+                <span className="truncate text-[9.5px] font-medium" style={{ color: INK }}>
+                  {ticket.guest}
+                </span>
+              </div>
+            </div>
+
+            <div
+              className="mt-[3px] flex h-[26px] w-[26px] shrink-0 items-center justify-center rounded-full border-[1.5px]"
+              style={{ borderColor: STAFF }}
+            >
+              <Plus size={14} strokeWidth={2.6} style={{ color: STAFF }} />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <BuiltBy />
+      <HomeIndicator />
+    </Screen>
+  )
+}
+
+/* ───────────────────────  FRAGMENTS, OUTSIDE A PHONE  ─────────────────────── */
+
+/**
+ * Two cards that float free of any device in the case study's composition.
+ *
+ * They are the two halves of one request: the guest's table, confirmed, and the
+ * housekeeping ticket somebody on shift has picked up. Showing them outside the
+ * frames is what makes the point that this is one platform and not two apps
+ * that happen to share a logo — the same event, rendered for two audiences.
+ */
+export const YagoReservationCard = () => {
+  const { pick } = useLocale()
+
+  return (
+    <Fragment
+      tint={`linear-gradient(135deg, ${TEAL}, ${BLUE})`}
+      eyebrow={pick({ pt: "RESERVA", en: "RESERVATION" })}
+      badge={pick(reservation.status)}
+      badgeBg={GREEN_BG}
+      badgeInk={GREEN_INK}
+      title={reservation.venue}
+      body={`${pick(reservation.when)} · ${pick({ pt: "Mesa para 2", en: "Table for 2" })}`}
+    />
+  )
+}
+
+export const YagoTicketCard = () => {
+  const { pick } = useLocale()
+
+  return (
+    <Fragment
+      tint={`linear-gradient(135deg, ${STAFF}, ${STAFF_PLUM})`}
+      mark={<Brush size={8} strokeWidth={2.6} className="text-white" />}
+      eyebrow={pick({ pt: "CHAMADO", en: "TICKET" })}
+      badge={pick({ pt: "Em atendimento", en: "In progress" })}
+      badgeBg={CYAN_BG}
+      badgeInk={CYAN_INK}
+      title={pick({
+        pt: "UH 512 · Cobertor e toalhas extra",
+        en: "UH 512 · Extra blanket and towels",
+      })}
+      body={pick({ pt: "Responsável: Rafael Menezes", en: "Assigned to: Rafael Menezes" })}
+    />
   )
 }

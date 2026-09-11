@@ -55,6 +55,18 @@ const WorkPreview = ({ active }: { active: Hovered | null }) => {
   // it fades out, instead of emptying and then disappearing.
   const [shown, setShown] = useState<Project | null>(null)
 
+  /*
+    Whether the card has been placed, and may therefore be seen.
+
+    Separate from `visible` because the two answer different questions: whether
+    a row wants a card, and whether that card is standing where it belongs yet.
+    Driving the opacity off `visible` alone is why the card never actually
+    faded in — the inner element mounted with the visible class already on it,
+    and a CSS transition does not run on mount. It simply appeared, which after
+    a placement delay reads as a stutter rather than as an entrance.
+  */
+  const [ready, setReady] = useState(false)
+
   // Where to place the card the moment it appears. Without it the card would
   // sit at the viewport's origin until the first `pointermove` — and a pointer
   // that entered a row by scrolling, rather than by moving, never sends one.
@@ -62,10 +74,22 @@ const WorkPreview = ({ active }: { active: Hovered | null }) => {
 
   const visible = Boolean(active) && enabled
 
+  /*
+    Derived during render, not in an effect.
+
+    It used to be assigned from `useEffect([active])`, which cost a whole commit
+    before the card had any contents — and the placement effect, which runs in
+    the commit where `visible` flips, therefore measured an empty box and had to
+    wait a frame for a real height. Adjusting the state during render is the
+    supported way to do this: React re-renders immediately, without painting the
+    intermediate result, so the card arrives already holding a project and the
+    placement can happen straight away.
+  */
+  if (active && active.project !== shown) setShown(active.project)
+
   useEffect(() => {
     if (!active) return
     origin.current = { x: active.x, y: active.y }
-    setShown(active.project)
   }, [active])
 
   useEffect(() => {
@@ -104,6 +128,13 @@ const WorkPreview = ({ active }: { active: Hovered | null }) => {
     let height = element.offsetHeight
     let frame = 0
     let placed = false
+
+    const hasObserver = typeof ResizeObserver !== "undefined"
+
+    // Frames to wait for the card to have contents at all. It needs one in the
+    // ordinary case; the budget is for the pathological one.
+    let patience = 30
+    let pendingReveal = 0
 
     // The navbar is fixed, opaque once the page has scrolled, and painted above
     // this card. Clamping to `MARGIN` would slide a flipped-up card underneath
@@ -146,18 +177,76 @@ const WorkPreview = ({ active }: { active: Hovered | null }) => {
       target.x = Math.max(MARGIN, Math.min(x, window.innerWidth - WIDTH - MARGIN))
       target.y = Math.max(top, Math.min(y, maxY))
 
-      if (!frame) frame = requestAnimationFrame(tick)
+      // The trail is only ever a response to pointer movement. Before the card
+      // has been placed there is nothing to trail *from* — easing out of
+      // whatever transform the element happens to be carrying is how it flies
+      // in from the corner.
+      if (placed && !frame) frame = requestAnimationFrame(tick)
+    }
+
+    /** Put the card on its target now, with no interpolation. */
+    const place = () => {
+      current.x = target.x
+      current.y = target.y
+      if (frame) {
+        cancelAnimationFrame(frame)
+        frame = 0
+      }
+      write()
     }
 
     // The card appears where the pointer already is; it does not fly in from
     // wherever the last hover left it. Held until it has a figure inside it,
-    // because the flip depends on a height an empty shell does not have yet.
+    // because the flip depends on a height an empty shell does not have yet —
+    // and hidden until then, so the one frame it might spend at a stale
+    // transform is a frame nobody sees.
+    /**
+     * Show the card, once, in the right place.
+     *
+     * One frame of patience, and only because the card has no content in the
+     * commit that starts this effect — `shown` is set from an effect, so the
+     * first pass measures an empty box. The frame after that, the box is its
+     * full and final height, because the figure lives in a fixed-size well:
+     * whatever is inside can measure and scale itself for as long as it likes
+     * without the card around it ever changing size.
+     *
+     * That is what makes the placement trustworthy on the first try. The
+     * flip above or below the pointer is computed against a height that is
+     * already correct, so there is no correction to chase afterwards — which
+     * is the difference between a card that appears and a card that appears
+     * and then tidies itself up.
+     */
     const settle = () => {
-      if (placed || height < CONTENT_HEIGHT) return
+      if (placed || pendingReveal) return
+
+      // The observer is the only thing that keeps `height` current, so without
+      // one this has to read the box itself — otherwise the card would never
+      // clear `CONTENT_HEIGHT` and would stay hidden for good.
+      if (!hasObserver) height = element.offsetHeight
+
+      if (height < CONTENT_HEIGHT) {
+        // No contents yet. Come back next frame; the budget is for the
+        // pathological case, since the ordinary one resolves on the first try.
+        if (patience <= 0) return
+        patience -= 1
+        pendingReveal = requestAnimationFrame(() => {
+          pendingReveal = 0
+          settle()
+        })
+        return
+      }
+
+      // Positioned immediately, revealed one frame later — deliberately. The
+      // transition needs a painted frame at `opacity-0` to transition *from*;
+      // flipping both in the same commit is how the card ends up appearing
+      // rather than arriving.
       placed = true
-      current.x = target.x
-      current.y = target.y
-      write()
+      aim()
+      place()
+      pendingReveal = requestAnimationFrame(() => {
+        pendingReveal = 0
+        setReady(true)
+      })
     }
 
     const onMove = (event: PointerEvent) => {
@@ -182,11 +271,32 @@ const WorkPreview = ({ active }: { active: Hovered | null }) => {
     */
     let observer: ResizeObserver | undefined
 
-    if (typeof ResizeObserver !== "undefined") {
+    if (hasObserver) {
       observer = new ResizeObserver(([entry]) => {
-        height = entry.borderBoxSize?.[0]?.blockSize ?? entry.contentRect.height
+        const measured = entry.borderBoxSize?.[0]?.blockSize ?? entry.contentRect.height
+        const grew = Math.abs(measured - height) > 0.5
+        height = measured
         aim()
-        settle()
+
+        if (!placed) {
+          settle()
+          return
+        }
+
+        /*
+          Already placed, and the box changed size under a pointer that did not
+          move. `aim()` has just written a new target — often a *long* way from
+          the old one, because crossing `CONTENT_HEIGHT` or swapping a browser
+          card for a phone card can flip the whole thing to the other side of
+          the pointer, some 400px up.
+
+          Easing that is the bug: the trail exists to make the card feel
+          attached to the pointer, and there is no pointer gesture here to be
+          attached to. What the eye reads instead is the card sitting in the
+          wrong place and then hurriedly correcting itself. A correction the
+          visitor did not ask for should be instantaneous.
+        */
+        if (grew) place()
       })
       observer.observe(element)
     }
@@ -195,6 +305,10 @@ const WorkPreview = ({ active }: { active: Hovered | null }) => {
       window.removeEventListener("pointermove", onMove)
       observer?.disconnect()
       if (frame) cancelAnimationFrame(frame)
+      if (pendingReveal) cancelAnimationFrame(pendingReveal)
+      // Back to unplaced: the next hover starts somewhere else and has to earn
+      // its position again before it is allowed to be seen.
+      setReady(false)
     }
   }, [visible])
 
@@ -228,12 +342,27 @@ const WorkPreview = ({ active }: { active: Hovered | null }) => {
             // commit that starts the fade would cut the transition this class
             // exists to run. `pointer-events-none` and `aria-hidden` already
             // make an opacity-0 card inert for pointers and assistive tech.
-            "overflow-hidden rounded-xl border border-border bg-card shadow-[0_28px_70px_-30px_rgba(0,0,0,0.85)] transition-[opacity,transform] duration-300 ease-out",
-            visible ? "scale-100 opacity-100" : "scale-95 opacity-0",
+            "overflow-hidden rounded-xl border border-border bg-card shadow-[0_28px_70px_-30px_rgba(0,0,0,0.85)] transition-[opacity,transform] duration-150 ease-out",
+            visible && ready ? "scale-100 opacity-100" : "scale-95 opacity-0",
           )}
         >
           <div
-            className="flex min-h-[8.5rem] items-center justify-center p-5"
+            /*
+              Fixed, not `min-h`. The card's height used to be whatever the
+              figure inside it turned out to be — which is a number that only
+              exists after the figure has measured its own container and scaled
+              itself, two frames later, and which differs by ~40px between a
+              bare browser window and one with a phone hanging off it.
+
+              Everything unpleasant about this card came from that: the flip
+              above/below the pointer was computed against a height that was
+              still wrong, the correction had to be chased afterwards, and
+              crossing from one project to another resized the card under a
+              stationary pointer. A constant box removes the whole class of
+              problem — the position is right on the first frame, and there is
+              nothing left to correct.
+            */
+            className="flex h-[13.5rem] items-center justify-center p-5"
             style={{
               background: `linear-gradient(155deg, ${shown.brand.from}26, ${shown.brand.to}14)`,
             }}
