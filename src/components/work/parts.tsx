@@ -12,13 +12,6 @@ const LOGO_SIZES: Record<string, string> = {
   vez: "max-h-[68%] max-w-[78%]",
 }
 
-/**
- * The pieces every case study shares.
- *
- * Each project composes these differently — that is the whole point of the
- * section — but the information they carry is identical, so a visitor learns
- * to read the second and third case study faster than the first.
- */
 
 export const CaseIndex = ({ index }: { index: number }) => (
   <span className="font-mono text-[0.6875rem] tracking-[0.1em] text-muted-foreground">
@@ -48,16 +41,6 @@ export const StatusPill = ({ status }: { status: Project["status"] }) => {
   )
 }
 
-/**
- * Kind → name → headline → summary. The reading order of every case study.
- *
- * The name is the page's `<h1>`. It used to be an `<h3>`, which was right when
- * a case study was a block inside the home page, under the Work section's
- * `<h2>` and the hero's `<h1>`. On its own route none of that is above it, so
- * an `<h3>` left the page with no heading at all for Google and a level-3
- * orphan for anyone navigating by heading. `display-lg` carries the size, so
- * the level is free to be correct.
- */
 export const CaseTitle = ({
   project,
   index,
@@ -87,8 +70,6 @@ export const CaseTitle = ({
         {pick(project.kind)}
       </p>
 
-      {/* The brand mark rides with the name rather than floating in the device
-          composition, where it always ended up colliding with a screen. */}
       <div className="mt-3 flex items-center gap-3.5">
         <BrandMark project={project} className="h-9 w-9 shrink-0 rounded-[0.625rem]" />
         <h1 className="display-lg text-balance text-foreground">{project.name}</h1>
@@ -105,13 +86,6 @@ export const CaseTitle = ({
   )
 }
 
-/**
- * The three beats: problem → what I built → what I owned.
- *
- * Rendered as a rule-separated list rather than cards, so it reads as an
- * editorial sidebar and doesn't compete with the device composition for
- * attention.
- */
 export const CaseBeats = ({
   project,
   className,
@@ -138,7 +112,6 @@ export const CaseBeats = ({
   )
 }
 
-/** Role and stack — the credentials strip, kept quiet and typographic. */
 export const CaseFacts = ({
   project,
   className,
@@ -162,8 +135,6 @@ export const CaseFacts = ({
 
       <div className="mt-6">
         <p className="eyebrow">{pick(COPY.work.context)}</p>
-        {/* Who it was for, and — where it is not obvious from the name — on
-            what terms. */}
         <p className="mt-2 text-sm leading-relaxed text-foreground/85">
           {project.context.company}
         </p>
@@ -194,15 +165,6 @@ export const CaseFacts = ({
   )
 }
 
-/**
- * The project's logo on its own brand field. Used as a quiet corner mark.
- *
- * A project without a logo still renders the field, carrying its initial. It
- * used to render nothing at all, which was fine when the mark only ever sat
- * beside a heading — but in the index it holds a column, and one missing tile
- * makes the whole list look misaligned rather than making one project look
- * logo-less.
- */
 export const BrandMark = ({
   project,
   className,

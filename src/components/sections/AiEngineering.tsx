@@ -7,19 +7,6 @@ import { MOBILE } from "@/content/mobile"
 import { tagKey, useLocale } from "@/i18n/useLocale"
 import { cn } from "@/lib/utils"
 
-/**
- * AI, treated as engineering.
- *
- * It sits directly after the engineering foundations and before the delivery
- * process, because that is where it belongs in the argument: it is not a
- * product feature and it is not a tool in the appendix — it is part of how the
- * decisions in the section above get made.
- *
- * The section leads with the orchestration diagram rather than with prose. The
- * shape of the work — context in, one thing deciding, specialists in parallel,
- * every result reported back for judgement — is the claim; the four pillars
- * underneath it are the detail behind each part of that shape.
- */
 const AiEngineering = () => {
   const { pick, locale } = useLocale()
   const eyebrow = useReveal<HTMLParagraphElement>()
@@ -28,15 +15,6 @@ const AiEngineering = () => {
 
   const { graph: graphCopy } = COPY.ai
 
-  /**
-   * Memoised on the locale, which is the only thing that changes it.
-   *
-   * `AgentGraph` keys its measurement — a forced layout read per node — on
-   * this object's identity. Rebuilt inline it would change on every render of
-   * this section, and the three `useReveal` hooks here each cause one, so the
-   * graph would re-measure and re-observe every node three times on a plain
-   * page visit and once per state change forever after.
-   */
   const graphLabels = useMemo(
     () => ({
       context: [...graphCopy.context],
@@ -51,8 +29,6 @@ const AiEngineering = () => {
       },
       caption: pick(graphCopy.caption),
     }),
-    // `pick` is a stable function of `locale`, and `graphCopy` is a frozen
-    // literal — so the locale is the whole dependency.
     [locale],
   )
 
@@ -128,14 +104,6 @@ const Pillar = ({
       className={cn(
         revealProps.className,
         "border-t border-border pt-6",
-        // The diagram above is the claim and it stays on every screen; these
-        // are the detail behind it, at four sentences each. A phone gets the
-        // two that distinguish the work — see `content/mobile.ts`.
-        //
-        // `md:list-item` and not `md:block`: an <li> restored as a block is no
-        // longer a list item to a screen reader, so the list would announce two
-        // of four on a wide screen. Desktop has to be untouched, and that
-        // includes the parts of it nobody looks at.
         index >= MOBILE.aiPillars && "hidden md:list-item",
       )}
     >
@@ -150,9 +118,6 @@ const Pillar = ({
         {pick(pillar.body)}
       </p>
 
-      {/* As in Foundations: chips are the cheapest thing on the page to cut
-          and the most expensive to scroll past. The AI names are all in the
-          toolkit index, under its own heading. */}
       <ul className="mt-5 hidden flex-wrap gap-2 md:flex">
         {pillar.tools.map((tool) => (
           <li key={tagKey(tool)} className="tag">

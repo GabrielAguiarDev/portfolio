@@ -1,11 +1,3 @@
-<!-- =========================
-  Portfolio • Gabriel Aguiar
-========================= -->
-
-<p align="center">
-  <img src="./assets/readme/cover.png" alt="Gabriel Aguiar - Portfolio" />
-</p>
-
 <h1 align="center">Gabriel Aguiar</h1>
 
 <p align="center">
@@ -22,7 +14,6 @@
   <a href="https://www.gabrielaguiar.dev">🌐 Portfolio</a> •
   <a href="#about">About</a> •
   <a href="#stack">Stack</a> •
-  <a href="#screenshots">Screenshots</a> •
   <a href="#running-locally">Running locally</a>
 </p>
 
@@ -96,12 +87,6 @@ The portfolio works as a **technical business card**, showing not only _what_ I 
 
 🔗 **Access the portfolio:**  
 👉 https://www.gabrielaguiar.dev
-
----
-<a id="screenshots"></a>
-## 🖼️ Screenshots
-
-The screenshot images in `./assets/readme/` reflect the previous design and are pending an update to reflect the current dark, editorial visual identity. Screenshots from the new design will be added soon.
 
 ---
 <a id="running-locally"></a>

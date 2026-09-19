@@ -9,14 +9,6 @@ import { cn } from "@/lib/utils"
 
 import { BrandMark } from "./parts"
 
-/**
- * The way out of a case study, at both ends.
- *
- * A project page is frequently the first page someone sees — it is the URL
- * that gets shared — so it cannot assume the visitor arrived from the index.
- * Without these it is a page with no way onward except the browser's Back
- * button, which a visitor who landed here from a link does not have.
- */
 
 export const CaseNavTop = () => {
   const { pick } = useLocale()

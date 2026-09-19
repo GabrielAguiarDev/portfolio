@@ -17,44 +17,18 @@ import { cn } from "@/lib/utils"
 import { HomeIndicator, Screen, ScrollFade, StatusBar } from "./chrome"
 import { Fragment } from "./fragments"
 
-/**
- * Porto Seguro Shopping, rebuilt from the product's own screens.
- *
- * The app is the shopping centre's official marketplace, and each retailer
- * inside it gets its own storefront — the one these screens are taken from
- * sells wine. That detail matters more than it looks: the case study claims
- * many stores in one app, and a storefront this specific (countries, vintages,
- * bottles sold per SKU) is only possible because the catalogue belongs to the
- * retailer rather than to the mall.
- *
- * Structure, chrome and palette are the product's. Every label, vintage, price
- * and unit count is invented, and the bottles are drawn rather than
- * photographed — there is no product photography to ship here, and a stand-in
- * silhouette is the honest substitute.
- */
 
 const INK = "#111111"
 const BODY = "#3F3F3F"
 const MUTED = "#8A8A8A"
 const LINE = "#E4E4E4"
-/** The storefront's own copper, off the retailer's wordmark. */
 const COPPER = "#A04717"
-/** The panel every total and price footer sits on. */
 const PANEL = "#E9E9E9"
 const DISCOUNT = "#E0313B"
 
-/* ─────────────────────────────  DRAWN ASSETS  ───────────────────────────── */
 
 type Country = "br" | "pt" | "it" | "fr" | "es" | "cl"
 
-/**
- * The country a bottle comes from, drawn rather than loaded.
- *
- * Origin is the storefront's primary axis — it is the first filter on the home
- * screen and a chip on every single product — so these are content, not
- * decoration. Six flags of flat geometry cost nothing; six flag images would
- * be six requests inside a case study that has to stay light.
- */
 const FLAGS: Record<Country, ReactNode> = {
   br: (
     <>
@@ -113,7 +87,6 @@ type BottleStyle = {
   ink: string
 }
 
-/** The six bottle treatments the catalogue actually needs. */
 const BOTTLES: Record<string, BottleStyle> = {
   sparkling: { glass: "#26331F", capsule: "#C8A24A", label: "#F2EDE0", ink: "#26331F" },
   champagne: { glass: "#2F2C1B", capsule: "#D8B24A", label: "#E8C05A", ink: "#4A3B12" },
@@ -123,14 +96,6 @@ const BOTTLES: Record<string, BottleStyle> = {
   amber: { glass: "#8E7B45", capsule: "#C9B27A", label: "#F8F4E9", ink: "#5A4B22" },
 }
 
-/**
- * A bottle, drawn to the proportions of a 750ml Bordeaux.
- *
- * Stands in for product photography. It is deliberately a silhouette with a
- * blank label rather than an attempt at a specific wine — a drawn imitation of
- * a real producer's bottle would be a worse kind of placeholder than an
- * obvious one.
- */
 const Bottle = ({ variant, className }: { variant: keyof typeof BOTTLES; className?: string }) => {
   const style = BOTTLES[variant]
 
@@ -155,22 +120,12 @@ const Bottle = ({ variant, className }: { variant: keyof typeof BOTTLES; classNa
       <rect x="14" y="104" width="20" height="2.6" rx="1.3" fill={style.ink} opacity="0.7" />
       <rect x="16" y="111" width="16" height="2" rx="1" fill={style.ink} opacity="0.45" />
       <rect x="14" y="126" width="20" height="2" rx="1" fill={style.ink} opacity="0.35" />
-      {/* The single highlight that stops the silhouette reading as a flat shape. */}
       <rect x="14" y="60" width="3" height="80" rx="1.5" fill="white" opacity="0.16" />
     </svg>
   )
 }
 
-/* ────────────────────────────────  CHROME  ──────────────────────────────── */
 
-/**
- * The retailer's wordmark.
- *
- * A storefront inside the mall's app carries the shop's identity, not the
- * mall's — which is exactly the structural point of the product, and why this
- * belongs in the top bar while "Porto Seguro Shopping" is relegated to the
- * footer band.
- */
 const StoreMark = () => (
   <div className="flex items-center gap-[5px]">
     <svg width="17" height="15" viewBox="0 0 20 18" fill="none" aria-hidden="true">
@@ -224,7 +179,6 @@ const TopBar = ({
   </div>
 )
 
-/** The band that says whose marketplace this storefront is inside. */
 const MallFooter = () => {
   const { pick } = useLocale()
 
@@ -247,7 +201,6 @@ const MallFooter = () => {
   )
 }
 
-/** "Vendido 88 unidades" — the storefront puts it under every single title. */
 const SoldCount = ({ units, size = 8 }: { units: number; size?: number }) => {
   const { pick } = useLocale()
 
@@ -261,13 +214,6 @@ const SoldCount = ({ units, size = 8 }: { units: number; size?: number }) => {
   )
 }
 
-/**
- * A price, in the two forms the storefront uses.
- *
- * With `was` it is the discount form: struck original, percentage off, then
- * "Por" and the price. Without, just the price. The "un" suffix is on both,
- * because everything in the catalogue is sold by the bottle.
- */
 const Price = ({
   price,
   was,
@@ -327,7 +273,6 @@ const SectionHead = ({ title }: { title: string }) => {
   )
 }
 
-/* ─────────────────────────────  THE CATALOGUE  ──────────────────────────── */
 
 const catalogue = {
   countries: [
@@ -403,13 +348,6 @@ const home = {
   bestSellers: { pt: "Mais Vendidos", en: "Best Sellers" } satisfies Localized,
 }
 
-/**
- * The storefront.
- *
- * Everything on it is addressed by origin first and price second, which is the
- * catalogue's own logic and the reason the country rail sits above the offers
- * rather than inside a filter sheet.
- */
 export const ShoppingHome = () => {
   const { pick } = useLocale()
 
@@ -426,8 +364,6 @@ export const ShoppingHome = () => {
           >
             <div className="absolute inset-0 bg-[radial-gradient(90%_120%_at_88%_20%,rgba(255,255,255,0.16),transparent_58%)]" />
 
-            {/* The producer's bottles, angled into the corner the way the
-                storefront's own campaign art does. */}
             <div className="absolute -bottom-[8px] right-[10px] flex items-end gap-[2px]">
               <Bottle variant="red" className="h-[102px] w-[30px] opacity-90" />
               <Bottle variant="red" className="h-[118px] w-[34px]" />
@@ -554,7 +490,6 @@ export const ShoppingHome = () => {
   )
 }
 
-/* ── The product ───────────────────────────────────────────────────────────── */
 
 const product = {
   name: "Quinta do Cais Alvarinho MM DOC, 2024",
@@ -577,14 +512,6 @@ const product = {
   add: { pt: "ADICIONAR À SACOLA", en: "ADD TO BAG" } satisfies Localized,
 }
 
-/**
- * The product page — where the sale is actually decided.
- *
- * The price block and the button are pinned to the bottom rather than sitting
- * at the end of the copy, which is the product's own decision and the right
- * one: the description runs long enough that a reader would otherwise have to
- * scroll back up to buy.
- */
 export const ShoppingProduct = () => {
   const { pick } = useLocale()
 
@@ -674,7 +601,6 @@ export const ShoppingProduct = () => {
   )
 }
 
-/* ── The bag ───────────────────────────────────────────────────────────────── */
 
 const cart = {
   timer: { pt: "Tempo restante:", en: "Time remaining:" } satisfies Localized,
@@ -698,7 +624,6 @@ const cart = {
       bottle: "white" as const,
       price: "R$ 92,00",
       quantity: 1,
-      /** Mid-swipe, with the delete action exposed. */
       swiped: true,
     },
     {
@@ -713,17 +638,6 @@ const cart = {
   ],
 }
 
-/**
- * The bag, held under a countdown.
- *
- * The copper timer bar is the screen's most consequential detail and the one
- * that would be easiest to leave out: a reservation on stock the retailer only
- * holds for a few minutes. It changes what the screen *is* — not a saved list,
- * a claim with an expiry — so it stays.
- *
- * The middle row is drawn mid-swipe with its delete action exposed. A cart
- * screenshot with three tidy rows says nothing about how you remove one.
- */
 export const ShoppingCart = () => {
   const { pick } = useLocale()
 
@@ -855,13 +769,7 @@ export const ShoppingCart = () => {
   )
 }
 
-/* ───────────────────────  FRAGMENTS, OUTSIDE A PHONE  ────────────────────── */
 
-/**
- * The two moments the app exists to own, and the two a storefront screenshot
- * cannot show: the push that brings somebody back, and the state of an order
- * once the shop has stopped being a website and become a delivery.
- */
 export const ShoppingPromoCard = () => {
   const { pick } = useLocale()
 

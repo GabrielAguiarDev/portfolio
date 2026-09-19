@@ -4,28 +4,11 @@ import { animation, MOBILE_BREAKPOINT, type ResponsiveValue } from "./config"
 import { loadMotionRuntime } from "./runtime"
 
 type FloatOptions = {
-  /** Total vertical travel in px across the viewport, centred on rest. */
   y: ResponsiveValue
-  /** Total tilt in degrees across the viewport, centred on rest. */
   tilt?: ResponsiveValue
-  /** Resting rotation the scrub is applied on top of. */
   rotate?: number
 }
 
-/**
- * Scroll-linked drift and tilt for a device mockup.
- *
- * A superset of `useParallax`: it also scrubs rotation, so two phones in the
- * same composition can move at different rates AND lean by different amounts,
- * which is what stops a group of mockups reading as one flat sticker.
- *
- * The resting rotation is owned here rather than in a CSS class, because GSAP
- * takes over the whole `transform` — a `rotate-*` utility would be wiped the
- * moment the runtime loads.
- *
- * Until (and unless) the runtime loads, the element sits at its resting
- * rotation with no drift. Nothing can shift, and nothing is invisible.
- */
 export function useFloat<T extends HTMLElement = HTMLDivElement>({
   y,
   tilt = animation.tilt.device,
@@ -82,7 +65,6 @@ export function useFloat<T extends HTMLElement = HTMLDivElement>({
       disposed = true
       cleanup?.()
     }
-    // Amplitudes come from the frozen config; `rotate` is a literal per call site.
   }, [rotate])
 
   return ref

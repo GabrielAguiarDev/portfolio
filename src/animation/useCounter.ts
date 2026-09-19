@@ -3,15 +3,6 @@ import { useEffect, useRef, useState } from "react"
 import { animation } from "./config"
 import { prefersReducedMotion } from "./runtime"
 
-/**
- * Counts a figure up from zero the first time it enters the viewport.
- *
- * Runs on rAF rather than through GSAP so an impact figure animates even
- * before the motion runtime has finished loading — these sit high enough on
- * the page that waiting for the chunk would mean missing the moment.
- *
- * With reduced motion it returns the final value immediately.
- */
 export function useCounter(target: number) {
   const ref = useRef<HTMLSpanElement>(null)
   const skip = !animation.enabled.counters || prefersReducedMotion()

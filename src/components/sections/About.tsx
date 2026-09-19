@@ -5,21 +5,6 @@ import { PROFILE } from "@/content/profile"
 import { useLocale } from "@/i18n/useLocale"
 import { cn } from "@/lib/utils"
 
-/**
- * About.
- *
- * The portrait is treated rather than presented: desaturated, slightly warmed,
- * and cropped tall so it sits as a column of the layout instead of a headshot
- * dropped into a circle. It drifts a little slower than the text beside it,
- * which is what stops the two columns feeling glued together.
- *
- * It used to be framed — a hairline border, a card ground, a rounded corner —
- * which made the one photograph on the page an object dropped on top of it.
- * The frame is gone and the top and bottom are dissolved into the ground over
- * long ramps instead, so it reads as something the page fades up to. The sides
- * keep their straight edges: a portrait's subject sits near them, and fading
- * those as well cost a shoulder without buying anything.
- */
 const About = () => {
   const { pick } = useLocale()
   const eyebrow = useReveal<HTMLParagraphElement>()
@@ -41,9 +26,6 @@ const About = () => {
                 className="pointer-events-none absolute -inset-6 -z-10 bg-[radial-gradient(closest-side,rgba(248,107,39,0.09),transparent_72%)] blur-2xl"
               />
 
-              {/* No border, no card ground, no corner radius: the mask takes
-                  the photograph to nothing at the edges, so a frame would only
-                  draw the outline the fade exists to remove. */}
               <img
                 ref={portrait}
                 src={PROFILE.photo}
@@ -55,10 +37,6 @@ const About = () => {
                 className="portrait-fade block aspect-[4/5] w-full object-cover object-[50%_26%] grayscale contrast-[1.04] brightness-[1.12] sepia-[0.08]"
               />
 
-              {/* Just clear of the image's box, not pulled up into it. The
-                  bottom ramp is nearly a fifth of a tall portrait, so a
-                  negative margin big enough to close the apparent gap lands
-                  the text where the photograph is still half opaque. */}
               <div className="mt-2 flex items-baseline justify-between gap-4">
                 <p className="text-[0.8125rem] font-medium tracking-tight text-foreground">
                   {PROFILE.name}
@@ -98,10 +76,6 @@ const About = () => {
                       index === 0
                         ? "text-base text-foreground/90 md:text-lg"
                         : "text-sm text-muted-foreground md:text-base",
-                      // Four paragraphs in Portuguese and five in English, all
-                      // of them beside a tall portrait on a wide screen and all
-                      // of them under it on a phone. The first two are the ones
-                      // that answer the question; see `content/mobile.ts`.
                       index >= MOBILE.aboutParagraphs && "hidden md:block",
                     )}
                   >

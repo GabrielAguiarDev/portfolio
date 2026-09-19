@@ -1,17 +1,5 @@
 import type { Project } from "@/content/work"
 
-/**
- * The preview's resting state.
- *
- * Shown twice: while the chunk holding the real interfaces is still in flight,
- * and permanently for a project that has no screen yet — a draft, or one whose
- * captures haven't arrived. It is a shape, not a screenshot, and it is meant to
- * read as one: an outline that says "a product" without pretending to be a
- * specific one.
- *
- * Lives in its own module so the main bundle can render it without pulling in
- * the lazily-loaded screens it stands in for.
- */
 const PreviewSkeleton = ({ project }: { project: Project }) => (
   <div
     className="w-full rounded-lg border border-white/10 bg-card/80 p-4 shadow-[0_18px_40px_-24px_rgba(0,0,0,0.8)]"

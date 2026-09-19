@@ -26,20 +26,7 @@ import { cn } from "@/lib/utils"
 import { HomeIndicator, Screen, StatusBar } from "./chrome"
 import { Fragment } from "./fragments"
 
-/**
- * VEZ, rebuilt from the product's own screens.
- *
- * A booking marketplace with five surfaces, and the one here whose shape is
- * genuinely two-sided: a customer looking for a free slot in a city, and a shop
- * whose day is a queue of people and a grid of chairs. The same appointment is
- * a *search result* on one side and a *conflict to resolve* on the other, which
- * is why both apps are staged rather than one.
- *
- * Structure, chrome and palette are the product's. Every name, shop, time and
- * figure is invented — the captures in /docs/projetos are reference material.
- */
 
-/** The product's coral. Everything actionable is this colour and nothing else is. */
 const CORAL = "#EE6C4C"
 const CORAL_WASH = "#FDEDE8"
 const INK = "#14171A"
@@ -50,12 +37,9 @@ const CANVAS = "#F7F7F8"
 const GREEN = "#2E7D52"
 const AMBER = "#B4801F"
 
-/** Exported for `Miniature`: the ground both consoles' pages sit on. */
 export const VEZ_CANVAS = CANVAS
-/** The logical width both consoles are authored against. */
 export const VEZ_WIDTH = 1180
 
-/* ────────────────────────────  THE CLIENT APP  ─────────────────────────── */
 
 const client = {
   city: "Joinville",
@@ -70,8 +54,6 @@ const client = {
   seeQueue: { pt: "Ver fila", en: "See queue" } satisfies Localized,
   categories: { pt: "Categorias", en: "Categories" } satisfies Localized,
   seeAll: { pt: "VER TODAS", en: "SEE ALL" } satisfies Localized,
-  /* Each category is a flat mark in its own hue — the product's way of making a
-     grid of eight scannable without eight illustrations to maintain. */
   kinds: [
     { label: { pt: "Barbearia", en: "Barber" } satisfies Localized, tint: "#4B6EA4", wash: "#E8EDF5" },
     { label: { pt: "Cabelo", en: "Hair" } satisfies Localized, tint: "#A8447A", wash: "#F7E9F0" },
@@ -91,7 +73,6 @@ const client = {
   ],
 }
 
-/** The ring the product uses as its only glyph, at any size. */
 const Ring = ({ size, color, filled = 0.28 }: { size: number; color: string; filled?: number }) => (
   <svg width={size} height={size} viewBox="0 0 20 20" aria-hidden="true">
     <circle cx="10" cy="10" r="7.5" fill="none" stroke={color} strokeWidth="2.4" opacity="0.28" />
@@ -109,14 +90,6 @@ const Ring = ({ size, color, filled = 0.28 }: { size: number; color: string; fil
   </svg>
 )
 
-/**
- * The customer's app.
- *
- * Leads on the live queue card, which is the product's real idea: not "book a
- * slot next Tuesday" but "four people ahead of you, leave now". A marketplace
- * of appointments is a directory; a marketplace of *waiting* is a reason to
- * open the app on a Saturday morning.
- */
 export const VezClient = () => {
   const { pick } = useLocale()
 
@@ -162,7 +135,6 @@ export const VezClient = () => {
             {pick(client.search)}
           </span>
         </div>
-        {/* Conversational search is a first-class control, not a setting. */}
         <span
           className="flex h-[40px] w-[40px] shrink-0 items-center justify-center rounded-[13px]"
           style={{ background: CORAL }}
@@ -283,7 +255,6 @@ export const VezClient = () => {
   )
 }
 
-/* ────────────────────────────  THE SHOP'S APP  ─────────────────────────── */
 
 const store = {
   shop: "Barbearia Dom Aníbal",
@@ -346,14 +317,6 @@ const store = {
   ],
 }
 
-/**
- * The same marketplace, from behind the chair.
- *
- * It is a queue and an inbox of decisions, not a calendar — because the thing
- * that actually goes wrong in a barbershop is two bookings on one barber and a
- * customer twelve minutes late, and both of those are decisions somebody has to
- * make between haircuts.
- */
 export const VezStore = () => {
   const { pick } = useLocale()
 
@@ -452,7 +415,6 @@ export const VezStore = () => {
               </p>
             </div>
           </div>
-          {/* The bar is the appointment running out, not decoration. */}
           <div className="h-[2.5px]" style={{ background: "#EDEFF0" }}>
             <div className="h-full w-[38%]" style={{ background: GREEN }} />
           </div>
@@ -588,7 +550,6 @@ export const VezStore = () => {
   )
 }
 
-/* ─────────────────────────────  THE CONSOLES  ──────────────────────────── */
 
 type NavGroup = {
   heading: Localized
@@ -601,14 +562,6 @@ const Card = ({ children, className }: { children: ReactNode; className?: string
   </div>
 )
 
-/**
- * The shell both web surfaces share.
- *
- * `tag` is the only thing that separates them at a glance — PORTAL for the shop
- * that owns one diary, ADMIN for the operator who owns the marketplace — which
- * is a deliberate choice in the product and worth keeping: they are the same
- * application at two altitudes, not two applications.
- */
 const VezShell = ({
   tag,
   nav,
@@ -865,8 +818,6 @@ const portal = {
       en: "The pale gaps are slots you can still sell.",
     } satisfies Localized,
     free: { pt: "1h40 livres", en: "1h40 free" } satisfies Localized,
-    /* `at` is a percentage across the working day, `width` how long it runs —
-       so the gaps between blocks are the product's actual inventory. */
     staff: [
       { name: "Rai", slots: [{ at: 0, width: 13, label: "08:00" }, { at: 15, width: 12, label: "09:30" }, { at: 33, width: 11, label: "12:00" }, { at: 50, width: 12, label: "13:30", clash: true }, { at: 70, width: 12, label: "17:00" }] },
       { name: "Téo", slots: [{ at: 5, width: 13, label: "08:30" }, { at: 26, width: 12, label: "11:00" }, { at: 52, width: 11, label: "14:00", clash: true }, { at: 67, width: 12, label: "15:30" }] },
@@ -877,7 +828,6 @@ const portal = {
   },
 }
 
-/** The shop's own console: an approval inbox and a live queue, not a calendar. */
 export const VezPortal = () => {
   const { pick } = useLocale()
 
@@ -1111,7 +1061,6 @@ export const VezPortal = () => {
               </div>
             </div>
           ))}
-          {/* Now. The one line on the panel that moves. */}
           <span
             className="pointer-events-none absolute inset-y-0 w-[1.5px]"
             style={{ left: "calc(46px + 12px + 56%)", background: CORAL }}
@@ -1206,14 +1155,6 @@ const adminData = {
   ],
 }
 
-/**
- * The console above the marketplace.
- *
- * Leads on a work queue rather than a metric, because running a marketplace is
- * a job with an inbox: approvals, tickets, reported reviews, overdue cards. The
- * city quota grid below it is the business model made visible — a fixed number
- * of subscription slots per city, and what happens when one sells out.
- */
 export const VezAdmin = () => {
   const { pick } = useLocale()
 
@@ -1262,8 +1203,6 @@ export const VezAdmin = () => {
               {adminData.mrrDelta}
             </span>
           </p>
-          {/* The split is the monetisation model, not a chart: two ways of being
-              paid for the same booking. */}
           <div className="mt-[11px] flex h-[7px] overflow-hidden rounded-full">
             {adminData.split.map((part) => (
               <div key={part.label.en} style={{ flexGrow: part.share, background: part.tint }} />
@@ -1414,14 +1353,7 @@ export const VezAdmin = () => {
   )
 }
 
-/* ───────────────────────  FRAGMENTS, OUTSIDE A PHONE  ────────────────────── */
 
-/**
- * One card per app, and together they are the product in two sentences: the
- * customer is told when to leave the house, and the shop is told what is
- * waiting on its decision. Neither moment lives on a screen anybody is looking
- * at when it happens, which is exactly why they are worth staging.
- */
 export const VezQueueCard = () => {
   const { pick } = useLocale()
 

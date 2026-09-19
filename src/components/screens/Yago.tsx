@@ -27,19 +27,6 @@ import { useLocale, type Localized } from "@/i18n/useLocale"
 import { BuiltBy, HomeIndicator, Screen, ScrollFade, StatusBar } from "./chrome"
 import { Fragment } from "./fragments"
 
-/**
- * Yago, rebuilt from the product's own screens.
- *
- * Two apps, not one — which is the fact the case study is actually about. The
- * guest holds the blue app: a grid of everything the resort has switched on,
- * and their own reservations inside it. The staff hold the magenta one: the
- * tickets those guests open, and the state each one is in. Same platform,
- * opposite ends of the same request.
- *
- * The structure, chrome and colour are the product's. Every name, unit number,
- * date and dish is invented — the captures in /docs/projetos are reference
- * material, not content.
- */
 
 const TEAL = "#35A8A7"
 const BLUE = "#3758AD"
@@ -50,23 +37,13 @@ const LINE = "#E8E8E8"
 const STAFF_PLUM = "#370035"
 const STAFF = "#AD37A8"
 
-/** Confirmed, resolved. */
 const GREEN_BG = "#CCF5CE"
 const GREEN_INK = "#2F8F3A"
-/** Open, waiting on somebody. */
 const AMBER_BG = "#FFE9CC"
 const AMBER_INK = "#E86D00"
-/** Being handled right now. */
 const CYAN_BG = "#B3E3FF"
 const CYAN_INK = "#0093E6"
 
-/**
- * The header every screen in both apps wears: a safe-area band in the darker
- * tone, then the bar carrying who is logged in.
- *
- * `unit` is the room in the guest app and the department in the staff app —
- * the same slot, which is why one component covers both.
- */
 const AppHeader = ({
   band,
   bar,
@@ -92,8 +69,6 @@ const AppHeader = ({
       </div>
       {bell ? (
         <div className="relative shrink-0" aria-hidden="true">
-          {/* Drawn rather than lucide's outline bell: the product's is a solid
-              glyph with the unread badge notched into its top-right. */}
           <svg width="15" height="17" viewBox="0 0 15 17" fill="none">
             <path
               d="M7.5 1.2c-2.3 0-4 1.8-4 4v2.6c0 1-.3 2-.9 2.8l-.5.7h10.8l-.5-.7c-.6-.8-.9-1.8-.9-2.8V5.2c0-2.2-1.7-4-4-4Z"
@@ -109,7 +84,6 @@ const AppHeader = ({
   </div>
 )
 
-/** The screen title row: back arrow, centred title, module glyph. */
 const ScreenTitle = ({
   title,
   tone,
@@ -133,14 +107,6 @@ const ScreenTitle = ({
   </div>
 )
 
-/**
- * The segmented control both apps put above a list.
- *
- * The next option is always half off the right edge with a chevron after it.
- * That is the product's own behaviour and the reason the row is worth
- * reproducing exactly: it says the list is filtered, and that there is more
- * filter than fits.
- */
 const Segments = ({
   options,
   tone,
@@ -173,7 +139,6 @@ const Segments = ({
   </div>
 )
 
-/** A state pill. Every status in either app is one of these. */
 const Badge = ({ label, bg, ink }: { label: string; bg: string; ink: string }) => (
   <span
     className="shrink-0 rounded-full px-[7px] py-[2.5px] text-[8.5px] font-bold leading-[1.35]"
@@ -183,14 +148,6 @@ const Badge = ({ label, bg, ink }: { label: string; bg: string; ink: string }) =
   </span>
 )
 
-/**
- * The banner at the top of a module.
- *
- * In the product this is a photograph of the place, with the module's name
- * burned over it. There is no photograph to ship here, so it is a warm field
- * with the same overlay — which keeps the composition and the type hierarchy
- * of the real screen without pretending to be a picture of anything.
- */
 const HeroBanner = ({ from, to, children }: { from: string; to: string; children: ReactNode }) => (
   <div
     className="relative h-[112px] shrink-0 overflow-hidden rounded-[8px]"
@@ -202,7 +159,6 @@ const HeroBanner = ({ from, to, children }: { from: string; to: string; children
   </div>
 )
 
-/* ─────────────────────────────  GUEST APP  ───────────────────────────────── */
 
 const guest = {
   name: "Marina Duarte",
@@ -229,14 +185,6 @@ const guest = {
   ],
 }
 
-/**
- * The guest app's home: everything the resort has switched on, as a grid.
- *
- * The fourth row is cropped by the screen's own bottom edge rather than
- * dropped. That is what the product does, and it is the honest way to show
- * eleven modules in a viewport that fits nine — trimming the list to what fits
- * would misrepresent how much of the resort the app actually carries.
- */
 export const YagoHome = () => {
   const { pick } = useLocale()
 
@@ -261,9 +209,6 @@ export const YagoHome = () => {
       </div>
 
       <div className="flex shrink-0 items-center justify-center gap-[11px] px-[20px] pt-[14px]">
-        {/* The concierge avatar. An illustrated face in the product; here the
-            same silhouette, so the row keeps its shape without inventing a
-            person's likeness. */}
         <div
           className="relative h-[44px] w-[44px] shrink-0 overflow-hidden rounded-full"
           style={{ background: `linear-gradient(150deg, ${TEAL}, ${BLUE})` }}
@@ -304,7 +249,6 @@ export const YagoHome = () => {
   )
 }
 
-/* ── Guest: the reservation ────────────────────────────────────────────────── */
 
 const reservation = {
   title: { pt: "Minhas reservas", en: "My reservations" } satisfies Localized,
@@ -341,14 +285,6 @@ const reservation = {
   ],
 }
 
-/**
- * The reservation itself — the app's one transactional screen, and the reason
- * this is the phone the case study leads with.
- *
- * Worth noticing in the real product and kept here: the order is stored per
- * *person*, not per table. The blue bar names whose choices the grey block
- * below belongs to, and the second card is the other cover, still empty.
- */
 export const YagoReservation = () => {
   const { pick, locale } = useLocale()
 
@@ -439,7 +375,6 @@ export const YagoReservation = () => {
   )
 }
 
-/* ─────────────────────────────  STAFF APP  ───────────────────────────────── */
 
 const staff = {
   name: "Rafael Menezes",
@@ -491,13 +426,6 @@ const staff = {
   datePlaceholder: "00/00/0000",
 }
 
-/**
- * The staff app: the same request, from the side that has to resolve it.
- *
- * Deliberately the second phone in the composition. A guest app on its own is
- * an app; a guest app with the operational half behind it is a system, and the
- * whole argument of this portfolio is that the system is the durable part.
- */
 export const YagoStaffTickets = () => {
   const { pick, locale } = useLocale()
 
@@ -588,16 +516,7 @@ export const YagoStaffTickets = () => {
   )
 }
 
-/* ───────────────────────  FRAGMENTS, OUTSIDE A PHONE  ─────────────────────── */
 
-/**
- * Two cards that float free of any device in the case study's composition.
- *
- * They are the two halves of one request: the guest's table, confirmed, and the
- * housekeeping ticket somebody on shift has picked up. Showing them outside the
- * frames is what makes the point that this is one platform and not two apps
- * that happen to share a logo — the same event, rendered for two audiences.
- */
 export const YagoReservationCard = () => {
   const { pick } = useLocale()
 

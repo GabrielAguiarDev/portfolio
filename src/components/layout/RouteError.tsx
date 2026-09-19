@@ -11,7 +11,6 @@ const copy = {
   action: { pt: "Recarregar", en: "Reload" },
 }
 
-/** What a visitor sees instead of a blank document when a route chunk fails. */
 const RouteError = () => {
   const { pick } = useLocale()
 

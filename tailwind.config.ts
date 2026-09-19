@@ -31,7 +31,6 @@ export default {
           "Segoe UI",
           "sans-serif",
         ],
-        /* Tight grotesk for display type — the voice of every headline. */
         display: [
           "Inter Tight",
           "Inter",
@@ -39,7 +38,6 @@ export default {
           "BlinkMacSystemFont",
           "sans-serif",
         ],
-        /* Editorial counterpoint. A word or two per page, never a sentence. */
         serif: ["Instrument Serif", "Iowan Old Style", "Georgia", "serif"],
       },
       colors: {

@@ -8,29 +8,10 @@ import { cn } from "@/lib/utils"
 
 import { CaseBeats, CaseFacts, CaseTitle } from "./parts"
 
-/**
- * Composition four — the one that is driven entirely by data.
- *
- * The other three are bespoke: each imports the screens of one specific
- * product and is tuned to exactly the devices that product needs. That is the
- * argument the section makes, and it is worth the cost — but it means a
- * project cannot exist until someone has drawn its interface in code.
- *
- * This one takes whatever `figures` it is handed, in whatever number, and
- * arranges them. It is the honest home for a project whose screens are real
- * captures rather than drawings, and the place a project starts before it has
- * earned a composition of its own. Promoting one later is a one-word change to
- * `layout` in work.ts.
- *
- * With no figures at all it renders the typography alone — which is a complete
- * and truthful case study page, just a quiet one.
- */
 
 const Gallery = ({ project }: { project: Project }) => {
   const { pick } = useLocale()
 
-  // Amplitudes alternate rather than being unique per index, so the group
-  // reads as having depth at any count instead of only at three.
   const drifts = [
     animation.parallax.caseDeviceLead,
     animation.parallax.caseDevice,
@@ -52,8 +33,6 @@ const Gallery = ({ project }: { project: Project }) => {
 
       <ul
         className={cn(
-          // A row of phones is a row; anything with a browser in it needs the
-          // full width per item or the window becomes unreadable.
           phones
             ? "no-scrollbar -mx-5 flex snap-x snap-mandatory gap-5 overflow-x-auto px-5 pb-2 sm:mx-0 sm:grid sm:grid-cols-3 sm:gap-8 sm:overflow-visible sm:px-0 lg:gap-10"
             : "grid gap-10 md:gap-14",
@@ -61,8 +40,6 @@ const Gallery = ({ project }: { project: Project }) => {
       >
         {figures.map((figure, index) => (
           <GalleryFigure
-            // Positional: two figures can legitimately point at the same
-            // capture in different frames, which would collide on `src`.
             key={index}
             figure={figure}
             project={project}

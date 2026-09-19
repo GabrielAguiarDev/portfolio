@@ -5,7 +5,6 @@ import { COPY } from "@/content/copy"
 import { hasEmail, LINKS, PROFILE } from "@/content/profile"
 import { useLocale } from "@/i18n/useLocale"
 
-/** Sign-off. Name, role, three links, one line of small print. */
 const Footer = () => {
   const { pick } = useLocale()
 

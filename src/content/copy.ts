@@ -1,12 +1,5 @@
 import type { Localized } from "@/i18n/useLocale"
 
-/**
- * Navigation. `id` doubles as the section's DOM id and scroll target.
- *
- * The order has to match the order the sections appear in the document: the
- * navbar's active marker takes the last item whose top has passed the reading
- * line, which only works if this list is in document order.
- */
 export const NAV = [
   { id: "work", label: { pt: "Projetos", en: "Work" } satisfies Localized },
   { id: "ai", label: { pt: "IA", en: "AI" } satisfies Localized },
@@ -20,24 +13,9 @@ export const COPY = {
     cta: { pt: "Vamos conversar", en: "Let's talk" },
     menu: { pt: "Menu", en: "Menu" },
     close: { pt: "Fechar", en: "Close" },
-    /** The language toggle, described in the language currently on screen. */
     language: { pt: "Mudar para inglês", en: "Switch to Portuguese" },
   },
 
-  /**
-   * Labels only assistive technology ever reads. They are localised for the
-   * same reason everything else is: a screen reader set to Portuguese
-   * announcing "Skip to content" is the one visitor who cannot skip past it.
-   */
-  /*
-   * Page metadata, read by `useDocumentMeta`.
-   *
-   * Separate from the hero because the two are read in different places and
-   * under different constraints: the hero is the first line of a page someone
-   * is already looking at, and this is a paragraph that has to stand alone in a
-   * search result, next to nine competitors, describing a person the reader has
-   * never heard of.
-   */
   meta: {
     home: {
       pt: "Gabriel Aguiar, desenvolvedor de software. Construo aplicativos móveis e plataformas web, trabalhando em todas as etapas: arquitetura, desenvolvimento, testes e publicação. Projetos em produção com usuários reais.",
@@ -51,27 +29,6 @@ export const COPY = {
     social: { pt: "Redes sociais", en: "Social" },
   },
 
-  /*
-   * The hero.
-   *
-   * Short on purpose, and plain on purpose.
-   *
-   * It has been through two wrong versions. The first defined itself by
-   * negation ("not just the screen"), which spends half a sentence correcting
-   * an expectation nobody stated. The second replaced that with a dash and a
-   * three-part list, which is the house style of copy written by a machine and
-   * reads as such. Both were trying to prove something in the first breath.
-   *
-   * This one just says what he builds and that he builds all of it. Experience
-   * is not a word that appears here, and it does not need to be: naming two
-   * kinds of product and claiming every stage of both is a larger claim than
-   * any adjective, and the sections below spend the rest of the page backing
-   * it up.
-   *
-   * `lead` is the hero's line only. The page's meta description lives in
-   * `meta.home` below, so search results can be fuller than the hero without
-   * dragging the hero out to match.
-   */
   hero: {
     headline: {
       pt: "Construo aplicativos e plataformas web.",
@@ -101,10 +58,8 @@ export const COPY = {
     stack: { pt: "Stack", en: "Stack" },
     role: { pt: "Meu papel", en: "My role" },
     more: { pt: "Mais projetos no GitHub", en: "More projects on GitHub" },
-    /* The last cell of the grid — a way out, not a sixth project. */
     moreKind: { pt: "Repositórios públicos", en: "Public repositories" },
 
-    /* The system section on a case-study page. */
     surfaces: { pt: "O sistema", en: "The system" },
     surfaceCount: { pt: "superfícies", en: "surfaces" },
     surfacesTitle: {
@@ -117,17 +72,10 @@ export const COPY = {
     },
     surfaceAudience: { pt: "Para", en: "For" },
 
-    /* The case-study pages. */
     backToWork: { pt: "Projetos", en: "Work" },
     next: { pt: "Próximo projeto", en: "Next project" },
-    /** Where the work happened — employer or client. */
     context: { pt: "Contexto", en: "Context" },
     freelance: { pt: "Freelancer", en: "Freelance" },
-    /**
-     * Shown wherever a case study exists as structure but has not been
-     * written. Deliberately blunt: a placeholder that reads as finished copy
-     * is worse than no page at all.
-     */
     draft: { pt: "Case em preparação", en: "Case study in progress" },
     noFigures: {
       pt: "As telas deste projeto ainda não foram adicionadas.",
@@ -139,13 +87,6 @@ export const COPY = {
     },
   },
 
-  /**
-   * The four pillars the page argues for: structure settled once, one base
-   * under every surface, delivery as part of the build, and security treated
-   * as design. The working method with AI used to be the fourth pillar; it
-   * outgrew a paragraph and now has its own section, so this one went back to
-   * the thing it was quietly missing — how the work actually ships.
-   */
   foundations: {
     eyebrow: { pt: "Engenharia", en: "Engineering" },
     title: {
@@ -157,11 +98,6 @@ export const COPY = {
       en: "Screens change. What keeps a product cheap to evolve are the choices made before any screen exists, and the method used to reach them.",
     },
 
-    /**
-     * The layers of the diagram, top to bottom. The order is the argument, so
-     * it is content rather than a constant inside the component — and the
-     * component's plane count is driven by the length of this list.
-     */
     layers: [
       {
         label: { pt: "Interface", en: "Interface" },
@@ -242,17 +178,6 @@ export const COPY = {
     ],
   },
 
-  /**
-   * The AI section.
-   *
-   * Deliberately not a list of tools I have installed. The claim is narrower
-   * and more useful than "I use AI": that a model is a component like any
-   * other — it has a contract, a cost and an attack surface — and that the
-   * interesting decisions are the ones around it. Everything asserted here is
-   * something practised daily on real work, which is why there is no mention
-   * of training, fine-tuning or serving models: that is a different job and
-   * claiming it would be the easiest thing on this page to disprove.
-   */
   ai: {
     eyebrow: { pt: "Engenharia de IA", en: "AI engineering" },
     title: {
@@ -264,7 +189,6 @@ export const COPY = {
       en: "A model isn't magic: it's a component with a contract, a cost and an attack surface. I use AI every day to build software, and I treat the decisions around it with the same care I give any other part of the system.",
     },
 
-    /** Labels for the orchestration diagram. */
     graph: {
       context: ["MCP", "RAG"],
       core: {
@@ -323,8 +247,6 @@ export const COPY = {
           en: "Every piece of text that enters a model is untrusted input, including whatever came back from a tool. Prompt injection, secrets leaking into context and an agent holding more permission than it needs are design failures, and design is where they get solved.",
         },
         tools: [
-          // Left in English on purpose: "prompt injection" is the term the
-          // OWASP list uses and the one Brazilian engineers say out loud.
           "Prompt injection",
           { pt: "Vazamento de dados e segredos", en: "Data & secret leakage" },
           { pt: "Menor privilégio", en: "Least privilege" },
@@ -420,43 +342,14 @@ export const COPY = {
   impact: {
     eyebrow: { pt: "Impacto", en: "Impact" },
     title: { pt: "O que isso significa na prática.", en: "What that means in practice." },
-    /*
-     * Three figures, three different questions. There were four, and three of
-     * them answered the same one: products built, surfaces built and products
-     * live all measured volume, so the row said one thing three times over.
-     *
-     * How long, how much, how far.
-     */
     years: { pt: "Anos de experiência", en: "Years of experience" },
-    /*
-     * Counts surfaces, not products, and only the ones actually running. Every
-     * product here is a system: a panel, an admin, one or two apps. "Apps
-     * published" left all of that out and framed the work as mobile, which had
-     * stopped being true.
-     */
     surfaces: { pt: "Sistemas e apps em produção", en: "Systems and apps in production" },
 
-    /*
-     * The weight figures. They answer the question the others cannot: not how
-     * much was built, but what it carries. Rendered only once set in
-     * profile.ts, so the row never shows a gap where a number should be.
-     */
     revenue: {
       pt: "Transacionados nos sistemas em que trabalhei",
       en: "Transacted through systems I worked on",
     },
     installs: { pt: "Instalações dos apps publicados", en: "Installs of the apps shipped" },
-    /*
-     * The reason the figures above are larger than the grid further up. Said
-     * plainly, because "I have done more than this" reads as a boast when it is
-     * implied and as a fact when it is stated.
-     */
-    /*
-     * Carries the half of the argument that has no number attached to it, and
-     * needs none: what these systems hold up. A count of products says nothing
-     * about whether any of them survived the week of the year when everybody
-     * arrives at once.
-     */
     selection: {
       pt: "Os projetos abertos aqui são uma seleção; parte do que construí é interna e não pode ser mostrada. São sistemas em uso diário, em {sectors}, sustentando operação e receita reais, e que já seguraram campanhas com milhares de acessos simultâneos.",
       en: "The projects opened here are a selection; some of what I have built is internal and cannot be shown. These are systems in daily use across {sectors}, holding up real operations and real revenue, that have already carried campaigns with thousands of concurrent users.",
@@ -472,7 +365,6 @@ export const COPY = {
     },
     responsibilities: { pt: "Responsabilidades", en: "Responsibilities" },
     highlights: { pt: "Principais contribuições", en: "Key contributions" },
-    /* Only shown where the company name doesn't already say what this was. */
     kindFreelance: { pt: "Freelancer", en: "Freelance" },
   },
 

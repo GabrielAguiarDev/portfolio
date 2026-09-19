@@ -3,16 +3,6 @@ import { useEffect, useRef } from "react"
 import { animation, MOBILE_BREAKPOINT, type ResponsiveValue } from "./config"
 import { loadMotionRuntime } from "./runtime"
 
-/**
- * Scroll-linked parallax on a single element.
- *
- * The element travels `amount` pixels in total, centred on its natural
- * position, using `translate3d` only. Amplitude is smaller on mobile, and
- * GSAP's matchMedia re-runs the setup when the breakpoint is crossed.
- *
- * Until (and unless) the motion runtime loads, the element simply sits where
- * the layout put it — no placeholder transform, so nothing can shift.
- */
 export function useParallax<T extends HTMLElement = HTMLDivElement>(amount: ResponsiveValue) {
   const ref = useRef<T>(null)
 
@@ -62,7 +52,6 @@ export function useParallax<T extends HTMLElement = HTMLDivElement>(amount: Resp
       disposed = true
       cleanup?.()
     }
-    // `amount` comes from the frozen config object, so it is stable by construction.
   }, [])
 
   return ref

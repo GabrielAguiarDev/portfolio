@@ -16,23 +16,6 @@ import { hasEmail, LINKS } from "@/content/profile"
 import { useLocale } from "@/i18n/useLocale"
 import { cn } from "@/lib/utils"
 
-/**
- * A nav item.
- *
- * On the home page it is a fragment anchor whose default is cancelled so the
- * smooth scroll can own the movement. Anywhere else that same handler was a
- * trap: it cancelled the click, rewrote the URL to `/work/yago#work`, then
- * looked for a `#work` element that does not exist on that page — a dead link
- * that corrupted the address bar on the way. Off the home page the item has to
- * be a real navigation, so it becomes a router Link to `/#id`, and
- * `useHashScroll` resolves the fragment once the home page has mounted.
- *
- * Declared at module scope rather than inside `Nav`: a component defined in a
- * render body is a new component *type* on every render, so React would tear
- * down and rebuild every item each time the bar re-rendered — which it does on
- * every scroll frame — restarting the mobile menu's staggered entrance and
- * dropping keyboard focus mid-interaction.
- */
 const SectionLink = ({
   id,
   onHome,
@@ -66,15 +49,11 @@ const SectionLink = ({
     </Link>
   )
 
-/** Scroll position, in px, past which the bar earns its background. */
 const SOLID_AT = 24
 
 const Nav = () => {
   const { pick, locale, setLocale } = useLocale()
   const { pathname } = useLocation()
-  // Off the home page the bar is solid from the first frame. Initialising to
-  // false and correcting in an effect meant every case page opened with a
-  // half-second background fade, through `transition-colors duration-500`.
   const [solid, setSolid] = useState(
     () => window.location.pathname !== "/" || window.scrollY > SOLID_AT,
   )
@@ -82,9 +61,6 @@ const Nav = () => {
   const [open, setOpen] = useState(false)
   const pending = useRef<string | null>(null)
 
-  // Every nav item points at a section of the home page. On a case-study route
-  // none of those sections is in the DOM, so the bar has to navigate rather
-  // than scroll — and the scroll-spy has nothing to measure.
   const onHome = pathname === "/"
 
   useEffect(() => {
@@ -100,7 +76,6 @@ const Nav = () => {
       frame = 0
       setSolid(window.scrollY > SOLID_AT)
 
-      // The section whose top has most recently passed the reading line.
       const line = window.scrollY + window.innerHeight * 0.35
       let current: string | null = null
       for (const item of NAV) {
@@ -123,8 +98,6 @@ const Nav = () => {
     }
   }, [onHome])
 
-  // The overlay locks scrolling while it fades out, so a section chosen from
-  // the menu is parked here and scrolled to once the overlay is gone.
   useEffect(() => {
     setSmoothScrollPaused(open)
     document.body.style.overflow = open ? "hidden" : ""
@@ -151,18 +124,9 @@ const Nav = () => {
 
   const goTo = useCallback(
     (event: MouseEvent<HTMLAnchorElement>, id: string) => {
-      // Let the browser handle a click that asks for a new tab or window.
       if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) return
       event.preventDefault()
 
-      // Keep the fragment in the address bar so the section stays shareable,
-      // without letting the browser jump there and fight the smooth scroll.
-      //
-      // The existing state has to be carried through: React Router keeps its
-      // entry key and index in `history.state`, and passing `null` wipes them.
-      // That was invisible while this was a one-route site; now it desynchronises
-      // the history stack, and the per-entry scroll positions keyed on that key
-      // start restoring the wrong offsets.
       window.history.replaceState(window.history.state, "", `#${id}`)
 
       if (open) {
@@ -187,8 +151,6 @@ const Nav = () => {
         )}
       >
         <div className="container flex h-full items-center justify-between gap-6">
-          {/* On the home page the mark scrolls to the top; anywhere else the
-              top of the page is not what it means, so it goes home. */}
           {onHome ? (
             <button
               type="button"
@@ -274,16 +236,6 @@ const Nav = () => {
         </div>
       </header>
 
-      {/* Full-bleed menu. On a phone a drawer is fussy; a plain sheet of type
-          is faster to read and cheaper to animate. */}
-      {/*
-        `invisible` matters as much as `opacity-0` here: an opacity-0 overlay is
-        still in the tab order, so a keyboard user would tab through four
-        invisible links — and they would sit inside an aria-hidden subtree,
-        which is a violation in its own right. `visibility: hidden` takes them
-        out of the tab order, and flips back instantly on open so the fade-in
-        still reads.
-      */}
       <div
         id="mobile-menu"
         className={cn(

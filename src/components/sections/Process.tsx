@@ -3,14 +3,6 @@ import { COPY } from "@/content/copy"
 import { useLocale } from "@/i18n/useLocale"
 import { cn } from "@/lib/utils"
 
-/**
- * How I build — the full cycle, told as one continuous sideways move.
- *
- * On desktop the section pins and the track scrolls horizontally, so the
- * pipeline is experienced as a pipeline rather than read as a list. On touch
- * it is a native snap-scrolling strip: same content, same order, no hijacked
- * scrolling. See `useHorizontalTrack` for why that split exists.
- */
 const Process = () => {
   const { pick } = useLocale()
   const { sectionRef, trackRef } = useHorizontalTrack<HTMLDivElement, HTMLOListElement>()
@@ -66,8 +58,6 @@ const Process = () => {
                   <span className="font-mono text-[0.6875rem] text-muted-foreground">
                     {String(index + 1).padStart(2, "0")}
                   </span>
-                  {/* The rail between steps. It stops at the last one, because
-                      the cycle's end is a release, not another arrow. */}
                   <span
                     aria-hidden="true"
                     className={cn(

@@ -7,28 +7,13 @@ import { prefersReducedMotion } from "./runtime"
 import { useReveal } from "./useReveal"
 
 type RevealTextProps = {
-  /** The text to render. Split on spaces; the full string stays accessible. */
   text: string
-  /** Element to render as. Defaults to a heading-neutral span. */
   as?: ElementType
   className?: string
-  /** Extra delay in seconds before the first word starts. */
   delay?: number
-  /** Holds the words back until it goes false. See `useReveal`. */
   hold?: boolean
 }
 
-/**
- * Word-by-word masked reveal — the signature motion of the layout.
- *
- * Each word sits inside an `overflow: hidden` mask and slides up into place on
- * a staggered delay. The whole string is exposed via `aria-label` so assistive
- * tech reads it as one phrase rather than a list of words, and it stays in the
- * HTML for indexing either way.
- *
- * With reduced motion, or with `headingReveal` disabled, it renders as plain
- * text with no wrapper spans at all.
- */
 const RevealText = ({ text, as, className, delay = 0, hold = false }: RevealTextProps) => {
   const Tag = (as ?? "span") as ElementType
   const { ref, revealed } = useReveal<HTMLElement>({ hold })

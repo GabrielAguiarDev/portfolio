@@ -2,35 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
-/*
- * ─────────────────────────────────────────────────────────────────────────────
- *  Design system — "Signal"
- * ─────────────────────────────────────────────────────────────────────────────
- * Near-black ground, warm off-white ink, hairline rules instead of shadows,
- * and a single ember accent spent only where the eye must go: the active nav
- * marker, a live status, one word of a headline, the primary call to action.
- *
- * Depth comes from three things and nothing else — the hairline, a barely-lit
- * surface one step above the ground, and a very soft light bloom behind large
- * compositions. No drop shadows, no heavy glass.
- *
- * Colours are HSL triplets so Tailwind can compose them with opacity.
- */
-
 @layer base {
   :root {
-    --background: 220 14% 4%; /* #090A0C — cool near-black */
-    --foreground: 40 22% 96%; /* #F7F5F1 — warm ink, the contrast that gives it life */
-
-    /* One step above the ground. Panels, device bezels, quiet cards. */
+    --background: 220 14% 4%;
+    --foreground: 40 22% 96%;
     --card: 220 12% 7%;
     --card-foreground: 40 22% 96%;
 
     --popover: 220 14% 6%;
     --popover-foreground: 40 22% 96%;
-
-    /* The single accent in the system. Used sparingly, on purpose. */
-    --primary: 20 94% 55%; /* #F86B27 ember */
+    --primary: 20 94% 55%;
     --primary-foreground: 220 14% 4%;
 
     --secondary: 40 22% 96%;
@@ -40,7 +21,7 @@
     --tertiary-foreground: 40 22% 96%;
 
     --muted: 220 12% 9%;
-    --muted-foreground: 220 7% 56%; /* #878C94 — the quiet voice */
+    --muted-foreground: 220 7% 56%;
 
     --accent: 220 12% 11%;
     --accent-foreground: 40 22% 96%;
@@ -48,22 +29,17 @@
     --destructive: 0 72% 51%;
     --destructive-foreground: 40 22% 96%;
 
-    --border: 220 10% 15%; /* hairline */
+    --border: 220 10% 15%;
     --input: 220 10% 15%;
     --ring: 20 94% 55%;
 
     --radius: 1rem;
-
-    /* Motion timings are written here by applyMotionVars() before first paint;
-       these are the fallbacks if that ever fails to run. */
     --motion-reveal-duration: 0.9s;
     --motion-reveal-delay: 0s;
     --motion-reveal-ease: cubic-bezier(0.22, 1, 0.36, 1);
     --motion-reveal-distance: 28px;
     --motion-heading-duration: 1.05s;
     --motion-heading-ease: cubic-bezier(0.16, 1, 0.3, 1);
-
-    /* Height of the fixed navbar. Sections use it for scroll clearance. */
     --nav-h: 4rem;
 
     color-scheme: dark;
@@ -76,10 +52,8 @@
   }
 
   html {
-    /* Scrolling is by gesture, smoothed by Lenis — the bar would only add noise. */
     scrollbar-width: none;
     -ms-overflow-style: none;
-    /* Guards every section against a stray wide child pushing the page sideways. */
     overflow-x: hidden;
   }
 
@@ -104,8 +78,6 @@
   ::selection {
     @apply bg-primary text-primary-foreground;
   }
-
-  /* Lenis needs the document to size itself naturally. */
   html.lenis,
   html.lenis body {
     height: auto;
@@ -125,13 +97,6 @@
 }
 
 @layer components {
-  /*
-   * Display scale.
-   *
-   * Defined here rather than in tailwind.config's fontSize because
-   * tailwind-merge reads a custom `text-*` utility as a text COLOUR and drops
-   * it when a real colour class follows in the same cn() call.
-   */
   .display-xl {
     @apply font-display;
     font-size: clamp(2.25rem, 5vw, 4.5rem);
@@ -163,32 +128,22 @@
     line-height: 1.25;
     letter-spacing: -0.02em;
   }
-
-  /* The editorial counterpoint. One or two words per page, never a sentence. */
   .serif {
     @apply font-serif italic;
     font-weight: 400;
     letter-spacing: -0.01em;
   }
-
-  /* Small uppercase label. The system's only all-caps type. */
   .eyebrow {
     @apply text-[0.6875rem] font-medium uppercase tracking-[0.22em] text-muted-foreground;
   }
-
-  /* A panel one step above the ground. Depth from the rule, not a shadow. */
   .surface {
     @apply rounded-[--radius] border border-border bg-card;
   }
-
-  /* Used only where content genuinely sits over an image or a brand field. */
   .glass {
     @apply border border-white/10 bg-white/[0.04];
     backdrop-filter: blur(20px) saturate(140%);
     -webkit-backdrop-filter: blur(20px) saturate(140%);
   }
-
-  /* Hairline that fades out at both ends — a rule with no hard stop. */
   .hairline {
     @apply h-px w-full border-0;
     background: linear-gradient(
@@ -199,8 +154,6 @@
       transparent
     );
   }
-
-  /* Underline that grows from the left on hover — the only link affordance. */
   .rule-link {
     @apply relative inline-flex items-center gap-2;
   }
@@ -215,20 +168,10 @@
   .rule-link:focus-visible::after {
     @apply scale-x-100;
   }
-
-  /*
-   * A project cell in the work grid.
-   *
-   * The whole cell is the link, so the underline that marks a link on this site
-   * has to be drawn from the cell rather than from the word it sits under —
-   * `.rule-link:hover` would only fire on the name itself.
-   */
   .work-cell:hover .rule-link::after,
   .work-cell:focus-visible .rule-link::after {
     @apply scale-x-100;
   }
-
-  /* A tool or platform name. Typographic, never a logo chip. */
   .tag {
     @apply inline-flex items-center rounded-full border border-border px-3 py-1
            text-xs font-medium tracking-tight text-muted-foreground
@@ -241,10 +184,6 @@
 }
 
 @layer utilities {
-  /*
-   * Reveal: fade and rise, driven by IntersectionObserver adding .is-revealed.
-   * Only transform and opacity animate, so it never triggers layout.
-   */
   .reveal {
     opacity: 0;
     transform: translate3d(0, var(--motion-reveal-distance), 0);
@@ -257,11 +196,6 @@
     opacity: 1;
     transform: translate3d(0, 0, 0);
   }
-
-  /*
-   * Word-by-word heading mask. The mask clips the word until .is-revealed
-   * lands on the heading; padding/margin pair gives descenders room.
-   */
   .reveal-text__mask {
     display: inline-block;
     overflow: hidden;
@@ -283,8 +217,6 @@
     transform: translate3d(0, 0, 0);
     opacity: 1;
   }
-
-  /* Card lift, desktop pointers only — applied via md: in the markup. */
   .card-lift {
     transition:
       transform 0.5s var(--motion-reveal-ease),
@@ -296,8 +228,6 @@
     transform: translate3d(0, -5px, 0);
     @apply border-foreground/25;
   }
-
-  /* Fades a horizontally scrolling strip out at its edges. */
   .mask-fade-x {
     -webkit-mask-image: linear-gradient(
       to right,
@@ -314,23 +244,6 @@
       transparent
     );
   }
-
-  /*
-   * Fades a horizontally scrolling strip out at whichever edge still has
-   * content beyond it.
-   *
-   * The widths are set per element, from `useScrollEdges`, and both default to
-   * zero — which resolves to a gradient whose stops sit on top of each other
-   * at both ends, i.e. a mask that hides nothing. So a strip that fits, or one
-   * scrolled to its end, is left completely alone: the fade is only ever drawn
-   * where there is genuinely something more to see, which is what makes it
-   * readable as a signal rather than as decoration.
-   *
-   * A mask rather than an overlay gradient, for the same reason as
-   * `.portrait-fade` below: these strips sit on the page's own ground, and an
-   * overlay would have to guess that colour and would leave a visible block
-   * anywhere the guess was wrong.
-   */
   .edge-fade {
     --edge-fade-start: 0px;
     --edge-fade-end: 0px;
@@ -349,27 +262,6 @@
       transparent
     );
   }
-
-  /*
-   * Dissolves the top and bottom of a portrait into the page.
-   *
-   * A mask, not an overlay gradient. An overlay paints a colour on top, which
-   * only disappears where the ground is exactly `--background` — and this
-   * portrait sits over the section's soft ember bloom, so an overlay would
-   * leave a visible rectangle of flat black across it. Removing the pixels
-   * instead means whatever is behind shows through, and there is no edge left
-   * to see at any point along the fade.
-   *
-   * Vertical only. The sides keep their straight edges, which also means one
-   * gradient instead of two intersected — no `mask-composite`, and nothing to
-   * degrade on a browser that lacks it.
-   *
-   * The ramps are long on purpose: roughly a quarter of the height at the top
-   * and a fifth at the bottom, so the photograph arrives out of the ground
-   * rather than starting at a line. They are also deliberately lopsided — the
-   * top of this frame is wall, which can go to nothing over as long a ramp as
-   * it likes, while the bottom is the subject and the caption sits under it.
-   */
   .portrait-fade {
     -webkit-mask-image: linear-gradient(
       to bottom,
@@ -380,8 +272,6 @@
     );
     mask-image: linear-gradient(to bottom, transparent, #000 26%, #000 82%, transparent);
   }
-
-  /* Hides a scrollbar on a deliberately scrollable strip. */
   .no-scrollbar {
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -390,15 +280,6 @@
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
-
-  /*
-   * A short dash travelling the length of an edge in the agent graph.
-   *
-   * The path carries pathLength="100", so the dash array and this offset are
-   * both in percent of the edge — one keyframe pair works for every edge in
-   * the graph regardless of how long it actually is, and edges re-measured on
-   * resize keep their timing.
-   */
   @keyframes agent-pulse {
     from {
       stroke-dashoffset: 100;
@@ -413,19 +294,9 @@
     animation-timing-function: linear;
     animation-iteration-count: infinite;
   }
-
-  /*
-   * Stopped while the graph is off screen. `stroke-dashoffset` is not a
-   * compositor-animatable property in any engine, so every one of these paths
-   * is a main-thread paint per frame — the same reason both canvases on this
-   * page pause themselves when they cannot be seen. Paused rather than removed
-   * so the dashes hold their positions and resume mid-run.
-   */
   .agent-wires-paused .agent-pulse {
     animation-play-state: paused;
   }
-
-  /* Text balancing for short headings and leads. */
   .text-balance {
     text-wrap: balance;
   }
@@ -433,25 +304,10 @@
   .text-pretty {
     text-wrap: pretty;
   }
-
-  /*
-   * Clearance under the fixed navbar for every scroll target.
-   *
-   * This is now the whole distance between the top of the viewport and a
-   * section's first line of text after a jump — `sectionScrollTop` cancels the
-   * section's own top padding, so this value is not added to anything. Change
-   * it and every navbar click and deep link moves with it.
-   */
   .section-anchor {
     scroll-margin-top: calc(var(--nav-h) + 2rem);
   }
 }
-
-/*
- * Reduced motion: everything non-essential is switched off and content is shown
- * in its final state immediately. Not scoped to a layer so it always wins over
- * the utilities above.
- */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto !important;
@@ -474,12 +330,6 @@
   .rule-link::after {
     transition: none !important;
   }
-  /*
-   * The travelling pulses are the whole point of the graph's motion, so with
-   * motion switched off they are removed rather than frozen — a stalled dash
-   * partway along an edge reads as a rendering fault. The wiring, the nodes
-   * and every label stay exactly as they are.
-   */
   .agent-pulse {
     display: none !important;
   }

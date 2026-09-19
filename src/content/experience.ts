@@ -1,50 +1,16 @@
 import type { Localized, Tag } from "@/i18n/useLocale"
 
-/**
- * Professional experience.
- *
- * `period` is `null` wherever the dates were not available. A null period
- * renders nothing rather than a guess — fill them in and they appear.
- *
- * Every role is set the same way. There used to be a lead role with a full
- * editorial spread and the rest as compact sidebars, which said the mobile work
- * was the story and the web work was a footnote. That was true when there was
- * one product to talk about; across mobile, web and commissioned work it had
- * become an argument against the point the page itself makes — that the surface
- * is the least durable decision in a product. So the emphasis is gone and the
- * roles are simply listed, most recent first.
- */
 
-/**
- * What the working relationship actually was.
- *
- * A reader cannot tell employment from commissioned work, and the two say
- * different things about what a person is able to do. Only the one that is not
- * obvious from the company name is labelled on the page.
- */
 export type RoleKind = "employment" | "freelance"
 
 export type Role = {
   id: string
   title: Localized
-  /**
-   * Who the work was for.
-   *
-   * A `Tag` rather than a plain string, the same way toolkit chips are: an
-   * employer is a proper noun that reads identically in every language, while a
-   * commissioned engagement with no public client name needs a phrase, and a
-   * phrase has to be translated. It must not be the word "freelance" — the page
-   * already labels the relationship, and repeating it here produces
-   * "Freelance · Freelancer" and tells the reader nothing twice.
-   */
   company: Tag
   kind: RoleKind
-  /** TODO: fill in, e.g. { pt: "2023 — hoje", en: "2023 — present" }. */
   period: Localized | null
-  /** The one line that says what this role actually was. */
   summary: Localized
   responsibilities: Localized[]
-  /** What changed because I was there. Rendered only when there is something. */
   highlights: Localized[]
   stack: string[]
 }
@@ -55,7 +21,7 @@ export const ROLES: Role[] = [
     title: { pt: "Desenvolvedor Mobile", en: "Mobile Developer" },
     company: "YaaYoo — Fusion Thinking",
     kind: "employment",
-    period: null, // TODO: add the period for this role
+    period: null,
     summary: {
       pt: "Responsável pela arquitetura e pelo ciclo completo dos aplicativos: do desenho da estrutura à publicação nas lojas e à manutenção depois disso.",
       en: "Responsible for the architecture and the full cycle of the apps: from designing the structure through to store release and the maintenance after it.",
@@ -107,7 +73,7 @@ export const ROLES: Role[] = [
     title: { pt: "Desenvolvedor Front-end", en: "Front-end Developer" },
     company: "YaaYoo — Fusion Thinking",
     kind: "employment",
-    period: null, // TODO: add the period for this role
+    period: null,
     summary: {
       pt: "Aplicações web do ecossistema Y-Studio — Booking, CRM, CMS e portais internos, todos partindo da mesma base de componentes.",
       en: "Web applications across the Y-Studio ecosystem — Booking, CRM, CMS and internal portals, all built from the same component base.",
@@ -135,32 +101,12 @@ export const ROLES: Role[] = [
     stack: ["Next.js", "React", "TypeScript", "Tailwind CSS"],
   },
 
-  /* ───────────────────────────────────────────────────────────────────────────
-     The two engagements outside YaaYoo.
-
-     They were one entry — "Projetos Web Freelancer" — which flattened two
-     separate deliveries, for two different people, into a single line. Split so
-     each can carry its own client, period, scope and stack, which is also what
-     lets them pair one-to-one with the two commissioned case studies in
-     work.ts: `freelance-1` with `aguiar-one`, `freelance-2` with `vez`.
-
-     Neither names its product here, on purpose. An experience entry answers
-     "what is this person able to do on their own"; the case study answers "what
-     did it turn out to be". Naming the app in both makes the second one
-     redundant and turns a claim about capability into a second product pitch.
-
-     `company` carries the sector rather than a client name — factual, and it
-     keeps the two apart on the page. Swap in the real names if the engagements
-     are not private.
-     ─────────────────────────────────────────────────────────────────────── */
   {
     id: "freelance-1",
     title: { pt: "Desenvolvedor Full-stack — Freelancer", en: "Full-stack Developer — Freelance" },
-    // The sector rather than a name: true, useful, and it distinguishes the two
-    // engagements. Swap in the client if the work is not private.
     company: { pt: "Varejo local", en: "Local retail" },
     kind: "freelance",
-    period: null, // TODO
+    period: null,
     summary: {
       pt: "Plataforma de gestão para varejo local, entregue sozinho do levantamento com o cliente até a operação: o portal onde a loja trabalha, o console que administra a plataforma acima dela, o app e o banco.",
       en: "A management platform for local retail, delivered alone from the client conversation through to running it: the portal the shop works in, the console that administers the platform above it, the app and the database.",
@@ -208,7 +154,7 @@ export const ROLES: Role[] = [
     title: { pt: "Desenvolvedor Full-stack — Freelancer", en: "Full-stack Developer — Freelance" },
     company: { pt: "Serviços locais", en: "Local services" },
     kind: "freelance",
-    period: null, // TODO
+    period: null,
     summary: {
       pt: "Marketplace de agendamentos de uma cidade inteira, entregue sozinho: cinco superfícies, busca conversacional por IA, pagamento integrado com split e cobrança por mensalidade ou por comissão.",
       en: "A city-wide booking marketplace, delivered alone: five surfaces, conversational AI search, integrated payment with split, and billing by subscription or by commission.",
@@ -265,10 +211,6 @@ export const ROLES: Role[] = [
   },
 ]
 
-/**
- * Dev-only reminder, matching the one in profile.ts — the nudge reaches the
- * person who can act on it and never the visitor.
- */
 if (import.meta.env.DEV) {
   const unfilled = ROLES.filter(
     (role) =>

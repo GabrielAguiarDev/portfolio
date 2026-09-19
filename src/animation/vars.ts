@@ -1,12 +1,5 @@
 import { animation, MOBILE_BREAKPOINT } from "./config"
 
-/**
- * Mirrors the timing half of the animation config onto CSS custom properties,
- * so CSS-driven reveals and GSAP-driven motion read from the same source.
- *
- * Called from main.tsx before React renders, i.e. before first paint, so the
- * values are in place for the very first reveal.
- */
 export function applyMotionVars(root: HTMLElement = document.documentElement) {
   const isMobile = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`).matches
 

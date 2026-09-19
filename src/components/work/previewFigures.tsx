@@ -24,44 +24,9 @@ import { useLocale } from "@/i18n/useLocale"
 
 import PreviewSkeleton from "./PreviewSkeleton"
 
-/**
- * The interfaces the hover preview shows, and the only place they are named.
- *
- * This module is loaded lazily, on the first hover over the work index. That
- * matters: it pulls in the phone frame, the browser frame and four products'
- * screens — the same weight that was deliberately split out of the home page
- * when the case studies moved to their own routes. Paying for it when someone
- * reaches for a project is fine; paying for it on every first paint is not.
- *
- * Each project names its own preview rather than deriving one from `platforms`,
- * because the right figure is an editorial choice — and at card size it is a
- * different choice than at full size.
- */
 
-/**
- * The shape a monitor actually has.
- *
- * A dashboard authored whole is two and a half screens tall, and a browser
- * frame drawn around all of it is a frame no monitor has ever been — in a
- * preview card it reads as a long ribbon rather than as a computer. Cropping to
- * 16:10 shows what a laptop shows: the top of the page, with the rest running
- * past the bottom edge the way it does in the product.
- */
 const MONITOR = 16 / 10
 
-/**
- * A desktop console with the app that belongs to it resting on its corner.
- *
- * Three of these products are a system rather than an app: an operations panel
- * the staff work in, and a phone the customer holds. Showing one surface makes
- * a system look like an app, and showing two side by side makes them look like
- * two products. Overlapped, the phone reads as belonging to the window behind
- * it — which is the relationship the case study spends six paragraphs arguing.
- *
- * The phone hangs off the lower-right because that is the quietest region of
- * every one of these dashboards: the rail, the page title and the KPI row all
- * live top-left, and none of them are worth covering.
- */
 const PortalWithApp = ({
   url,
   width,
@@ -98,8 +63,6 @@ const FIGURES: Record<string, ReactNode> = {
       app={<YagoHome />}
     />
   ),
-  // Y-Studio is the one product here with no phone in it at all, so it gets the
-  // window on its own — at the same monitor proportion as the others.
   "y-studio": (
     <BrowserFrame url="app.y-studio.com/booking">
       <Miniature width={DESKTOP_WIDTH} ratio={MONITOR} background={STUDIO_CANVAS}>
@@ -136,15 +99,6 @@ const FIGURES: Record<string, ReactNode> = {
   ),
 }
 
-/**
- * A real capture always wins over the drawn screen — the moment a project has
- * one, the preview should show the product rather than the illustration of it.
- *
- * The capture's own `frame` decides what is drawn around it, the same way
- * `CaseGallery` reads it. Assuming a phone here would put the first desktop
- * capture anyone drops into `/public/screens` inside a 120px handset — a trap
- * laid directly across the workflow `content/work.ts` documents.
- */
 const PreviewFigure = ({ project }: { project: Project }) => {
   const { pick } = useLocale()
   const capture = project.figures?.[0]

@@ -26,29 +26,14 @@ import { cn } from "@/lib/utils"
 
 import { HomeIndicator, Screen, StatusBar } from "./chrome"
 
-/**
- * Aguiar One, rebuilt from the product's own screens.
- *
- * A modular back office for small retail — sales, costs, cash drawer, stock —
- * and the only project here that is a *platform with tenants*: shops run the
- * light portal, and a second, darker console above it runs the shops. That
- * pairing is the case study, so both are drawn.
- *
- * Structure, chrome and palette are the product's. Every shop name, figure and
- * date is invented — the captures in /docs/projetos are reference material.
- */
 
-/** The logical width both consoles are authored against. */
 export const AGUIAR_WIDTH = 1180
 
-/** The product's teal. It is the only saturated colour either console uses. */
 const TEAL = "#3E7E9C"
 const TEAL_WASH = "#E8F1F5"
-/** The bronze reserved for closing the drawer — the one irreversible action. */
 const BRONZE = "#9A6318"
 const NAVY = "#0E1F2B"
 const NAVY_SOFT = "#16303F"
-/** The ground both consoles' pages sit on. Exported for `Miniature`. */
 export const AGUIAR_CANVAS = "#F1F4F6"
 const CANVAS = AGUIAR_CANVAS
 const INK = "#15242E"
@@ -58,7 +43,6 @@ const HAIRLINE = "rgba(21,36,46,0.10)"
 const GREEN = "#2F855A"
 const AMBER = "#B7791F"
 
-/* ──────────────────────────────  SHARED  ────────────────────────────────── */
 
 const Card = ({ children, className }: { children: ReactNode; className?: string }) => (
   <div
@@ -69,12 +53,6 @@ const Card = ({ children, className }: { children: ReactNode; className?: string
   </div>
 )
 
-/**
- * The label over every figure in both consoles.
- *
- * Uppercase, tracked out, with a status dot whose colour is the whole point —
- * it is how a shop owner reads the row without reading the words.
- */
 const StatLabel = ({ label, dot }: { label: string; dot: string }) => (
   <div className="flex items-center gap-[7px]">
     <span className="h-[7px] w-[7px] shrink-0 rounded-full" style={{ background: dot }} />
@@ -113,7 +91,6 @@ type NavGroup = {
   items: { icon: typeof Users; label: Localized; badge?: string }[]
 }
 
-/* ───────────────────────────  THE SHOP'S PORTAL  ────────────────────────── */
 
 const portal = {
   shop: { initials: "BR", name: "Bella Ração", segment: { pt: "PetShop", en: "Pet shop" } satisfies Localized },
@@ -240,14 +217,6 @@ const portal = {
   ],
 }
 
-/**
- * The portal a shop actually works in.
- *
- * Leads on "Resumo de hoje" because that is the product's own promise, stated
- * on its marketing page: see the day's result without opening a spreadsheet.
- * Revenue, cost and profit sit on one row for the same reason — a till total
- * on its own is the number that misleads a small shop.
- */
 export const AguiarPortal = () => {
   const { pick } = useLocale()
 
@@ -521,7 +490,6 @@ export const AguiarPortal = () => {
   )
 }
 
-/* ──────────────────────────  THE PLATFORM CONSOLE  ─────────────────────── */
 
 const admin = {
   title: { pt: "Visão Geral", en: "Overview" } satisfies Localized,
@@ -663,14 +631,6 @@ const admin = {
   exportCsv: { pt: "Exportar CSV", en: "Export CSV" } satisfies Localized,
 }
 
-/**
- * The console above the shops.
- *
- * The dark shell is the product's own way of saying "you are not in a shop's
- * data any more" — and the reason this project is a platform rather than an
- * app. The module adoption list is the most telling panel on it: it is the
- * modular claim, measured.
- */
 export const AguiarAdmin = () => {
   const { pick } = useLocale()
 
@@ -923,7 +883,6 @@ export const AguiarAdmin = () => {
   )
 }
 
-/* ──────────────────────────  THE SHOP IN A POCKET  ─────────────────────── */
 
 const app = {
   greeting: { pt: "Bom dia, Marina", en: "Good morning, Marina" } satisfies Localized,
@@ -980,18 +939,6 @@ const app = {
   ],
 }
 
-/**
- * The third surface: the same shop, on the counter.
- *
- * Deliberately not a shrunken portal. It answers the two questions a shop owner
- * has while standing at the till — what have I taken today, and what is left
- * after costs — and puts *selling* in the middle of the tab bar as a raised
- * button, because that is the thing being done while the phone is in hand.
- *
- * Its figures agree with the portal's on purpose: same day, same shop, one
- * operation seen from two places. Two surfaces of one product quoting different
- * numbers is the detail that gives away a mockup.
- */
 export const AguiarApp = () => {
   const { pick } = useLocale()
 
@@ -1132,14 +1079,6 @@ export const AguiarApp = () => {
         </div>
       </div>
 
-      {/*
-        The tab bar, with selling raised out of it.
-
-        Four destinations and one *action*: the raised button is not navigation,
-        it is the job. A shop owner holding this phone at the counter is almost
-        always mid-sale, and burying that behind a tab would be the difference
-        between a till and a report.
-      */}
       <div
         className="relative flex shrink-0 items-start justify-around bg-white px-[10px] pb-[4px] pt-[10px]"
         style={{ borderTop: `1px solid ${HAIRLINE}` }}

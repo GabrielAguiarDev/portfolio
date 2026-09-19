@@ -4,25 +4,6 @@ import type { Project, Surface } from "@/content/work"
 import { useLocale } from "@/i18n/useLocale"
 import { cn } from "@/lib/utils"
 
-/**
- * The system, laid out as its parts.
- *
- * This is the section that makes a case study honest. Every product here is
- * several pieces serving several different people: a panel the staff work in
- * all day, an app the customer holds, a second app for the people serving that
- * customer, an admin nobody outside the company ever opens. A composition of
- * two phones shows one of those and implies the product is the phone.
- *
- * The badge and the name are what a skim picks up. `audience` is what makes it
- * mean anything: two management panels look identical in a screenshot and are
- * entirely different products once you know one belongs to a shop owner and the
- * other to the person running the platform they are on.
- *
- * Rendered uniformly for every project rather than folded into each bespoke
- * composition. The compositions exist to give each product its own character;
- * this is structure, and structure the reader is comparing across projects
- * should not change shape between them.
- */
 
 const SurfaceCell = ({
   surface,
@@ -93,9 +74,6 @@ const CaseSurfaces = ({ project }: { project: Project }) => {
         </p>
       </div>
 
-      {/* Same rule grid as the work index: cells draw the bottom and right
-          edges, the list draws the top and left, so a last row that does not
-          fill simply ends. */}
       <ul className="mt-12 grid border-l border-t border-border sm:grid-cols-2 md:mt-14 lg:grid-cols-3">
         {project.surfaces.map((surface, index) => (
           <SurfaceCell

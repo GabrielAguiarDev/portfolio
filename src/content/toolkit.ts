@@ -1,20 +1,7 @@
 import type { Localized, Tag } from "@/i18n/useLocale"
 
-/**
- * Tools, grouped by the layer of the product they belong to.
- *
- * Deliberately typographic — no logo wall. The grouping is the argument: the
- * order runs from the decisions that outlive everything (architecture) down to
- * the machinery that ships it, with mobile and web sitting side by side as two
- * surfaces rather than two careers.
- */
 export type ToolGroup = {
   label: Localized
-  /**
-   * Product and protocol names stay as plain strings — they read the same in
-   * every language. Anything that is a description in words is written per
-   * language, so a Portuguese page does not carry English chips.
-   */
   tools: Tag[]
 }
 

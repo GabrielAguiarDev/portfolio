@@ -37,27 +37,11 @@ import {
 import { useLocale, type Localized } from "@/i18n/useLocale"
 import { cn } from "@/lib/utils"
 
-/**
- * Y-Studio, rebuilt from the product's own screens.
- *
- * The thing worth reproducing here is not a dashboard, it is the shell. Every
- * module — yBooking, yCRM, yCMS, yCommerce, and the Yago guest platform —
- * loads inside the same rail, the same top bar, the same licensee chip, and
- * differs only in the navigation it publishes and the page it renders. That is
- * the product, and it is why two screens from two modules say more about it
- * than one screen ever could.
- *
- * Authored at `DESKTOP_WIDTH` and scaled by `Miniature` wherever it is placed,
- * the same way the phone screens are authored at a fixed logical width. Every
- * figure, client name, campaign and date is invented.
- */
 
-/** The logical width every web screen here is authored against. */
 export const DESKTOP_WIDTH = 1180
 
 const PURPLE = "#5F33B4"
 const PURPLE_WASH = "#EFEBF7"
-/** The ground every module's page sits on. Exported for `Miniature`. */
 export const STUDIO_CANVAS = "#F5F6FA"
 const CANVAS = STUDIO_CANVAS
 const PANEL = "#EEF0F7"
@@ -66,14 +50,6 @@ const MUTED = "#98A2B3"
 const BODY = "#475467"
 const HAIRLINE = "rgba(16,24,40,0.08)"
 
-/**
- * The platform's module palette, as the product defines it.
- *
- * Taken from `src/styles/colors.ts` in the Y-Studio codebase, not sampled off a
- * screenshot — these are the values the real shell paints each module's mark
- * with, and getting one wrong is the kind of detail that quietly says "this is
- * a drawing of the product" rather than the product.
- */
 const MODULE = {
   booking: "#0080ed",
   crm: "#ff7f00",
@@ -91,7 +67,6 @@ const RED = "#FA6767"
 const BLUE = "#2E9BF0"
 const AMBER = "#F5A524"
 
-/** A browser window. Fluid, unlike the screens — it is sized by its container. */
 export const BrowserFrame = ({
   children,
   url,
@@ -99,11 +74,9 @@ export const BrowserFrame = ({
   screenshot,
   alt,
 }: {
-  /** The interface drawn in code. Omitted when `screenshot` carries the view. */
   children?: ReactNode
   url: string
   className?: string
-  /** Capture path. When set it replaces the coded view entirely. */
   screenshot?: string
   alt?: string
 }) => (
@@ -142,15 +115,7 @@ export const BrowserFrame = ({
   </div>
 )
 
-/* ────────────────────────────────  SHELL  ────────────────────────────────── */
 
-/**
- * The module mark: a play glyph, tinted per module, over the module's name.
- *
- * One mark per module is how the product distinguishes them — the shell is
- * otherwise identical everywhere — so the tint is doing real work here rather
- * than decorating.
- */
 const ModuleMark = ({ tint, label }: { tint: string; label: string }) => (
   <div className="flex flex-col items-center gap-[3px]">
     <svg width="17" height="17" viewBox="0 0 20 20" fill="none" aria-hidden="true">
@@ -163,7 +128,6 @@ const ModuleMark = ({ tint, label }: { tint: string; label: string }) => (
   </div>
 )
 
-/** The Y-Studio wordmark that sits at the top of the rail. */
 const StudioWordmark = () => (
   <div className="flex items-center gap-[7px] px-[18px] pt-[16px]">
     <svg width="30" height="30" viewBox="0 0 32 32" fill="none" aria-hidden="true">
@@ -185,19 +149,10 @@ const StudioWordmark = () => (
 type NavItem = {
   icon: typeof Users
   label: Localized
-  /** Renders the disclosure chevron. The product uses it for grouped routes. */
   group?: boolean
-  /** Sub-routes, rendered only for the open group. */
   children?: Localized[]
 }
 
-/**
- * The rail, the top bar and the licensee chip — everything a module inherits.
- *
- * `activeChild` is separate from `active` because the product keeps the parent
- * route highlighted while a child is selected, which is the only way you can
- * tell from a screenshot which module section you are actually in.
- */
 const StudioShell = ({
   module,
   tint,
@@ -331,7 +286,6 @@ const StudioShell = ({
   )
 }
 
-/** Every card in every module is this box. */
 const Card = ({ children, className }: { children: ReactNode; className?: string }) => (
   <div
     className={cn("rounded-[12px] bg-white", className)}
@@ -354,7 +308,6 @@ const CardTitle = ({ title, note }: { title: string; note?: string }) => (
   </>
 )
 
-/** The period filter that heads every dashboard in the platform. */
 const PeriodFilters = () => {
   const { pick } = useLocale()
 
@@ -388,13 +341,6 @@ const PeriodFilters = () => {
   )
 }
 
-/**
- * The half-donut the platform uses wherever a total splits into named parts.
- *
- * Drawn from arc geometry rather than a chart library: it is four fixed
- * segments on a static screen, and pulling Recharts into the case study chunk
- * to draw them would cost more than the entire rest of this file.
- */
 const Gauge = ({ segments }: { segments: { value: number; color: string }[] }) => {
   const total = segments.reduce((sum, segment) => sum + segment.value, 0)
   const radius = 40
@@ -433,13 +379,6 @@ const Gauge = ({ segments }: { segments: { value: number; color: string }[] }) =
   )
 }
 
-/**
- * A day of bookings: what came in against what was turned away.
- *
- * The paired green/red bars are the chart the product leads with, and the pair
- * is the point — a booking total on its own says nothing about how much
- * availability the rate plan is refusing.
- */
 const PairedBars = ({
   days,
   positive,
@@ -501,15 +440,6 @@ const PairedBars = ({
   </div>
 )
 
-/**
- * A titled total with its own bar chart — the dashboard's main unit.
- *
- * The figure on the left and the bars on the right are one object in the
- * product: the total is the sum of what the chart shows, and reading either
- * without the other tells you nothing. `positive` is the only thing that
- * varies between instances, and it varies for a reason — the platform colours
- * each acquisition channel differently and keeps refusals red throughout.
- */
 const ChartBlock = ({
   title,
   note,
@@ -583,10 +513,6 @@ const ChartBlock = ({
 
 type GaugeRow = { figure: string; label: Localized; color: string }
 
-/**
- * A named total, split. The platform puts two of these side by side in the
- * right rail of every dashboard, which is the only reason it is a component.
- */
 const GaugeCard = ({
   title,
   note,
@@ -630,7 +556,6 @@ const GaugeCard = ({
   )
 }
 
-/* ──────────────────────────────  yBOOKING  ──────────────────────────────── */
 
 const booking = {
   date: {
@@ -880,12 +805,6 @@ export const StudioBooking = () => {
 
           <div className="my-[16px] h-px" style={{ background: HAIRLINE }} />
 
-          {/*
-            The same chart again, for the bookings the platform took itself
-            rather than the ones the website sent it. Two charts rather than one
-            is the product's decision and a load-bearing one: the split between
-            channels is what the whole rate-plan module is steered by.
-          */}
           <ChartBlock
             title={pick(ownChart.title)}
             note={pick(ownChart.note)}
@@ -1050,7 +969,6 @@ export const StudioBooking = () => {
   )
 }
 
-/* ────────────────────────────────  yCRM  ────────────────────────────────── */
 
 const crm = {
   date: {
@@ -1122,14 +1040,6 @@ const crm = {
   ],
 }
 
-/**
- * The second module, in a second window — the case study's actual argument.
- *
- * Nothing in the shell changes between this and yBooking: same rail, same top
- * bar, same licensee. Only the navigation and the page differ. Showing that
- * twice is the only way to demonstrate a modular platform; one screenshot of
- * one module is indistinguishable from one bespoke app.
- */
 export const StudioCrm = () => {
   const { pick } = useLocale()
 
@@ -1244,8 +1154,6 @@ export const StudioCrm = () => {
               </div>
             ))}
 
-            {/* The folder being created, mid-flow. It is in the reference and it
-                is worth keeping: it shows the tree is editable in place. */}
             <div
               className="ml-[36px] flex items-center gap-[9px] rounded-[8px] px-[11px] py-[9px]"
               style={{ border: `1px solid ${HAIRLINE}` }}
@@ -1362,18 +1270,7 @@ export const StudioCrm = () => {
   )
 }
 
-/* ───────────────  OTHER PRODUCTS, RUNNING ON THE SAME SHELL  ───────────── */
 
-/**
- * Two more modules, and the reason they live in this file.
- *
- * The operations portal behind the Yago apps and the back office behind the
- * Porto Seguro Shopping app are not separate systems — they are Y-Studio with a
- * different module switched on, which is exactly what the captures in
- * /docs/projetos show: the same rail, the same top bar, the same licensee chip.
- * Putting them next to `StudioBooking` says that; filing them under their own
- * products would quietly claim three shells where there is one.
- */
 
 const yago = {
   date: {
@@ -1421,8 +1318,6 @@ const yago = {
       pt: "Análise de textos e sentimentos, com as palavras mais usadas.",
       en: "Text and sentiment analysis, by most-used word.",
     } satisfies Localized,
-    /* size and tone are the data here: how often the word appears, and whether
-       it appears in praise or in complaint. */
     words: [
       { text: { pt: "ATENDIMENTO", en: "SERVICE" } satisfies Localized, size: 21, color: GREEN },
       { text: { pt: "conforto", en: "comfort" } satisfies Localized, size: 18, color: AMBER },
@@ -1505,7 +1400,6 @@ const yago = {
   seeMore: { pt: "ver mais", en: "see more" } satisfies Localized,
 }
 
-/** The panel behind the guest and staff apps: what the resort sees. */
 export const StudioYago = () => {
   const { pick } = useLocale()
 
@@ -1552,8 +1446,6 @@ export const StudioYago = () => {
             </p>
           </div>
           <div className="flex items-center gap-[9px]">
-            {/* A donut, not a gauge: this figure is a whole split in two, not a
-                position on a scale. */}
             <svg width="52" height="52" viewBox="0 0 42 42" aria-hidden="true">
               <circle cx="21" cy="21" r="15" fill="none" stroke="#7DC98F" strokeWidth="11" />
               <circle
@@ -1621,9 +1513,6 @@ export const StudioYago = () => {
             </div>
           </div>
 
-          {/* Four stacked bars, each one whole. The point of the panel is the
-              shape of the split, not any single figure — check-in is visibly
-              the department in trouble without a number being printed. */}
           <div className="mt-[16px] grid grid-cols-2 gap-x-[16px] gap-y-[16px]">
             {yago.qualitative.groups.map((group) => (
               <div key={group.label.en}>
@@ -1871,7 +1760,6 @@ const commerce = {
   },
 }
 
-/** The back office behind the marketplace app: what the retailer sees. */
 export const StudioCommerce = () => {
   const { pick } = useLocale()
 

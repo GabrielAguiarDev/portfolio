@@ -1,21 +1,5 @@
 import type { Localized } from "@/i18n/useLocale"
 
-/**
- * Selected work.
- *
- * Every claim here traces back to something the product actually does. There
- * are no invented metrics: the "facts" strip carries verifiable specifics
- * (platforms, stack, role) instead of numbers nobody can check.
- *
- * Each project owns a page at `/work/<id>`, and the home page carries only the
- * index. The `id` is therefore a public URL — changing one breaks a link that
- * may already be shared, so `useHashScroll` keeps the legacy `/#<id>` deep
- * links working by redirecting them.
- *
- * `figures` is the hook for real captures. Leave a figure's `src` undefined and
- * the frame renders the interface drawn in code for that project. Drop a file
- * in /public/screens and set `src` to swap in the real thing.
- */
 
 export type Layout = "stage" | "gallery"
 
@@ -24,58 +8,22 @@ export type Beat = {
   value: Localized
 }
 
-/**
- * One device or window in a case study's composition.
- *
- * The bespoke layouts consume figures positionally and fall back to the screen
- * they draw in code. `gallery` renders whatever it is given, in order, which is
- * what lets a project exist before anyone has drawn a screen for it.
- */
 export type Figure = {
-  /** Capture path, relative to /public. Undefined → the coded screen. */
   src?: string
-  /** Chrome drawn around it. Defaults to a phone. */
   frame?: "phone" | "browser"
-  /** Address bar contents. Only read when `frame` is "browser". */
   url?: string
-  /** Shown under the figure. Layouts that don't caption ignore this. */
   caption?: Localized
-  /** Alt text for a real capture. Falls back to the project name. */
   alt?: Localized
 }
 
-/**
- * One addressable piece of a product.
- *
- * Every project here turned out to be a system rather than an app: a panel the
- * staff work in, an app the customer holds, a second app for the people serving
- * that customer, an admin nobody outside the company ever sees. Describing any
- * of them as "an app" was throwing away the most substantial thing about the
- * work, and the one that backs the claim the rest of the page makes, that the
- * surface is the least durable decision in a product. Hard to argue that while
- * showing one surface.
- *
- * `audience` is the field that makes a system legible. Two panels look
- * identical in a screenshot and are completely different products once you know
- * one is for a shop owner and the other for the person running the platform.
- */
 export type Surface = {
-  /** Decides the badge's default label and, later, the frame drawn around it. */
   kind: "web" | "mobile"
-  /**
-   * Overrides the badge. Use it where the specifics are known and worth saying
-   * ("iOS · Android"); leave it off and the badge falls back to the kind.
-   */
   platforms?: string[]
-  /** What this piece is called inside the system. */
   name: Localized
-  /** One line on what it does. */
   purpose: Localized
-  /** Who actually opens it. */
   audience: Localized
 }
 
-/** Every platform a project touches, deduplicated, in a stable order. */
 const PLATFORM_ORDER = ["iOS", "Android", "Web"]
 
 export function platformsOf(project: Project): string[] {
@@ -91,20 +39,7 @@ export function platformsOf(project: Project): string[] {
   return [...known, ...rest]
 }
 
-/**
- * Where the work happened.
- *
- * Three of these were built inside an agency and two were delivered for direct
- * clients, and a visitor reading a case study has no way to tell which is which
- * — the screens look the same either way. It is also the distinction a recruiter
- * actively looks for, so it is a field rather than a footnote.
- *
- * Mirrors `RoleKind` in experience.ts on purpose: the same engagement must not
- * describe itself one way in the work grid and another in the experience
- * section.
- */
 export type Context = {
-  /** Client or employer, as it should read on the page. */
   company: string
   kind: "employment" | "freelance"
 }
@@ -112,67 +47,29 @@ export type Context = {
 export type Project = {
   id: string
   name: string
-  /**
-   * The business this product belongs to.
-   *
-   * Counted, distinct, in the Impact section, which is what makes the English
-   * string the de facto key: two projects in the same business have to word it
-   * identically or they count twice. Keep the vocabulary small on purpose.
-   */
   sector: Localized
-  /** Sits above the name — one line on what the product is. */
   kind: Localized
-  /** The headline of the case study. Short, concrete, no marketing froth. */
   headline: Localized
-  /** Two or three sentences maximum. */
   summary: Localized
   role: Localized
   context: Context
-  /**
-   * The year the work shipped, or the span it ran over. `null` renders
-   * nothing rather than a guess — see the same convention in experience.ts.
-   */
   year: string | null
-  /** Answers: what problem / what I built / what I owned. */
   beats: Beat[]
   stack: string[]
-  /**
-   * The pieces the product is made of.
-   *
-   * Replaces a hand-written `platforms` list. That list said "iOS, Android" for
-   * a project that also had a web panel behind it, and there was nothing to
-   * catch the drift because the two facts lived in different places. It is now
-   * derived from this one, by `platformsOf`.
-   */
   surfaces: Surface[]
   status: "live" | "building"
-  /** Brand colours, used only inside this project's own zone. */
   brand: {
     from: string
     to: string
-    /** Foreground that stays legible on `from`. */
     ink: string
-    /** Optional solid field for marks designed to sit on an app-icon surface. */
     surface?: string
   }
   logo?: string
-  /** How this case study is composed. */
   layout: Layout
-  /** The composition's devices and windows, in the order the layout reads them. */
   figures?: Figure[]
-  /**
-   * The case study has not been written yet.
-   *
-   * A draft still gets a row and a page — the structure has to be visible to
-   * be worked on — but it is marked as unwritten everywhere it appears, kept
-   * out of the production index and flagged in the dev console. Following the
-   * same rule as profile.ts: an unfilled value renders as obviously unfilled
-   * rather than as plausible copy nobody remembers is fake.
-   */
   draft?: boolean
 }
 
-/** The placeholder every unwritten field carries. Visible on purpose. */
 const TBD: Localized = { pt: "— a preencher —", en: "— to be written —" }
 
 export const PROJECTS: Project[] = [
@@ -197,7 +94,7 @@ export const PROJECTS: Project[] = [
       en: "Architecture and mobile development — from planning through to store release",
     },
     context: { company: "YaaYoo — Fusion Thinking", kind: "employment" },
-    year: null, // TODO: add the year this shipped, e.g. "2024"
+    year: null,
     beats: [
       {
         label: { pt: "O problema", en: "The problem" },
@@ -279,7 +176,7 @@ export const PROJECTS: Project[] = [
       en: "Web development — Booking, CRM, CMS and internal portals",
     },
     context: { company: "YaaYoo — Fusion Thinking", kind: "employment" },
-    year: null, // TODO: add the year this shipped, e.g. "2023 — 2024"
+    year: null,
     beats: [
       {
         label: { pt: "O problema", en: "The problem" },
@@ -304,23 +201,6 @@ export const PROJECTS: Project[] = [
       },
     ],
     stack: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Node.js"],
-    /*
-      The nine modules the platform actually ships, in the order its own module
-      picker lists them — taken from `src/types/modules.ts` in the Y-Studio
-      codebase rather than from memory. This used to say four, and the missing
-      five were not minor: Commerce, Storage and CX are what make the claim
-      "one system, modules each hotel switches on" true rather than marketing.
-
-      Each `purpose` is drawn from that module's own routes, so it describes
-      what the module does rather than what its name suggests.
-
-      Two of the nine are also case studies of their own in this portfolio, and
-      that is the most structurally interesting thing about the platform rather
-      than a filing accident: `commerce` is the back office behind Porto Seguro
-      Shopping, and `yago` the one behind the Yago apps. Neither serves a hotel
-      — they serve a shopping centre's retailers and a resort's guests. A module
-      here is a product the platform can carry, not a feature of one hotel.
-    */
     surfaces: [
       {
         kind: "web",
@@ -430,7 +310,7 @@ export const PROJECTS: Project[] = [
       en: "Architecture and mobile development — the app's full cycle",
     },
     context: { company: "YaaYoo — Fusion Thinking", kind: "employment" },
-    year: null, // TODO: add the year this shipped, e.g. "2025"
+    year: null,
     beats: [
       {
         label: { pt: "O problema", en: "The problem" },
@@ -482,30 +362,10 @@ export const PROJECTS: Project[] = [
     layout: "stage",
   },
 
-  /* ───────────────────────────────────────────────────────────────────────────
-     DRAFTS — the two freelance projects.
-
-     Structure only. Every `Localized` field below is the visible placeholder,
-     not copy: nothing here should ever reach a visitor as if it were true.
-     Fill a project in, delete its `draft: true`, give it a real `id` (that is
-     the public URL) and it joins the published index on its own.
-
-     Worth deciding as you fill these in: whether either deserves a bespoke
-     composition of its own, the way the three above have. `gallery` is the
-     honest default while the screens are captures rather than drawings —
-     promoting one later is a one-word change to `layout`.
-     ─────────────────────────────────────────────────────────────────────── */
   {
     id: "aguiar-one",
     name: "Aguiar One",
     sector: { pt: "Varejo", en: "Retail" },
-    /*
-      The three fields below are the product's own words, off its marketing
-      page — not copy written for this portfolio. Worth keeping that way: the
-      way a product introduces itself is evidence, and a case study that
-      paraphrases it into something smoother is quietly claiming a different
-      product than the one that shipped.
-    */
     kind: {
       pt: "Gestão de vendas e caixa para o varejo local",
       en: "Sales and cash management for local retail",
@@ -522,9 +382,8 @@ export const PROJECTS: Project[] = [
       pt: "Produto inteiro, sozinho — da conversa com o cliente à arquitetura, portal, admin, app e banco",
       en: "The whole product, alone — from the client conversation through architecture, portal, admin, app and database",
     },
-    // TODO: the client's name. Pairs with the `freelance-1` role in experience.ts
     context: { company: "Freelance", kind: "freelance" },
-    year: null, // TODO
+    year: null,
     beats: [
       {
         label: { pt: "O problema", en: "The problem" },
@@ -588,19 +447,10 @@ export const PROJECTS: Project[] = [
       },
     ],
     status: "live",
-    // Off the product itself: the teal every action in the shop's portal uses,
-    // and the navy the platform console switches to.
     brand: { from: "#3E7E9C", to: "#1B3A4B", ink: "#F2F7F9", surface: "#FFFFFF" },
     logo: "/aguiar-one.png",
-    /*
-      Promoted out of `gallery` because the interfaces are now drawn in code.
-      `immersive` is the right shape for it: two browser windows, no phone —
-      and here the second window is not another module but another *altitude*,
-      the console that runs the shops. The shop-owner app in `surfaces` has no
-      capture in /docs/projetos and is deliberately not invented.
-    */
     layout: "stage",
-    figures: [], // Set a `src` here to swap a real capture over the coded screen.
+    figures: [],
   },
   {
     id: "vez",
@@ -622,9 +472,8 @@ export const PROJECTS: Project[] = [
       pt: "Produto inteiro, sozinho — do levantamento com o cliente à arquitetura, stack, cinco superfícies e banco",
       en: "The whole product, alone — from discovery through architecture, stack, five surfaces and the database",
     },
-    // TODO: the client's name. Pairs with the `freelance-2` role in experience.ts
     context: { company: "Freelance", kind: "freelance" },
-    year: null, // TODO
+    year: null,
     beats: [
       {
         label: { pt: "O problema", en: "The problem" },
@@ -699,22 +548,13 @@ export const PROJECTS: Project[] = [
       },
     ],
     status: "building",
-    // The coral every action in the product uses, and nothing else does.
     brand: { from: "#EE6C4C", to: "#B8412A", ink: "#FFF4F0", surface: "#FFFFFF" },
     logo: "/vez.svg",
     layout: "stage",
-    figures: [], // Set a `src` here to swap a real capture over the coded screen.
+    figures: [],
   },
 ]
 
-/**
- * The distinct businesses across a set of projects, in the order met.
- *
- * Named rather than counted. As a figure it read "2", which sits badly next to
- * a nine-figure sum and undersells the point besides: the useful thing is not
- * how many businesses, it is *which* ones, because "hospitality, retail and
- * services" says something a number cannot.
- */
 export function sectorNamesOf(projects: Project[]): Localized[] {
   const seen = new Map<string, Localized>()
   for (const project of projects) {
@@ -723,21 +563,18 @@ export function sectorNamesOf(projects: Project[]): Localized[] {
   return [...seen.values()]
 }
 
-/** Web systems and apps running in production, across a set of projects. */
 export function liveSurfacesOf(projects: Project[]): number {
   return projects
     .filter((project) => project.status === "live")
     .reduce((total, project) => total + project.surfaces.length, 0)
 }
 
-/** Case studies fit to be read, indexed and shared. */
 export const PUBLISHED_PROJECTS = PROJECTS.filter((project) => !project.draft)
 
 export function findProject(id: string | undefined): Project | undefined {
   return PROJECTS.find((project) => project.id === id)
 }
 
-/** The project after this one, wrapping around. Drafts are never a destination. */
 export function nextProject(id: string): Project | undefined {
   const list = PUBLISHED_PROJECTS
   const index = list.findIndex((project) => project.id === id)
@@ -745,10 +582,6 @@ export function nextProject(id: string): Project | undefined {
   return list[(index + 1) % list.length]
 }
 
-/**
- * Dev-only reminder, matching the one in profile.ts — the nudge reaches the
- * person who can act on it and never the visitor.
- */
 if (import.meta.env.DEV) {
   const drafts = PROJECTS.filter((project) => project.draft).map((project) => project.id)
 

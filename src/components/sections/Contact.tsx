@@ -6,16 +6,6 @@ import { EMAIL, hasEmail, LINKS } from "@/content/profile"
 import { useLocale } from "@/i18n/useLocale"
 import { cn } from "@/lib/utils"
 
-/**
- * The close.
- *
- * One question, one action, three ways to reach me. No form: a form asks a
- * visitor to do paperwork at the exact moment they were ready to just write.
- *
- * The email row only appears once EMAIL has been filled in — see profile.ts.
- * An unfilled address would render a mailto: to nowhere, which is worse than
- * not offering it.
- */
 const Contact = () => {
   const { pick } = useLocale()
   const eyebrow = useReveal<HTMLParagraphElement>()
@@ -109,13 +99,6 @@ const Contact = () => {
                 rel={external ? "noreferrer noopener" : undefined}
                 className={cn(
                   "group flex items-center gap-4 py-6 transition-colors md:px-6",
-                  // The gutters are decided by position in the row, not with a
-                  // `first:`/`last:` variant: this anchor is the only child of
-                  // its own <li>, so those variants match every column and used
-                  // to strip the left padding from all of them — which put the
-                  // second column's icon flush against the divider it sits
-                  // behind. The outer edges stay flush with the container so
-                  // the row lines up with the type above it.
                   index === 0 && "md:pl-0",
                   index === channels.length - 1 && "md:pr-0",
                 )}
