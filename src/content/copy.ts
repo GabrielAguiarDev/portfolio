@@ -1,0 +1,411 @@
+import type { Localized } from "@/i18n/useLocale"
+
+export const NAV = [
+  { id: "work", label: { pt: "Projetos", en: "Work" } satisfies Localized },
+  { id: "ai", label: { pt: "IA", en: "AI" } satisfies Localized },
+  { id: "about", label: { pt: "Sobre", en: "About" } satisfies Localized },
+  { id: "experience", label: { pt: "Experiência", en: "Experience" } satisfies Localized },
+  { id: "contact", label: { pt: "Contato", en: "Contact" } satisfies Localized },
+]
+
+export const COPY = {
+  nav: {
+    cta: { pt: "Vamos conversar", en: "Let's talk" },
+    menu: { pt: "Menu", en: "Menu" },
+    close: { pt: "Fechar", en: "Close" },
+    language: { pt: "Mudar para inglês", en: "Switch to Portuguese" },
+  },
+
+  meta: {
+    home: {
+      pt: "Gabriel Aguiar, desenvolvedor de software. Construo aplicativos móveis e plataformas web, trabalhando em todas as etapas: arquitetura, desenvolvimento, testes e publicação. Projetos em produção com usuários reais.",
+      en: "Gabriel Aguiar, software developer. I build mobile apps and web platforms, working across every stage: architecture, development, testing and release. Projects in production with real users.",
+    },
+  },
+
+  a11y: {
+    skip: { pt: "Pular para o conteúdo", en: "Skip to content" },
+    sections: { pt: "Seções", en: "Sections" },
+    social: { pt: "Redes sociais", en: "Social" },
+  },
+
+  hero: {
+    headline: {
+      pt: "Construo aplicativos e plataformas web.",
+      en: "I build mobile apps and web platforms.",
+    },
+    lead: {
+      pt: "Trabalho em todas as etapas, da arquitetura até o produto no ar.",
+      en: "I work across every stage, from the architecture to the product going live.",
+    },
+    primary: { pt: "Ver os produtos", en: "See the work" },
+    secondary: { pt: "Entrar em contato", en: "Get in touch" },
+    scroll: { pt: "Role para explorar", en: "Scroll to explore" },
+  },
+
+  work: {
+    eyebrow: { pt: "Projetos selecionados", en: "Selected work" },
+    title: {
+      pt: "Produtos que estão no ar.",
+      en: "Products that are out there.",
+    },
+    lead: {
+      pt: "Aplicativos, plataformas web e um ecossistema completo, todos no ar e com usuários reais. Cada projeto exigiu um tipo diferente de decisão de arquitetura; abra um deles para ver como resolvi.",
+      en: "Mobile apps, web platforms and one full ecosystem, all live and with real users. Each project called for a different kind of architectural decision; open one to see how I solved it.",
+    },
+    live: { pt: "Em produção", en: "Live" },
+    building: { pt: "Em desenvolvimento", en: "In development" },
+    stack: { pt: "Stack", en: "Stack" },
+    role: { pt: "Meu papel", en: "My role" },
+    more: { pt: "Mais projetos no GitHub", en: "More projects on GitHub" },
+    moreKind: { pt: "Repositórios públicos", en: "Public repositories" },
+
+    surfaces: { pt: "O sistema", en: "The system" },
+    surfaceCount: { pt: "superfícies", en: "surfaces" },
+    surfacesTitle: {
+      pt: "Um produto, várias superfícies.",
+      en: "One product, several surfaces.",
+    },
+    surfacesLead: {
+      pt: "Cada peça atende uma pessoa diferente e resolve um problema diferente, partindo da mesma base.",
+      en: "Each piece serves a different person and solves a different problem, off the same foundation.",
+    },
+    surfaceAudience: { pt: "Para", en: "For" },
+
+    backToWork: { pt: "Projetos", en: "Work" },
+    next: { pt: "Próximo projeto", en: "Next project" },
+    context: { pt: "Contexto", en: "Context" },
+    freelance: { pt: "Freelancer", en: "Freelance" },
+    draft: { pt: "Case em preparação", en: "Case study in progress" },
+    noFigures: {
+      pt: "As telas deste projeto ainda não foram adicionadas.",
+      en: "This project's screens haven't been added yet.",
+    },
+    draftBody: {
+      pt: "Este projeto ainda não foi documentado. O conteúdo abaixo é estrutura, não descrição — nada aqui deve ser lido como informação sobre o produto.",
+      en: "This project hasn't been documented yet. What follows is structure, not description — nothing here should be read as information about the product.",
+    },
+  },
+
+  foundations: {
+    eyebrow: { pt: "Engenharia", en: "Engineering" },
+    title: {
+      pt: "A arquitetura vem antes da tela.",
+      en: "Architecture comes before the screen.",
+    },
+    lead: {
+      pt: "As telas mudam. O que decide se um produto continua barato de evoluir são as escolhas feitas antes de existir qualquer tela, e o método usado para chegar nelas.",
+      en: "Screens change. What keeps a product cheap to evolve are the choices made before any screen exists, and the method used to reach them.",
+    },
+
+    layers: [
+      {
+        label: { pt: "Interface", en: "Interface" },
+        note: { pt: "o que se vê", en: "what you see" },
+      },
+      {
+        label: { pt: "Estado", en: "State" },
+        note: { pt: "o que a tela sabe", en: "what the screen knows" },
+      },
+      {
+        label: { pt: "Domínio", en: "Domain" },
+        note: { pt: "a regra do negócio", en: "the business rule" },
+      },
+      {
+        label: { pt: "Dados", en: "Data" },
+        note: { pt: "contrato e cache", en: "contract and cache" },
+      },
+      {
+        label: { pt: "Infra", en: "Infra" },
+        note: { pt: "build, release, sessão", en: "build, release, session" },
+      },
+    ],
+    layersCaption: {
+      pt: "A tela é a camada de cima: a que muda mais e a que decide menos.",
+      en: "The screen is the top layer: the one that changes most and decides least.",
+    },
+
+    principles: [
+      {
+        title: {
+          pt: "Estrutura decidida uma vez",
+          en: "Structure decided once",
+        },
+        body: {
+          pt: "Camadas, estado e fronteiras definidos no começo. O teste real de uma arquitetura não é a entrega de hoje: é quanto custa a próxima versão.",
+          en: "Layers, state and boundaries settled up front. The real test of an architecture isn't today's delivery — it's what the next version costs.",
+        },
+        tools: ["Clean Architecture", "MVVM", "TypeScript", "Design system"],
+      },
+      {
+        title: {
+          pt: "Uma base, várias superfícies",
+          en: "One base, several surfaces",
+        },
+        body: {
+          pt: "Um app de loja, um painel no navegador e uma integração que ninguém vê resolvem problemas diferentes, mas repetem as mesmas decisões por baixo: navegação, estado, cache e contrato de API. É por isso que eu não me apresento por plataforma.",
+          en: "A store app, a browser dashboard and an integration nobody sees solve different problems, but they repeat the same decisions underneath: navigation, state, caching and the API contract. That is why I don't introduce myself by platform.",
+        },
+        tools: ["React Native", "Expo", "React", "Next.js", "Node.js"],
+      },
+      {
+        title: {
+          pt: "Entregar faz parte de construir",
+          en: "Shipping is part of building",
+        },
+        body: {
+          pt: "Build, versionamento e distribuição resolvidos junto com o código. Um produto que só sobe com passo manual não está pronto: está dependendo de alguém lembrar.",
+          en: "Builds, versioning and distribution settled alongside the code. A product that only ships with a manual step isn't finished: it depends on someone remembering.",
+        },
+        tools: ["GitHub Actions", "Fastlane", "App Store", "Google Play"],
+      },
+      {
+        title: {
+          pt: "Segurança no desenho",
+          en: "Security in the design",
+        },
+        body: {
+          pt: "Autenticação, sessão, permissão e o que nunca deveria sair do servidor. Já vi o suficiente do que dá errado para resolver isso na arquitetura, e não numa revisão no fim.",
+          en: "Authentication, session, permission, and what should never leave the server. I've seen enough of what goes wrong to settle it in the architecture rather than in a review at the end.",
+        },
+        tools: [
+          { pt: "Auth e sessões", en: "Auth & sessions" },
+          { pt: "Permissões", en: "Permissions" },
+          { pt: "Validação de entrada", en: "Input validation" },
+          { pt: "Segredos", en: "Secrets" },
+        ],
+      },
+    ],
+  },
+
+  ai: {
+    eyebrow: { pt: "Engenharia de IA", en: "AI engineering" },
+    title: {
+      pt: "Trabalhar com IA também é arquitetura.",
+      en: "Working with AI is architecture too.",
+    },
+    lead: {
+      pt: "Um modelo não é mágica: é um componente com contrato, custo e superfície de ataque. Uso IA todos os dias para construir software, e trato as decisões em volta dela com o mesmo cuidado que dou a qualquer outra parte do sistema.",
+      en: "A model isn't magic: it's a component with a contract, a cost and an attack surface. I use AI every day to build software, and I treat the decisions around it with the same care I give any other part of the system.",
+    },
+
+    graph: {
+      context: ["MCP", "RAG"],
+      core: {
+        label: { pt: "Orquestrador", en: "Orchestrator" },
+        note: { pt: "decide, consolida, decide de novo", en: "decides, consolidates, decides again" },
+      },
+      specialists: [
+        { pt: "Arquitetura", en: "Architecture" },
+        { pt: "Segurança", en: "Security" },
+        { pt: "Testes", en: "Testing" },
+        { pt: "Revisão", en: "Review" },
+      ],
+      legend: {
+        dispatch: { pt: "Delega", en: "Dispatch" },
+        report: { pt: "Reporta", en: "Report" },
+      },
+      caption: {
+        pt: "Diagrama: contexto do projeto entra por MCP e RAG, um orquestrador delega para subagentes especializados em arquitetura, segurança, testes e revisão, e cada um reporta de volta para ser avaliado.",
+        en: "Diagram: project context arrives through MCP and RAG, an orchestrator delegates to subagents specialised in architecture, security, testing and review, and each reports back to be judged.",
+      },
+    },
+
+    pillars: [
+      {
+        title: { pt: "Modelo e contexto", en: "Model and context" },
+        body: {
+          pt: "O LLM é só a peça; o resultado vem do contexto que chega até ele. Escrevo o prompt como um contrato, com entrada, formato e limite definidos, e busco o contexto no próprio projeto em vez de deixar o modelo adivinhar. É aí que a resposta deixa de ser genérica.",
+          en: "The LLM is just the part; the result comes from the context that reaches it. I write the prompt like a contract, with the input, format and boundaries spelled out, and pull context from the project itself instead of letting the model guess. That is where the answer stops being generic.",
+        },
+        tools: [
+          "LLMs",
+          { pt: "IA generativa", en: "Generative AI" },
+          { pt: "Engenharia de prompt", en: "Prompt engineering" },
+          "RAG",
+          { pt: "Janela de contexto", en: "Context window" },
+        ],
+      },
+      {
+        title: { pt: "Orquestração e especialização", en: "Orchestration and specialisation" },
+        body: {
+          pt: "Um agente genérico resolve tarefa genérica. O ganho real está em decompor: um orquestrador decide o quê, subagentes especializados executam em paralelo, e o contexto do projeto entra por MCP em vez de ser colado no prompt. O difícil continua sendo decidir, não digitar.",
+          en: "A generic agent solves a generic task. The real gain is in decomposing it: an orchestrator decides what, specialised subagents run in parallel, and project context arrives through MCP instead of being pasted into a prompt. The hard part is still deciding, not typing.",
+        },
+        tools: [
+          { pt: "Agentes", en: "Agents" },
+          { pt: "Subagentes", en: "Subagents" },
+          { pt: "Especialização de agentes", en: "Agent specialization" },
+          "MCP",
+          "Git worktrees",
+        ],
+      },
+      {
+        title: { pt: "Proteções e limites", en: "Guardrails" },
+        body: {
+          pt: "Todo texto que entra num modelo é entrada não confiável, inclusive o que voltou de uma ferramenta. Prompt injection, segredo vazando no contexto e agente com mais permissão do que precisa são falhas de projeto, e é no projeto que se resolvem.",
+          en: "Every piece of text that enters a model is untrusted input, including whatever came back from a tool. Prompt injection, secrets leaking into context and an agent holding more permission than it needs are design failures, and design is where they get solved.",
+        },
+        tools: [
+          "Prompt injection",
+          { pt: "Vazamento de dados e segredos", en: "Data & secret leakage" },
+          { pt: "Menor privilégio", en: "Least privilege" },
+          { pt: "Revisão humana", en: "Human review" },
+        ],
+      },
+      {
+        title: { pt: "Custo e arquitetura de IA", en: "Cost and AI architecture" },
+        body: {
+          pt: "Token é infraestrutura: tem preço, latência e teto. Escolho o modelo pela tarefa, cacheio o que repete e meço o que se gasta. Às vezes a resposta certa é não usar IA naquele ponto.",
+          en: "Tokens are infrastructure: they have a price, a latency and a ceiling. I pick the model for the task, cache what repeats and measure what it costs. Sometimes the right answer is not to use AI at that point.",
+        },
+        tools: [
+          { pt: "Arquitetura de IA", en: "AI architecture" },
+          { pt: "Controle de custo", en: "Cost control" },
+          { pt: "Roteamento de modelo", en: "Model routing" },
+          { pt: "Cache", en: "Caching" },
+        ],
+      },
+    ],
+  },
+
+  process: {
+    eyebrow: { pt: "Como eu construo", en: "How I build" },
+    title: {
+      pt: "O código funcionar é o meio do caminho.",
+      en: "Working code is the halfway point.",
+    },
+    lead: {
+      pt: "O ciclo completo de um produto, do primeiro desenho até a versão que sobe semana que vem.",
+      en: "The full cycle of a product, from the first sketch to the version that ships next week.",
+    },
+    steps: [
+      {
+        title: { pt: "Problema", en: "Problem" },
+        body: {
+          pt: "Entender o que precisa ser resolvido antes de escolher qualquer tecnologia.",
+          en: "Understand what has to be solved before choosing any technology.",
+        },
+      },
+      {
+        title: { pt: "Arquitetura", en: "Architecture" },
+        body: {
+          pt: "Camadas, estado, navegação e contrato de API. Decidido uma vez, no começo.",
+          en: "Layers, state, navigation and the API contract. Decided once, up front.",
+        },
+      },
+      {
+        title: { pt: "Superfície de risco", en: "Risk surface" },
+        body: {
+          pt: "Onde entra dado de fora, quem pode o quê, e o que nunca sai do servidor.",
+          en: "Where outside data enters, who is allowed what, and what never leaves the server.",
+        },
+      },
+      {
+        title: { pt: "Desenvolvimento", en: "Development" },
+        body: {
+          pt: "Implementação em componentes reaproveitáveis, com agentes especializados em paralelo no que é repetitivo.",
+          en: "Implementation in reusable components, with specialised agents in parallel on whatever is repetitive.",
+        },
+      },
+      {
+        title: { pt: "Testes", en: "Testing" },
+        body: {
+          pt: "Cobertura no que quebra de verdade: fluxo, estado e regra de negócio.",
+          en: "Coverage where things actually break: flows, state and business rules.",
+        },
+      },
+      {
+        title: { pt: "CI/CD", en: "CI/CD" },
+        body: {
+          pt: "Build automatizado, versionamento e distribuição sem passo manual.",
+          en: "Automated builds, versioning and distribution with no manual step.",
+        },
+      },
+      {
+        title: { pt: "Deploy", en: "Deploy" },
+        body: {
+          pt: "App Store, Google Play e web. Submissão, revisão e release.",
+          en: "App Store, Google Play and web. Submission, review and release.",
+        },
+      },
+      {
+        title: { pt: "Evolução", en: "Continuous improvement" },
+        body: {
+          pt: "A versão seguinte tem que ser fácil de fazer. Esse é o teste real da arquitetura.",
+          en: "The next version has to be easy to build. That's the real test of the architecture.",
+        },
+      },
+    ],
+  },
+
+  impact: {
+    eyebrow: { pt: "Impacto", en: "Impact" },
+    title: { pt: "O que isso significa na prática.", en: "What that means in practice." },
+    years: { pt: "Anos de experiência", en: "Years of experience" },
+    surfaces: { pt: "Sistemas e apps em produção", en: "Systems and apps in production" },
+
+    revenue: {
+      pt: "Transacionados nos sistemas em que trabalhei",
+      en: "Transacted through systems I worked on",
+    },
+    installs: { pt: "Instalações dos apps publicados", en: "Installs of the apps shipped" },
+    selection: {
+      pt: "Os projetos abertos aqui são uma seleção; parte do que construí é interna e não pode ser mostrada. São sistemas em uso diário, em {sectors}, sustentando operação e receita reais, e que já seguraram campanhas com milhares de acessos simultâneos.",
+      en: "The projects opened here are a selection; some of what I have built is internal and cannot be shown. These are systems in daily use across {sectors}, holding up real operations and real revenue, that have already carried campaigns with thousands of concurrent users.",
+    },
+  },
+
+  experience: {
+    eyebrow: { pt: "Experiência", en: "Experience" },
+    title: { pt: "Onde eu construí isso.", en: "Where I built it." },
+    lead: {
+      pt: "Arquitetura e ciclo completo dos produtos que construí: do primeiro desenho até a manutenção depois de estarem no ar, dentro de uma agência e para clientes diretos.",
+      en: "Architecture and the full cycle of the products I built: from the first sketch to the maintenance after they went live, inside an agency and for direct clients.",
+    },
+    responsibilities: { pt: "Responsabilidades", en: "Responsibilities" },
+    highlights: { pt: "Principais contribuições", en: "Key contributions" },
+    kindFreelance: { pt: "Freelancer", en: "Freelance" },
+  },
+
+  about: {
+    eyebrow: { pt: "Sobre", en: "About" },
+    title: { pt: "Como eu trabalho.", en: "How I work." },
+    body: {
+      pt: "Sou Software Engineer. Em quatro anos trabalhei em produtos que sustentam operação e receita de verdade: aplicativos nas lojas, plataformas web com milhares de usuários e integrações de que a empresa inteira depende.\n\nBoa parte do que resolvi chegou com prazo curto e com dinheiro rodando: campanha no ar, fluxo de pagamento travado, release que precisava subir naquele dia. Nesses casos eu diagnostico rápido, mas sem remendo, porque a gambiarra de hoje é o incidente do mês que vem.\n\nFora da urgência, meu foco é arquitetura. Camadas, estado, contrato de API e escala decididos antes da primeira tela, com MVVM e Clean Architecture, mais o ciclo de entrega automatizado até a App Store e a Google Play. Qualidade, para mim, é o pacote inteiro: do que o usuário vê e sente até o código que roda por baixo.\n\nSegurança faz parte disso. Token, sessão, permissão e o que nunca deveria sair do servidor são decisões de arquitetura, e sair barato depende de tomá-las no começo, não numa revisão no fim.",
+      en: "I'm a software engineer. Over four years I have worked on products that hold up real operations and real revenue: apps in the stores, web platforms with thousands of users, and integrations the whole company depends on. I started in mobile, with React Native and TypeScript, but I stopped introducing myself by platform a while ago.\n\nMuch of what I have solved arrived on a short deadline with money running: a campaign live, a payment flow stuck, a release that had to ship that day. In those situations I diagnose fast without patching, because today's workaround is next month's incident.\n\nOutside the urgent work, my focus is architecture. Layers, state, the API contract and scale settled before the first screen, with MVVM and Clean Architecture, plus a delivery pipeline that reaches the App Store and Google Play on its own. Quality, to me, is the whole package: from what the user sees and feels to the code running underneath.\n\nSecurity is part of that. Tokens, sessions, permissions and what should never leave the server are architectural decisions, and keeping them cheap means taking them early rather than in a review at the end.\n\nI like code the next person can read without having to ask me anything.",
+    },
+  },
+
+  toolkit: {
+    eyebrow: { pt: "Ferramentas", en: "Toolkit" },
+    title: { pt: "As ferramentas que eu uso.", en: "Tools I build with." },
+    lead: {
+      pt: "Agrupadas pela camada do produto a que pertencem. Escolhidas por resolverem um problema específico, não por estarem na moda.",
+      en: "Grouped by the layer of the product they belong to. Picked because they solve a specific problem, not because they're fashionable.",
+    },
+  },
+
+  contact: {
+    eyebrow: { pt: "Contato", en: "Contact" },
+    title: { pt: "Tem um produto em mente?", en: "Have a product in mind?" },
+    lead: {
+      pt: "Se você precisa de alguém que decida a arquitetura, construa o produto inteiro e continue cuidando dele depois de estar no ar, me chama.",
+      en: "If you need someone to settle the architecture, build the whole product and keep looking after it once it's live, get in touch.",
+    },
+    cta: { pt: "Vamos construir algo", en: "Let's build something" },
+    emailPending: {
+      pt: "E-mail em breve",
+      en: "Email coming soon",
+    },
+  },
+
+  footer: {
+    rights: { pt: "Todos os direitos reservados.", en: "All rights reserved." },
+    built: {
+      pt: "Feito com React, TypeScript e atenção a detalhe.",
+      en: "Built with React, TypeScript and attention to detail.",
+    },
+    top: { pt: "Voltar ao topo", en: "Back to top" },
+  },
+} as const

@@ -1,11 +1,3 @@
-<!-- =========================
-  Portfolio • Gabriel Aguiar
-========================= -->
-
-<p align="center">
-  <img src="./assets/readme/cover.png" alt="Gabriel Aguiar - Portfolio" />
-</p>
-
 <h1 align="center">Gabriel Aguiar</h1>
 
 <p align="center">
@@ -22,7 +14,6 @@
   <a href="https://www.gabrielaguiar.dev">🌐 Portfolio</a> •
   <a href="#about">About</a> •
   <a href="#stack">Stack</a> •
-  <a href="#screenshots">Screenshots</a> •
   <a href="#running-locally">Running locally</a>
 </p>
 
@@ -55,26 +46,38 @@ The portfolio works as a **technical business card**, showing not only _what_ I 
 ## 🧰 Stack
 
 <p>
-  <img src="https://skillicons.dev/icons?i=ts,react,styledcomponents,html,css,git,github,vercel&perline=9" />
+  <img src="https://skillicons.dev/icons?i=ts,react,vite,tailwind,html,css,git,github,vercel&perline=9" />
 </p>
 
 **Main technologies**
 
 - **TypeScript**
-- **React**
-- **Styled Components**
-- **HTML5 & CSS3**
+- **React 18** (single-page app, `react-router-dom`)
+- **Vite 5** — dev server and build
+- **Tailwind CSS 3** — utility-first styling
+- **react-i18next** — PT/EN with browser language detection (language detection and persistence only; copy lives next to content)
+- **GSAP + ScrollTrigger** and **Lenis** — scroll-linked motion, code-split and loaded after the LCP
+- **Package manager:** npm
 - **Deployment:** Vercel
 
 > The stack was chosen with a strong focus on **developer experience**, **performance**, **SEO**, and **scalability**.
+
+> Several packages in `package.json` (`shadcn/ui` components, `@radix-ui` packages, `@tanstack/react-query`) are no longer used by the site and are pending cleanup.
 
 ---
 
 ## 🧠 Technical highlights
 
-- Well-defined component structure
-- Responsive layout (mobile-first)
-- Subtle animations focused on UX
+- Dark, editorial design system ("Signal") with near-black ground, warm off-white type, and a single ember accent
+- Typed content layer (`src/content/`) keeps prose next to the data it describes rather than in a flat key namespace
+- Device mockups rendered in CSS (not images) — they scale smoothly at any size and ship as bytes instead of kilobytes
+- Scroll-driven motion: word-by-word heading reveals, section reveals via `IntersectionObserver`, parallax, and pinned horizontal scroll on desktop
+- Every timing, easing, delay and parallax amplitude lives in one file,
+  [`src/animation/config.ts`](src/animation/config.ts), including master on/off switches
+- `prefers-reduced-motion` is respected: the animation libraries are never even fetched, and content renders in its final state
+- Animation is a progressive enhancement — if the motion chunk fails to load, the page stays fully readable and navigable
+- Deep linking with `/#work`, `/#yago` etc. works via `useHashScroll` on the single-page app
+- Mobile-first responsive layout (mobile is the primary target, not a reduced version)
 - Basic SEO best practices applied
 - Clean, readable, and maintainable code
 
@@ -86,27 +89,32 @@ The portfolio works as a **technical business card**, showing not only _what_ I 
 👉 https://www.gabrielaguiar.dev
 
 ---
-<a id="screenshots"></a>
-## 🖼️ Screenshots
-
-<p align="center">
-  <img src="./assets/readme/screen-about.png" alt="About section" width="90%" />
-  <img src="./assets/readme/screen-experience.png" alt="Projects section" width="90%" />
-  <img src="./assets/readme/screen-skills.png" alt="Projects section" width="90%" />
-  <img src="./assets/readme/screen-projects.png" alt="Projects section" width="90%" />
-</p>
-
----
 <a id="running-locally"></a>
 ## ⚙️ Running locally
 
 ### Requirements
 
 - Node.js `>= 18`
-- PNPM / Yarn / NPM
+- Yarn 4 via Corepack (`corepack enable`); the repository ships a single `yarn.lock`, so please don't add another lockfile
 
 ### Clone the repository
 
 ```bash
 git clone https://github.com/GabrielAguiarDev/portfolio.git
 cd portfolio
+```
+
+### Install and run
+
+```bash
+yarn install
+yarn dev      # http://localhost:8080
+```
+
+### Other scripts
+
+```bash
+yarn build    # production build into dist/
+yarn preview  # serve the production build locally
+yarn lint     # eslint
+```
