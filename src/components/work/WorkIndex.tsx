@@ -94,10 +94,15 @@ const Cell = ({
 
       {/* The mark gets the cell's whole middle. It is the only object in an
           otherwise typographic layout, so it carries the recognition. */}
-      <span className="flex flex-1 items-center justify-center py-9 md:py-11">
+      <span className="relative flex flex-1 items-center justify-center py-9 md:py-11">
+        <span
+          aria-hidden="true"
+          className="absolute h-20 w-20 rounded-full opacity-25 blur-2xl transition-all duration-700 group-hover:scale-125 group-hover:opacity-50 group-focus-visible:scale-125 group-focus-visible:opacity-50 md:h-24 md:w-24"
+          style={{ background: project.brand.from }}
+        />
         <BrandMark
           project={project}
-          className="h-14 w-14 shrink-0 rounded-2xl transition-transform duration-700 ease-out group-hover:-translate-y-1 group-hover:scale-[1.07] md:h-16 md:w-16"
+          className="relative h-20 w-20 shrink-0 rounded-[1.375rem] shadow-[0_18px_45px_-22px_rgba(0,0,0,0.9)] transition-transform duration-700 ease-out group-hover:-translate-y-1.5 group-hover:scale-[1.05] md:h-24 md:w-24 md:rounded-[1.625rem]"
         />
       </span>
 

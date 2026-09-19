@@ -25,3 +25,14 @@ dist-ssr
 
 # TypeScript incremental build cache
 *.tsbuildinfo
+
+# Yarn Berry
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+# Documentation
+docs

@@ -152,6 +152,8 @@ export type Project = {
     to: string
     /** Foreground that stays legible on `from`. */
     ink: string
+    /** Optional solid field for marks designed to sit on an app-icon surface. */
+    surface?: string
   }
   logo?: string
   /** How this case study is composed. */
@@ -475,8 +477,8 @@ export const PROJECTS: Project[] = [
       },
     ],
     status: "live",
-    brand: { from: "#1C1917", to: "#44403C", ink: "#F2EFE9" },
-    logo: "/porto-seguro-shopping.webp",
+    brand: { from: "#9A4922", to: "#70765D", ink: "#F6E9D8", surface: "#f6e9d8" },
+    logo: "/porto-seguro-shopping-icon.svg",
     layout: "stage",
   },
 
@@ -575,11 +577,21 @@ export const PROJECTS: Project[] = [
         },
         audience: { pt: "Lojista", en: "Shop owner" },
       },
+      {
+        kind: "web",
+        name: { pt: "Landing page", en: "Landing page" },
+        purpose: {
+          pt: "Apresentar a plataforma e conduzir o lojista até o cadastro.",
+          en: "Presenting the platform and guiding shop owners into sign-up.",
+        },
+        audience: { pt: "Lojistas interessados", en: "Prospective shop owners" },
+      },
     ],
     status: "live",
     // Off the product itself: the teal every action in the shop's portal uses,
     // and the navy the platform console switches to.
-    brand: { from: "#3E7E9C", to: "#1B3A4B", ink: "#F2F7F9" },
+    brand: { from: "#3E7E9C", to: "#1B3A4B", ink: "#F2F7F9", surface: "#FFFFFF" },
+    logo: "/aguiar-one.png",
     /*
       Promoted out of `gallery` because the interfaces are now drawn in code.
       `immersive` is the right shape for it: two browser windows, no phone —
@@ -688,7 +700,8 @@ export const PROJECTS: Project[] = [
     ],
     status: "building",
     // The coral every action in the product uses, and nothing else does.
-    brand: { from: "#EE6C4C", to: "#B8412A", ink: "#FFF4F0" },
+    brand: { from: "#EE6C4C", to: "#B8412A", ink: "#FFF4F0", surface: "#FFFFFF" },
+    logo: "/vez.svg",
     layout: "stage",
     figures: [], // Set a `src` here to swap a real capture over the coded screen.
   },

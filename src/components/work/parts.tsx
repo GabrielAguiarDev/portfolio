@@ -4,6 +4,14 @@ import { platformsOf, type Project } from "@/content/work"
 import { useLocale } from "@/i18n/useLocale"
 import { cn } from "@/lib/utils"
 
+const LOGO_SIZES: Record<string, string> = {
+  yago: "max-h-[74%] max-w-[84%]",
+  "y-studio": "max-h-[60%] max-w-[72%]",
+  "porto-seguro-shopping": "max-h-[60%] max-w-[72%]",
+  "aguiar-one": "max-h-[68%] max-w-[78%]",
+  vez: "max-h-[68%] max-w-[78%]",
+}
+
 /**
  * The pieces every case study shares.
  *
@@ -195,14 +203,22 @@ export const CaseFacts = ({
  * makes the whole list look misaligned rather than making one project look
  * logo-less.
  */
-export const BrandMark = ({ project, className }: { project: Project; className?: string }) => (
+export const BrandMark = ({
+  project,
+  className,
+}: {
+  project: Project
+  className?: string
+}) => (
   <div
     className={cn(
       "flex items-center justify-center overflow-hidden rounded-2xl border border-white/10",
       className,
     )}
     style={{
-      background: `linear-gradient(140deg, ${project.brand.from}, ${project.brand.to})`,
+      background:
+        project.brand.surface ??
+        `linear-gradient(140deg, ${project.brand.from}, ${project.brand.to})`,
     }}
   >
     {project.logo ? (
@@ -211,7 +227,10 @@ export const BrandMark = ({ project, className }: { project: Project; className?
         alt={project.name}
         loading="lazy"
         decoding="async"
-        className="max-h-[46%] max-w-[58%] object-contain"
+        className={cn(
+          "max-h-[54%] max-w-[66%] object-contain",
+          LOGO_SIZES[project.id],
+        )}
       />
     ) : (
       <span

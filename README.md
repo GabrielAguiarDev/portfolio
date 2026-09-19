@@ -110,7 +110,7 @@ The screenshot images in `./assets/readme/` reflect the previous design and are 
 ### Requirements
 
 - Node.js `>= 18`
-- npm (the repository ships a single `package-lock.json`; please don't add another lockfile)
+- Yarn 4 via Corepack (`corepack enable`); the repository ships a single `yarn.lock`, so please don't add another lockfile
 
 ### Clone the repository
 
@@ -122,14 +122,14 @@ cd portfolio
 ### Install and run
 
 ```bash
-npm install
-npm run dev      # http://localhost:8080
+yarn install
+yarn dev      # http://localhost:8080
 ```
 
 ### Other scripts
 
 ```bash
-npm run build    # production build into dist/
-npm run preview  # serve the production build locally
-npm run lint     # eslint
+yarn build    # production build into dist/
+yarn preview  # serve the production build locally
+yarn lint     # eslint
 ```
